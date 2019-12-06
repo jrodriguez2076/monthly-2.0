@@ -1,9 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-const title = 'React with Webpack and Babel';
+import express from 'express';
 
+const app = express();
 
-ReactDOM.render(
-  <div>{title}</div>,
-  document.getElementById('app')
-);
+app.listen(3000, (req, res) => {
+    console.log('Now listening on port 3000');
+    console.log("heres is your request: " + req);
+})
