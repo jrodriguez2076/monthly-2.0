@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack --config ./webpack.config.js --mode development",
+    "server": "nodemon --exec babel-node src/index.js",
     "dev": "webpack-dev-server --config ./webpack.config.js --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,14 +21,17 @@
   "homepage": "https://github.com/jrodriguez2076/monthly-2.0#readme",
   "devDependencies": {
     "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
     "@babel/preset-env": "^7.7.5",
     "@babel/preset-react": "^7.7.4",
     "babel-loader": "^8.0.6",
+    "nodemon": "^2.0.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
