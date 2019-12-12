@@ -20,8 +20,10 @@ import {
 function NavSection(props) {
     return <div>
         <Navbar className="bg-dark">
-            <NavbarBrand className="text-white" href="/">Joc</NavbarBrand>
-            <Nav className="mr-auto">
+            <NavbarBrand className="text-white" href="/">
+                <img src="/img/icon/money_13.png" style={{width: "36px",height:"36px"}}></img>
+            </NavbarBrand>
+            <Nav>
                 <NavItem>
                     <NavLink className="text-light" href="/">Expenses</NavLink>
                 </NavItem>
@@ -32,7 +34,7 @@ function NavSection(props) {
                     <NavLink className="text-light" href="/">Budgets</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink className="text-light" href="/">Goals</NavLink>
+                    <NavLink className="text-light" href="/">Goals!</NavLink>
                 </NavItem>
             </Nav>
         </Navbar>
