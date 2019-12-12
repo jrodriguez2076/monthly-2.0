@@ -11,6 +11,14 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/api/expenses', (req,res)=>{
+    res.send('Here we will get the expenses')
+});
+
+app.post('/api/expenses', (req,res)=>{
+    res.send('Here we will POST new expenses')
+});
+
 app.get('/', (req,res)=>{
     res.sendFile(path.join(__dirname,"index.html"))
 })
