@@ -7,7 +7,7 @@ import { Button } from 'reactstrap';
 import NavSection from './components/NavSection';
 import ExpenseTotal from './components/ExpenseTotal';
 
-const title = 'Welcome to the next step';
+const title = 'More functions coming soon...';
 
 function App() {
   return (
@@ -15,11 +15,12 @@ function App() {
       <NavSection></NavSection>
       <div className="container">
         {/* <div className="row"> */}
-          <ExpenseTotal></ExpenseTotal>
+        <ExpenseTotal></ExpenseTotal>
         {/* </div> */}
       </div>
-      <h1>{title}</h1>
-      <p>Going below for the next changes</p>
+      <div className="row">
+        <h1 className="col-sm-4 offset-sm-4">{title}</h1>
+      </div>
     </div>
   )
 }
