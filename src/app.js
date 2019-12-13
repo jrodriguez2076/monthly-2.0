@@ -5,20 +5,26 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
 
 import NavSection from './components/NavSection';
+import ExpenseTotal from './components/ExpenseTotal';
 
 const title = 'Welcome to the next step';
 
-function Welcome() {
+function App() {
   return (
     <div>
       <NavSection></NavSection>
+      <div className="container">
+        {/* <div className="row"> */}
+          <ExpenseTotal></ExpenseTotal>
+        {/* </div> */}
+      </div>
       <h1>{title}</h1>
-      <p>now we will start with the actual design</p>
+      <p>Going below for the next changes</p>
     </div>
   )
 }
 
 ReactDOM.render(
-  <Welcome />,
+  <App />,
   document.getElementById('app')
 );
