@@ -28,7 +28,7 @@ function NavSection(props) {
                 <img src="/img/icon/money_13.png" style={{ width: "36px", height: "36px" }}></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggleNav} />
-            <Collapse className isOpen={isOpen} navbar>
+            <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto">
                     <NavItem>
                         <NavLink className="text-light" href="/">Expenses</NavLink>
