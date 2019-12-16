@@ -25,7 +25,7 @@ function NavSection(props) {
     return <div>
         <Navbar className="bg-dark" dark expand="lg">
             <NavbarBrand className="text-white" href="/">
-                <img src="/img/icon/money_13.png" style={{ width: "3rem", height: "3rem" }}></img>
+                <img src="/img/icon/logo.png" style={{ width: "3rem", height: "3rem" }}></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggleNav} />
             <Collapse isOpen={isOpen} navbar>

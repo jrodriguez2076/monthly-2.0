@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Button } from 'reactstrap';
+import { Button,Row } from 'reactstrap';
 
 import NavSection from './components/NavSection';
 import ExpenseTotal from './components/ExpenseTotal';
-import ActionButton from './components/ActionButton'
+import ActionButton from './components/ActionButton';
+import AddExpense from './components/AddExpense';
 
 const title = 'More functions coming soon...';
 
@@ -19,10 +20,14 @@ function App() {
       </div>
       <div className="container">
         <div >
-          <ActionButton></ActionButton>
+          <Row>
+            <ActionButton Feature="expense"></ActionButton>
+            <ActionButton Feature="income"></ActionButton>
+            <ActionButton Feature="budget"></ActionButton>
+          </Row>
         </div>
         <div className="row">
-          <h1 className="col-lg-4 offset-lg-4">{title}</h1>
+          <AddExpense></AddExpense>
         </div>
       </div>
     </div>
