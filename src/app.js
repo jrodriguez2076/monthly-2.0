@@ -7,7 +7,6 @@ import { Button,Row } from 'reactstrap';
 import NavSection from './components/NavSection';
 import ExpenseTotal from './components/ExpenseTotal';
 import ActionButton from './components/ActionButton';
-import AddExpense from './components/AddExpense';
 
 const title = 'More functions coming soon...';
 
@@ -27,7 +26,6 @@ function App() {
           </Row>
         </div>
         <div className="row">
-          <AddExpense></AddExpense>
         </div>
       </div>
     </div>

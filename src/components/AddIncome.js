@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
-const AddExpense = (props) => {
+const AddIncome = (props) => {
     return (
         <Form>
             <FormGroup>
@@ -24,7 +24,7 @@ const AddExpense = (props) => {
                 />
             </FormGroup>
             <FormGroup>
-                <Label for="user">Who made the expense?</Label>
+                <Label for="user">Who made the INCOME?</Label>
                 <Input type="select" name="user" id="user">
                     <option>Jose</option>
                     <option>Ana</option>
@@ -62,4 +62,4 @@ const AddExpense = (props) => {
 }
 
 
-export default AddExpense
+export default AddIncome
