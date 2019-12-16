@@ -23,9 +23,9 @@ function NavSection(props) {
     const toggleNav = () => setIsOpen(!isOpen)
 
     return <div>
-        <Navbar className="bg-dark" dark expand="md">
+        <Navbar className="bg-dark" dark expand="lg">
             <NavbarBrand className="text-white" href="/">
-                <img src="/img/icon/money_13.png" style={{ width: "36px", height: "36px" }}></img>
+                <img src="/img/icon/money_13.png" style={{ width: "3rem", height: "3rem" }}></img>
             </NavbarBrand>
             <NavbarToggler onClick={toggleNav} />
             <Collapse isOpen={isOpen} navbar>
