@@ -15,7 +15,7 @@ const AddExpense = (props) => {
                 />
             </FormGroup>
             <FormGroup>
-                <Label for="amount">Number</Label>
+                <Label for="amount">Amount</Label>
                 <Input
                     type="number"
                     name="number"
