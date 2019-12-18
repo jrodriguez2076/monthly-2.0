@@ -3,8 +3,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddExpense = (props) => {
+
+    const handleKeyPress=(event) =>{
+        event.preventDefault()
+        console.log(event);
+        // props.handleSubmit();
+    }
+
     return (
-        <Form>
+        <Form onSubmit={handleKeyPress}>
             <FormGroup>
                 <Label for="expenseDate">Date</Label>
                 <Input
@@ -57,6 +64,7 @@ const AddExpense = (props) => {
                     <Input type="checkbox" /> Paid in cash
                 </Label>
             </FormGroup>
+            <Button type="submit">Submit</Button>
         </Form >
     )
 }

@@ -19,7 +19,7 @@ const ActionButton = (props) => {
     iconPath = "/img/icon/".concat(props.Feature, ".png");
     return (
 
-        <Col lg="4">
+        <Col lg="4" className="d-flex justify-content-center">
             <div id="quick-access" className="text-center" >
                 <Ripples className="text-center" >
                     <Card body className="text-center" style={{ width: "20rem" }} onClick={toggle}>

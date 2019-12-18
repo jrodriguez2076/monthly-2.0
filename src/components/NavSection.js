@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { Link } from 'react-router-dom';
+
+
 import {
     Collapse,
     Navbar,
@@ -31,13 +34,22 @@ function NavSection(props) {
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto">
                     <NavItem>
-                        <NavLink className="text-light" href="/">Expenses</NavLink>
+                        <Link to="/expenses">
+                            <p>expenses</p>
+                            {/* <NavLink className="text-light">Expenses</NavLink> */}
+                        </Link>
                     </NavItem>
                     <NavItem>
-                        <NavLink className="text-light" href="/">Incomes</NavLink>
+                        <Link to="/incomes">
+                        <p>incomes</p>
+                            {/* <NavLink className="text-light">Incomes</NavLink> */}
+                        </Link>
                     </NavItem>
                     <NavItem>
-                        <NavLink className="text-light" href="/">Budgets</NavLink>
+                        <Link to="/budgets">
+                        <p>budgets</p>
+                            {/* <NavLink className="text-light">Budgets</NavLink> */}
+                        </Link>
                     </NavItem>
                     <NavItem>
                         <NavLink className="text-light" href="/">Goals!</NavLink>

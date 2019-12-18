@@ -6,6 +6,10 @@ const AddBudget = (props) => {
     return (
         <Form>
             <FormGroup>
+                <Label for="name">Budget Name</Label>
+                <Input type="text" name="name" id="name" />
+            </FormGroup>
+            <FormGroup>
                 <Label for="amount">Budget Amount</Label>
                 <Input
                     type="number"
@@ -15,8 +19,8 @@ const AddBudget = (props) => {
                 />
             </FormGroup>
             <FormGroup>
-                <Label for="name">Budget Name</Label>
-                <Input type="textarea" name="name" id="name" />
+                <Label for="description">Enter a brief budget description</Label>
+                <Input type="textarea" name="description" id="description" />
             </FormGroup>
             <p>Icon Selection Here...</p>
         </Form >

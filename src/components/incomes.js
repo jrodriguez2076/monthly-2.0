@@ -4,25 +4,25 @@ import {
   CardSubtitle, CardBody
 } from 'reactstrap';
 
-const Budgets = (props) => {
+const Incomes = (props) => {
   return (
     <CardDeck className="text-center">
       <Card>
-        <CardImg className="mx-auto" top width="100%" src="/img/icon/budget.png" style={{ width: "10rem" }} alt="Card image cap" />
+        <CardImg className="mx-auto" top width="100%" src="/img/icon/income.png" style={{width:"10rem"}} alt="Card image cap" />
         <CardBody>
           <CardTitle>Card title</CardTitle>
           <CardText>This card has supporting text below as a natural lead-in to additional content.</CardText>
         </CardBody>
       </Card>
       <Card>
-        <CardImg className="mx-auto" top width="100%" src="/img/icon/budget.png" style={{ width: "10rem" }} alt="Card image cap" />
+        <CardImg className="mx-auto" top width="100%" src="/img/icon/income.png" style={{width:"10rem"}} alt="Card image cap" />
         <CardBody>
           <CardTitle>Card title</CardTitle>
           <CardText>This card has supporting text below as a natural lead-in to additional content.</CardText>
         </CardBody>
       </Card>
       <Card>
-        <CardImg className="mx-auto" top width="100%" src="/img/icon/budget.png" style={{ width: "10rem" }} alt="Card image cap" />
+        <CardImg className="mx-auto" top width="100%" src="/img/icon/income.png" style={{width:"10rem"}} alt="Card image cap" />
         <CardBody>
           <CardTitle>Card title</CardTitle>
           <CardText>This card has supporting text below as a natural lead-in to additional content.</CardText>
@@ -32,4 +32,4 @@ const Budgets = (props) => {
   );
 };
 
-export default Budgets;
+export default Incomes;
