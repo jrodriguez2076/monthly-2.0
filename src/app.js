@@ -2,23 +2,38 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Button } from 'reactstrap';
+import { Button, Row, Container } from 'reactstrap';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import NavSection from './components/NavSection';
+import ExpenseTotal from './components/ExpenseTotal';
+import ActionButton from './components/ActionButton';
+import LatestExpenses from './components/LatestExpenses';
+import Pagination from './components/Pagination';
+import Budgets from './components/Budgets';
+import Home from './components/Home';
+import Incomes from './components/incomes';
 
-const title = 'Welcome to the next step';
+const title = 'More functions coming soon...';
 
-function Welcome() {
+function App() {
   return (
-    <div>
-      <NavSection></NavSection>
-      <h1>{title}</h1>
-      <p>now we will start with the actual design</p>
-    </div>
+    <Router>
+      <div>
+        <NavSection></NavSection>
+
+        <Switch>
+          <Route path="/expenses" exact component={LatestExpenses} />
+          <Route path="/incomes" exact component={Incomes} />
+          <Route path="/budgets" exact component={Budgets} />
+          <Route path="/" exact component={Home} />
+        </Switch>
+      </div>
+    </Router>
   )
 }
 
 ReactDOM.render(
-  <Welcome />,
+  <App />,
   document.getElementById('app')
 );
