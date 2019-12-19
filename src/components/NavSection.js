@@ -34,26 +34,26 @@ function NavSection(props) {
             <Collapse isOpen={isOpen} navbar>
                 <Nav className="mr-auto">
                     <NavItem>
-                        <Link to="/expenses">
-                            <p>expenses</p>
+                        <Link className="text-light nav-link" to="/expenses"> Expenses
+                            {/* <p>expenses</p> */}
                             {/* <NavLink className="text-light">Expenses</NavLink> */}
                         </Link>
                     </NavItem>
                     <NavItem>
-                        <Link to="/incomes">
-                        <p>incomes</p>
+                        <Link className="text-light nav-link" to="/incomes"> Incomes
+                        {/* <p>incomes</p> */}
                             {/* <NavLink className="text-light">Incomes</NavLink> */}
                         </Link>
                     </NavItem>
                     <NavItem>
-                        <Link to="/budgets">
-                        <p>budgets</p>
+                        <Link className="text-light nav-link" to="/budgets"> Budgets
+                        {/* <p>budgets</p> */}
                             {/* <NavLink className="text-light">Budgets</NavLink> */}
                         </Link>
                     </NavItem>
-                    <NavItem>
+                    {/* <NavItem>
                         <NavLink className="text-light" href="/">Goals!</NavLink>
-                    </NavItem>
+                    </NavItem> */}
                 </Nav>
             </Collapse>
         </Navbar>
