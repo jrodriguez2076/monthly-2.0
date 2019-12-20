@@ -26,5 +26,4 @@ module.exports = {
     historyApiFallback: true
 
   }
-
 };

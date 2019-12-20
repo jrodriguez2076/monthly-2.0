@@ -30,6 +30,7 @@ const AddIncome = (props) => {
                     <Input type="checkbox" /> This is a monthly income
                 </Label>
             </FormGroup>
+            
         </Form >
     )
 }
