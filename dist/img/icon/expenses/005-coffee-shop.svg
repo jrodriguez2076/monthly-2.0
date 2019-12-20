@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512" height="512">
+<g>
+	<rect x="192" y="351.5" style="fill:#8CA4B8;" width="240" height="56"/>
+	<rect x="408" y="351.5" style="fill:#627B8C;" width="24" height="56"/>
+	<rect x="192" y="199.5" style="fill:#A6E7FF;" width="240" height="152"/>
+	<rect x="408" y="199.5" style="fill:#2AC3F2;" width="24" height="152"/>
+	<rect x="80" y="199.5" style="fill:#A6E7FF;" width="112" height="208"/>
+	<polygon style="fill:#FF907A;" points="384,63.5 448,127.5 448,199.5 64,199.5 64,127.5 128,63.5  "/>
+	<g>
+		<g>
+			<rect x="280" y="88" style="fill:#FFFFFF;" width="16" height="15"/>
+		</g>
+		<g>
+			<rect x="248" y="88" style="fill:#FFFFFF;" width="16" height="15"/>
+		</g>
+		<g>
+			<rect x="216" y="88" style="fill:#FFFFFF;" width="16" height="15"/>
+		</g>
+	</g>
+	<rect x="64" y="175.5" style="fill:#FF512E;" width="384" height="24"/>
+	<g>
+		<path style="fill:#FFFFFF;" d="M368,295.5L368,295.5c-13.255,0-24-10.745-24-24v-24h48v24C392,284.755,381.255,295.5,368,295.5z"/>
+		<g>
+			<rect x="212.402" y="252" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 613.6847 264.8051)" width="79.196" height="15"/>
+			<rect x="224.5" y="216.873" transform="matrix(0.7071 0.7071 -0.7071 0.7071 237.3033 -93.9008)" width="15" height="45.255"/>
+			<rect x="112" y="32.5" width="288" height="15"/>
+			<path d="M439,400.5v-193h16v-72h17v-15h-20.894l-64-64H124.894l-64,64H40v15h16v72h16v193H0v15h512v-15H439z M440,192.5h-17v-9     h17V192.5z M440,168.5h-17v-33h17V168.5z M131.106,71.5h249.787l49,49H82.106L131.106,71.5z M391,168.5v-33h17v33H391z      M408,183.5v9h-17v-9H408z M359,168.5v-33h17v33H359z M376,183.5v9h-17v-9H376z M327,168.5v-33h17v33H327z M344,183.5v9h-17v-9     H344z M216,183.5v9h-17v-9H216z M199,168.5v-33h17v33H199z M304,207.5v137H199v-137H304z M248,183.5v9h-17v-9H248z M231,168.5     v-33h17v33H231z M280,183.5v9h-17v-9H280z M263,168.5v-33h17v33H263z M295,192.5v-9h17v9H295z M295,168.5v-33h17v33H295z      M135,168.5v-33h17v33H135z M152,183.5v9h-17v-9H152z M103,168.5v-33h17v33H103z M120,183.5v9h-17v-9H120z M71,135.5h17v33H71     V135.5z M71,192.5v-9h17v9H71z M184,400.5H87v-193h97V400.5z M184,192.5h-17v-9h17V192.5z M184,168.5h-17v-33h17V168.5z      M424,400.5H199v-41h225V400.5z M424,344.5H319v-137h105V344.5z"/>
+			<rect x="320" y="432.5" width="160" height="15"/>
+			<rect x="32" y="432.5" width="272" height="15"/>
+			<rect x="64" y="464.5" width="384" height="15"/>
+			<rect x="152" y="287.5" width="15" height="32"/>
+			<path d="M408,296.5h-20.232c7.149-6,11.232-15.113,11.232-25h17v-15h-17v-16h-63v31c0,9.887,5.083,19,12.232,25H328v15h80V296.5z      M384,271.5c0,9.098-7.402,16.5-16.5,16.5s-16.5-7.402-16.5-16.5v-16h33V271.5z"/>
+		</g>
+	</g>
+</g>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</svg>

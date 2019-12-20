@@ -1,8 +1,10 @@
 import express from 'express';
 import path, { dirname } from 'path';
 import 'dotenv/config';
+var fs = require('fs');
 
 const app = express();
+
 
 // Middlewares
 
@@ -16,92 +18,109 @@ app.use((req, res, next) => {
 // Routes
 
 // Expenses API
+app.get('/api/icons', (req, res) => {
+    if (req.query.section) {
+        let iconSection = req.query.section;
+        const dir = "dist/img/icon/".concat(iconSection);
 
-app.get('/api/expenses', (req,res)=>{
-    if (req.query.month){
+        fs.readdir(dir, (err, files) => {
+            try {
+                res.send(`There are ${files.length} in ${dir}`);
+            }
+            catch{
+                res.send('ERROR!!')
+            }
+        });
+
+    }
+    else res.send('no icons found in this folder');
+});
+
+app.get('/api/expenses', (req, res) => {
+    if (req.query.month) {
         let month;
         month = req.query.month;
-        res.send(`Here are the expenses for ${month}`);        
+        res.send(`Here are the expenses for ${month}`);
     }
     else res.send('Here we will get the expenses');
 });
 
-app.post('/api/expenses', (req,res)=>{
+app.post('/api/expenses', (req, res) => {
     res.send('Here we will POST expenses')
 });
 
-app.put('/api/expenses', (req,res)=>{
+app.put('/api/expenses', (req, res) => {
     res.send('Here we will UPDATE expenses')
 });
 
-app.delete('/api/expenses', (req,res)=>{
+app.delete('/api/expenses', (req, res) => {
     res.send('Here we will DELETE expenses')
 });
 
 // incomes API
 
-app.get('/api/incomes', (req,res)=>{
-    if (req.query.month){
+app.get('/api/incomes', (req, res) => {
+    if (req.query.month) {
         let month;
         month = req.query.month;
-        res.send(`Here are the incomes for ${month}`);        
+        res.send(`Here are the incomes for ${month}`);
     }
     else res.send('Here we will get the incomes');
 });
 
-app.post('/api/incomes', (req,res)=>{
+app.post('/api/incomes', (req, res) => {
     res.send('Here we will POST incomes')
 });
 
-app.put('/api/incomes', (req,res)=>{
+app.put('/api/incomes', (req, res) => {
     res.send('Here we will UPDATE incomes')
 });
 
-app.delete('/api/incomes', (req,res)=>{
+app.delete('/api/incomes', (req, res) => {
     res.send('Here we will DELETE incomes')
 });
 
 // Budgets API
 
-app.get('/api/budgets', (req,res)=>{
+app.get('/api/budgets', (req, res) => {
     res.send('Here we will get the BUDGETS')
 });
 
-app.post('/api/budgets', (req,res)=>{
+app.post('/api/budgets', (req, res) => {
     res.send('Here we will POST the BUDGETS')
 });
 
-app.put('/api/budgets', (req,res)=>{
+app.put('/api/budgets', (req, res) => {
     res.send('Here we will UPDATE the BUDGETS')
 });
 
-app.delete('/api/budgets', (req,res)=>{
+app.delete('/api/budgets', (req, res) => {
     res.send('Here we will DELETE the BUDGETS')
 });
 
 // Goals API
 
-app.get('/api/goals', (req,res)=>{
+app.get('/api/goals', (req, res) => {
     res.send('Here we will get the GOALS')
 });
 
-app.post('/api/goals', (req,res)=>{
+app.post('/api/goals', (req, res) => {
     res.send('Here we will POST new GOALS')
 });
 
-app.delete('/api/budgets', (req,res)=>{
+app.delete('/api/budgets', (req, res) => {
     res.send('Here we will DELETE the GOALS')
 });
 
-app.get('*', (req,res)=>{
-    res.sendFile(path.join(process.cwd(),"dist","index.html"))
+app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), "dist", "index.html"))
 });
 
 
 // Server Start
 
 app.listen(process.env.PORT, () => {
-    console.log(`Now listening on port ${process.env.PORT}`);app.use((req, res, next) => {
-    next();
-});
+    console.log(`Now listening on port ${process.env.PORT}`); app.use((req, res, next) => {
+        next();
+    });
 })
