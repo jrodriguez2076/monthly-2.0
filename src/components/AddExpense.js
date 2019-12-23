@@ -61,7 +61,17 @@ const AddExpense = (props) => {
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" /> Paid in cash
+                    <Input type="checkbox" /> Cash
+                </Label>
+            </FormGroup>
+            <FormGroup check>
+                <Label check>
+                    <Input type="checkbox" /> Electronic
+                </Label>
+            </FormGroup>
+            <FormGroup check>
+                <Label check>
+                    <Input type="checkbox" /> Credit
                 </Label>
             </FormGroup>
             <Button type="submit">Submit</Button>
