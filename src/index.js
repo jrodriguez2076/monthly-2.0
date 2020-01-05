@@ -5,6 +5,98 @@ var fs = require('fs');
 
 const app = express();
 
+const expenseQuery = {
+    "11": [
+        {
+            "user": "Jose",
+            "date": "12/12/2019",
+            "location": "Villa Urquiza",
+            "amount": 5000,
+            "description": "Christmas Dinner"
+        },
+        {
+            "user": "Ana",
+            "date": "5/12/2019",
+            "location": "Villa Urquiza",
+            "amount": 400,
+            "description": "Christmas gift"
+        },
+        {
+            "user": "Ana",
+            "date": "6/12/2019",
+            "location": "Villa Urquiza",
+            "amount": 1000,
+            "description": "Taxi"
+        },
+        {
+            "user": "Jose",
+            "date": "1/12/2019",
+            "location": "Microcentro",
+            "amount": 500,
+            "description": "Gift"
+        },
+    ],
+    "0": [
+        {
+            "user": "Ana",
+            "date": "1/1/2019",
+            "location": "Villa Urquiza",
+            "amount": 600,
+            "description": "Christmas Dinner"
+        },
+        {
+            "user": "Ana",
+            "date": "5/1/2019",
+            "location": "Villa Urquiza",
+            "amount": 4600,
+            "description": "Christmas gift"
+        },
+        {
+            "user": "Jose",
+            "date": "6/1/2019",
+            "location": "Villa Urquiza",
+            "amount": 15900,
+            "description": "Rent"
+        },
+        {
+            "user": "Jose",
+            "date": "12/1/2019",
+            "location": "Microcentro",
+            "amount": 1500,
+            "description": "Birthday Gift"
+        },
+    ],
+    "1": [
+        {
+            "user": "Jose",
+            "date": "16/2/2019",
+            "location": "Villa Urquiza",
+            "amount": 5000,
+            "description": "stuff"
+        },
+        {
+            "user": "Ana",
+            "date": "18/2/2019",
+            "location": "Villa Urquiza",
+            "amount": 4050,
+            "description": "more stuff"
+        },
+        {
+            "user": "Ana",
+            "date": "6/2/2019",
+            "location": "Villa Martelli",
+            "amount": 300,
+            "description": "another Taxi"
+        },
+        {
+            "user": "Jose",
+            "date": "8/2/2019",
+            "location": "Microcentro",
+            "amount": 5600,
+            "description": "yet more stuff"
+        },
+    ],
+}
 
 // Middlewares
 
@@ -40,7 +132,8 @@ app.get('/api/expenses', (req, res) => {
     if (req.query.month) {
         let month;
         month = req.query.month;
-        res.send(`Here are the expenses for ${month}`);
+        console.log("Fetching latest expenses for the month...")
+        res.send(expenseQuery[month]);
     }
     else res.send('Here we will get the expenses');
 });
