@@ -40,28 +40,28 @@ const expenseQuery = {
         {
             "user": "Ana",
             "date": "1/1/2019",
-            "location": "Villa Urquiza",
+            "location": "Vicente Lopez",
             "amount": 600,
             "description": "Christmas Dinner"
         },
         {
             "user": "Ana",
             "date": "5/1/2019",
-            "location": "Villa Urquiza",
+            "location": "Urquiza",
             "amount": 4600,
             "description": "Christmas gift"
         },
         {
             "user": "Jose",
             "date": "6/1/2019",
-            "location": "Villa Urquiza",
+            "location": "Mar del Plata",
             "amount": 15900,
             "description": "Rent"
         },
         {
             "user": "Jose",
             "date": "12/1/2019",
-            "location": "Microcentro",
+            "location": "Iguazu",
             "amount": 1500,
             "description": "Birthday Gift"
         },
@@ -98,6 +98,27 @@ const expenseQuery = {
     ],
 }
 
+const budgets = [
+    {
+        "name": "Rent",
+        "amount": 10000,
+        "description": "Rent for the month",
+        "icon": "004-house.svg",
+    },
+    {
+        "name": "Vacations",
+        "amount": 8850,
+        "description": "plane tickets, hotels, events, suitcases, etc.",
+        "icon": "aircraft.png",
+    },
+    {
+        "name": "Food",
+        "amount": 10000,
+        "description": "Food for market, meals, take-outs and out-of-house foods",
+        "icon": "034-store.svg",
+    }
+]
+
 // Middlewares
 
 app.use(express.static('dist'));
@@ -113,17 +134,30 @@ app.use((req, res, next) => {
 app.get('/api/icons', (req, res) => {
     if (req.query.section) {
         let iconSection = req.query.section;
-        const dir = "dist/img/icon/".concat(iconSection);
+        const prefix = "dist/img/icon/";
+        const dir = prefix.concat(iconSection);
+        let iconPath = "";
+
+        var options = {
+            root: path.join(process.cwd(), prefix),
+            dotfiles: 'deny'
+        };
+
+        if (req.query.iconid) {
+            let icon = req.query.iconid;
+            iconPath = path.join(iconSection, icon)
+            console.log(iconPath)
+        }
 
         fs.readdir(dir, (err, files) => {
             try {
-                res.send(`There are ${files.length} in ${dir}`);
+                res.set({ 'Content-Type': 'image/png' });
+                res.sendFile(iconPath, options);
             }
             catch{
-                res.send('ERROR!!')
+                res.send(err)
             }
         });
-
     }
     else res.send('no icons found in this folder');
 });
@@ -176,7 +210,8 @@ app.delete('/api/incomes', (req, res) => {
 // Budgets API
 
 app.get('/api/budgets', (req, res) => {
-    res.send('Here we will get the BUDGETS')
+    console.log("getting the budgets...")
+    res.send(budgets)
 });
 
 app.post('/api/budgets', (req, res) => {

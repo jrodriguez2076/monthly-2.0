@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Table, Jumbotron, Container } from 'reactstrap';
 
 import Pagination from './Pagination';
-import ExpenseTotal from './ExpenseTotal';
+import ExpenseItem from './ExpenseItem';
 
 
 const LatestExpenses = (props) => {
@@ -19,8 +19,7 @@ const LatestExpenses = (props) => {
 
     const getLatestExpenses = () => {
         let d = new Date();
-        console.log(d.getMonth());
-        fetch(`http://localhost:3000/api/expenses?month=${d.getMonth()}`)
+        fetch(`/api/expenses?month=${d.getMonth()}`)
             .then(data => { return data.json() }
             )
             .then(res => {
@@ -39,7 +38,7 @@ const LatestExpenses = (props) => {
                 </Container>
             </Jumbotron>
             <div className="row text-center">
-                <Table>
+                <Table responsive>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -50,26 +49,19 @@ const LatestExpenses = (props) => {
                             <th>Description</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {Expenses.map((item)=>{
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>{item.user} hola</td>
-                                <td>{item.date}</td>
-                                <td>{item.location}</td>
-                                <td>{item.amount}</td>
-                                <td>{item.description}</td>
-                            </tr>
-                        })}
-
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jose</td>
-                            <td>16/12/2019</td>
-                            <td>Home</td>
-                            <td>ARS 500</td>
-                            <td>Dinner</td>
+                    {/* <tbody> */}
+                    <ExpenseItem expenses={Expenses}></ExpenseItem>
+                    {/* <tr>
+                            <div>
+                                <th scope="row">2</th>
+                                <td>Jose</td>
+                                <td>16/12/2019</td>
+                                <td>Home</td>
+                                <td>ARS 500</td>
+                                <td>Dinner</td>
+                            </div>
                         </tr>
+
                         <tr>
                             <th scope="row">3</th>
                             <td>Ana</td>
@@ -78,7 +70,7 @@ const LatestExpenses = (props) => {
                             <td>ARS 200</td>
                             <td>Uber Ride</td>
                         </tr>
-                    </tbody>
+                    </tbody> */}
                 </Table>
             </div>
             <div className="row d-flex justify-content-center">

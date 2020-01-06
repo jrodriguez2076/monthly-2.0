@@ -2,6 +2,7 @@
   "name": "monthly-2.0",
   "version": "1.0.0",
   "description": "",
+  "proxy": "http://localhost:3000",
   "main": "index.js",
   "scripts": {
     "start": "webpack --watch --config ./webpack.config.js --mode development",
