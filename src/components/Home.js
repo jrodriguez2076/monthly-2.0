@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Button, Row, Container } from 'reactstrap';
@@ -8,18 +7,31 @@ import { Button, Row, Container } from 'reactstrap';
 import ActionButton from './ActionButton';
 import ExpenseTotal from './ExpenseTotal';
 
-const title = 'More functions coming soon...';
-
 const Home = (props) => {
     useEffect(() => changeTotalExpense(), []);
 
     const [Amount, setAmount] = useState(0);
 
-    const changeTotalExpense = () => {  
-        setAmount(10000)
-    };
     
-    const toCurrency = (number)=> {
+
+    const changeTotalExpense = () => {
+        let d = new Date();
+        fetch(`/api/expenses?month=${d.getMonth()}`)
+            .then(data => { return data.json() }
+            )
+            .then(res => {
+                console.log(res)
+                let total = 0;
+                for (const el of res){
+                    total += el.amount
+                    console.log(total)
+                }
+                setAmount(total)
+            })
+        
+    };
+
+    const toCurrency = (number) => {
         return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
     }
 
@@ -31,7 +43,7 @@ const Home = (props) => {
             <Container>
                 <div >
                     <Row className="d-flex justify-content-center">
-                        <ActionButton Feature="expense"  HandleNewExpense=""></ActionButton>
+                        <ActionButton Feature="expense" HandleNewExpense=""></ActionButton>
                         <ActionButton Feature="income"></ActionButton>
                         <ActionButton Feature="budget"></ActionButton>
                     </Row>

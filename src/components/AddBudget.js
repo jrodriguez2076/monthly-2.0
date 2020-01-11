@@ -78,6 +78,11 @@ const AddBudget = (props) => {
                 <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect8">
                 </Input>
             </FormGroup>
+            <FormGroup check>
+                <Label check>
+                    <Input type="checkbox" /> This is a monthly budget
+                </Label>
+            </FormGroup>
         </Form >
     )
 }
