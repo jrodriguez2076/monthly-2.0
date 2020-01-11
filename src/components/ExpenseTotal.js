@@ -11,7 +11,7 @@ const ExpenseTotal = (props) => {
                     <h1 className="display-3"> {props.currency} {props.totalMonthlyAmount} </h1>
                     <p>Have been spent this month</p>
                     <hr></hr>
-                    <p> this is above/below the average spent during the previous months</p>
+                    {/* <p> this is above/below the average spent during the previous months</p> */}
                 </Container>
             </Jumbotron>
         // </div>

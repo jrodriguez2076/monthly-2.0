@@ -5,6 +5,8 @@ import {
 } from 'reactstrap';
 
 import BudgetItem from './BudgetItem'
+import ActionButton from './ActionButton';
+
 
 const Budgets = (props) => {
 
@@ -40,22 +42,10 @@ const Budgets = (props) => {
         </Container>
       </Jumbotron>
       <BudgetItem budgets={Budgets}></BudgetItem>
-
-      {/* <Card>
-          <CardImg className="mx-auto" top width="100%" src="/img/icon/budget.png" style={{ width: "10rem" }} alt="Card image cap" />
-          <CardBody>
-            <CardTitle>Card title</CardTitle>
-            <CardText>This card has supporting text below as a natural lead-in to additional content.</CardText>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardImg className="mx-auto" top width="100%" src="/img/icon/budget.png" style={{ width: "10rem" }} alt="Card image cap" />
-          <CardBody>
-            <CardTitle>Card title</CardTitle>
-            <CardText>This card has supporting text below as a natural lead-in to additional content.</CardText>
-          </CardBody>
-        </Card>
-      </CardDeck> */}
+      <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
+      <div className="d-flex justify-content-center">
+        <ActionButton Feature="budget"></ActionButton>
+      </div>
     </div>
   );
 };

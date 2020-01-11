@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Button, Row, Container } from 'reactstrap';
@@ -7,10 +6,6 @@ import { Button, Row, Container } from 'reactstrap';
 
 import ActionButton from './ActionButton';
 import ExpenseTotal from './ExpenseTotal';
-import ExpenseItem from './ExpenseItem';
-
-
-const title = 'More functions coming soon...';
 
 const Home = (props) => {
     useEffect(() => changeTotalExpense(), []);

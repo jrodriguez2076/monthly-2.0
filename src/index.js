@@ -119,6 +119,38 @@ const budgets = [
     }
 ]
 
+const incomes = [
+    {
+        "user": "Jose",
+        "amount": 20000,
+        "description": "base salary",
+        "icon": "dragon.png",
+        "monthly": true
+    },
+    {
+        "user": "Ana",
+        "amount": 20000,
+        "description": "base salary",
+        "icon": "duck.png",
+        "monthly": true
+    }
+]
+
+const users = [
+    {
+        "name":"Jose",
+        "lastName":"Rodriguez",
+        "avatar":"dragon.png",
+        "email":"myplaceholder@gmail.com"
+    },
+    {
+        "name":"Ana",
+        "lastName":"Smith",
+        "avatar":"duck.png",
+        "email":"myotherplaceholder@gmail.com"
+    }
+]
+
 // Middlewares
 
 app.use(express.static('dist'));
@@ -187,12 +219,8 @@ app.delete('/api/expenses', (req, res) => {
 // incomes API
 
 app.get('/api/incomes', (req, res) => {
-    if (req.query.month) {
-        let month;
-        month = req.query.month;
-        res.send(`Here are the incomes for ${month}`);
-    }
-    else res.send('Here we will get the incomes');
+    console.log("getting the incomes...")
+    res.send(incomes);
 });
 
 app.post('/api/incomes', (req, res) => {
@@ -240,9 +268,31 @@ app.delete('/api/budgets', (req, res) => {
     res.send('Here we will DELETE the GOALS')
 });
 
+//Users API
+
+app.get('/api/users', (req, res) => {
+    console.log("getting the users...")
+    res.send(users)
+});
+
+app.post('/api/budgets', (req, res) => {
+    res.send('Here we will POST the USERS')
+});
+
+app.put('/api/budgets', (req, res) => {
+    res.send('Here we will UPDATE the USERS')
+});
+
+app.delete('/api/budgets', (req, res) => {
+    res.send('Here we will DELETE the USERS')
+});
+
+//main index file
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(process.cwd(), "dist", "index.html"))
 });
+
 
 
 // Server Start

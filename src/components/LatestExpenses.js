@@ -4,6 +4,8 @@ import { Button, Table, Jumbotron, Container } from 'reactstrap';
 
 import Pagination from './Pagination';
 import ExpenseItem from './ExpenseItem';
+import ActionButton from './ActionButton';
+
 
 
 const LatestExpenses = (props) => {
@@ -49,32 +51,15 @@ const LatestExpenses = (props) => {
                             <th>Description</th>
                         </tr>
                     </thead>
-                    {/* <tbody> */}
                     <ExpenseItem expenses={Expenses}></ExpenseItem>
-                    {/* <tr>
-                            <div>
-                                <th scope="row">2</th>
-                                <td>Jose</td>
-                                <td>16/12/2019</td>
-                                <td>Home</td>
-                                <td>ARS 500</td>
-                                <td>Dinner</td>
-                            </div>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Ana</td>
-                            <td>16/12/2019</td>
-                            <td>Villa Urquiza</td>
-                            <td>ARS 200</td>
-                            <td>Uber Ride</td>
-                        </tr>
-                    </tbody> */}
                 </Table>
             </div>
             <div className="row d-flex justify-content-center">
                 <Pagination></Pagination>
+            </div>
+            <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
+            <div className="d-flex justify-content-center">
+                <ActionButton Feature="expense"></ActionButton>
             </div>
         </div>
     );
