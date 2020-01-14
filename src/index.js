@@ -224,7 +224,9 @@ app.get('/api/incomes', (req, res) => {
 });
 
 app.post('/api/incomes', (req, res) => {
-    res.send('Here we will POST incomes')
+    let newIncome = req.body;
+    incomes.push(newIncome);
+    res.send(`successfully posted new income: ${newIncome}`)
 });
 
 app.put('/api/incomes', (req, res) => {
