@@ -8,6 +8,7 @@ const app = express();
 const expenseQuery = {
     "11": [
         {
+            "id": 1,
             "user": "Jose",
             "date": "12/12/2019",
             "location": "Villa Urquiza",
@@ -15,6 +16,7 @@ const expenseQuery = {
             "description": "Christmas Dinner"
         },
         {
+            "id": 2,
             "user": "Ana",
             "date": "5/12/2019",
             "location": "Villa Urquiza",
@@ -22,6 +24,7 @@ const expenseQuery = {
             "description": "Christmas gift"
         },
         {
+            "id": 3,
             "user": "Ana",
             "date": "6/12/2019",
             "location": "Villa Urquiza",
@@ -29,6 +32,7 @@ const expenseQuery = {
             "description": "Taxi"
         },
         {
+            "id": 4,
             "user": "Jose",
             "date": "1/12/2019",
             "location": "Microcentro",
@@ -38,6 +42,7 @@ const expenseQuery = {
     ],
     "0": [
         {
+            "id": 5,
             "user": "Ana",
             "date": "1/1/2019",
             "location": "Vicente Lopez",
@@ -45,6 +50,7 @@ const expenseQuery = {
             "description": "Christmas Dinner"
         },
         {
+            "id": 6,
             "user": "Ana",
             "date": "5/1/2019",
             "location": "Urquiza",
@@ -52,6 +58,7 @@ const expenseQuery = {
             "description": "Christmas gift"
         },
         {
+            "id": 7,
             "user": "Jose",
             "date": "6/1/2019",
             "location": "Mar del Plata",
@@ -59,6 +66,7 @@ const expenseQuery = {
             "description": "Rent"
         },
         {
+            "id": 8,
             "user": "Jose",
             "date": "12/1/2019",
             "location": "Iguazu",
@@ -68,6 +76,7 @@ const expenseQuery = {
     ],
     "1": [
         {
+            "id": 9,
             "user": "Jose",
             "date": "16/2/2019",
             "location": "Villa Urquiza",
@@ -75,6 +84,7 @@ const expenseQuery = {
             "description": "stuff"
         },
         {
+            "id": 10,
             "user": "Ana",
             "date": "18/2/2019",
             "location": "Villa Urquiza",
@@ -82,6 +92,7 @@ const expenseQuery = {
             "description": "more stuff"
         },
         {
+            "id": 11,
             "user": "Ana",
             "date": "6/2/2019",
             "location": "Villa Martelli",
@@ -89,6 +100,7 @@ const expenseQuery = {
             "description": "another Taxi"
         },
         {
+            "id": 12,
             "user": "Jose",
             "date": "8/2/2019",
             "location": "Microcentro",
@@ -100,18 +112,21 @@ const expenseQuery = {
 
 const budgets = [
     {
+        "id": 1,
         "name": "Rent",
         "amount": 10000,
         "description": "Rent for the month",
         "icon": "004-house.svg",
     },
     {
+        "id": 2,
         "name": "Vacations",
         "amount": 8850,
         "description": "plane tickets, hotels, events, suitcases, etc.",
         "icon": "aircraft.png",
     },
     {
+        "id": 3,
         "name": "Food",
         "amount": 10000,
         "description": "Food for market, meals, take-outs and out-of-house foods",
@@ -121,6 +136,7 @@ const budgets = [
 
 const incomes = [
     {
+        "id": 1,
         "user": "Jose",
         "amount": 20000,
         "description": "base salary",
@@ -128,6 +144,7 @@ const incomes = [
         "monthly": true
     },
     {
+        "id": 2,
         "user": "Ana",
         "amount": 20000,
         "description": "base salary",
@@ -138,16 +155,16 @@ const incomes = [
 
 const users = [
     {
-        "name":"Jose",
-        "lastName":"Rodriguez",
-        "avatar":"dragon.png",
-        "email":"myplaceholder@gmail.com"
+        "name": "Jose",
+        "lastName": "Rodriguez",
+        "avatar": "dragon.png",
+        "email": "myplaceholder@gmail.com"
     },
     {
-        "name":"Ana",
-        "lastName":"Smith",
-        "avatar":"duck.png",
-        "email":"myotherplaceholder@gmail.com"
+        "name": "Ana",
+        "lastName": "Smith",
+        "avatar": "duck.png",
+        "email": "myotherplaceholder@gmail.com"
     }
 ]
 
@@ -205,7 +222,16 @@ app.get('/api/expenses', (req, res) => {
 });
 
 app.post('/api/expenses', (req, res) => {
-    res.send('Here we will POST expenses')
+    if (req.query.month) {
+        let month;
+        month = req.query.month;
+        let newExpense = req.body;
+        newExpense["amount"] = parseInt(newExpense["amount"]);
+        newExpense["id"] = parseInt(newExpense["id"]);
+        console.log(newExpense)
+        expenseQuery[month].push(newExpense);
+        res.send(`successfully posted new income: ${expenseQuery}`)
+    }
 });
 
 app.put('/api/expenses', (req, res) => {
@@ -224,7 +250,9 @@ app.get('/api/incomes', (req, res) => {
 });
 
 app.post('/api/incomes', (req, res) => {
-    res.send('Here we will POST incomes')
+    let newIncome = req.body;
+    incomes.push(newIncome);
+    res.send(`successfully posted new income: ${newIncome}`)
 });
 
 app.put('/api/incomes', (req, res) => {
@@ -243,7 +271,9 @@ app.get('/api/budgets', (req, res) => {
 });
 
 app.post('/api/budgets', (req, res) => {
-    res.send('Here we will POST the BUDGETS')
+    let newBudget = req.body;
+    budgets.push(newBudget);
+    res.send(`successfully posted new income: ${newBudget}`)
 });
 
 app.put('/api/budgets', (req, res) => {
@@ -276,6 +306,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/budgets', (req, res) => {
+    let newBudget = req.body;
     res.send('Here we will POST the USERS')
 });
 
