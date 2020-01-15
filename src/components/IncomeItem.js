@@ -10,10 +10,6 @@ import {
 
 
 const IncomeItem = (props) => {
-    // var iconPaths = {
-    //     "Ana": "0",
-    //     "Jose": "1"
-    // }
 
     const [iconPaths, setIconPaths] = useState({});
 
@@ -22,10 +18,10 @@ const IncomeItem = (props) => {
             let users = await getUsers()
             let paths = {}
             users.forEach(element => {
-                        paths[element.name] ="/img/icon/avatar/".concat(element.avatar)
+                paths[element.name] = "/img/icon/avatar/".concat(element.avatar)
             });
             setIconPaths(paths)
-            return;       
+            return;
         }
 
         getIconPaths()
@@ -36,29 +32,31 @@ const IncomeItem = (props) => {
     }
 
     const getUsers = async () => {
-       let response = await fetch('/api/users');
-       let data = await response.json()
-       return data
+        let response = await fetch('/api/users');
+        let data = await response.json()
+        return data
     }
 
-    
+
 
     const incomeMapper = props.incomes.map((item, i) => {
-        console.log(iconPaths[item.user])
-        return <Card key={i}>
-            <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Card image cap" />
-            <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader>
-            <CardBody>
-                <CardTitle>{item.user}</CardTitle>
-                <CardText>{item.description}</CardText>
-            </CardBody>
-        </Card>
+        return <div className="col-md-6" style={{ marginBottom: "2rem" }}>
+            <Card key={i}>
+                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Card image cap" />
+                <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader>
+                <CardBody>
+                    <CardTitle>{item.user}</CardTitle>
+                    <CardText>{item.description}</CardText>
+                </CardBody>
+            </Card>
+        </div>
     })
 
     return (
-        <CardGroup className="text-center">
+        <CardGroup className="row text-center">
             {incomeMapper}
         </CardGroup>
+
 
     );
 }

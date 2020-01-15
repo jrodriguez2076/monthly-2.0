@@ -15,17 +15,19 @@ const BudgetItem = (props) => {
     }
 
     const budgetMapper = props.budgets.map(function (item, i) {
-        return <Card key={i} >
-            <CardImg className="mx-auto" top width="100%" src={getIconPath(item)} style={{ width: "7rem" }} alt="Card image cap" />
-            <CardHeader tag="h4">{item.name}</CardHeader>
-            <CardBody>
-                <CardText>{item.description}</CardText>
-            </CardBody>
-        </Card>
+        return <div className="col-md-6" style={{ marginBottom: "2rem" }}>
+            <Card key={i} >
+                <CardImg className="mx-auto" top width="100%" src={getIconPath(item)} style={{ width: "7rem" }} alt="Card image cap" />
+                <CardHeader tag="h4">{item.name}</CardHeader>
+                <CardBody>
+                    <CardText>{item.description}</CardText>
+                </CardBody>
+            </Card>
+        </div>
     })
 
     return (
-        <CardGroup className="text-center">
+        <CardGroup className="row text-center">
             {budgetMapper}
         </CardGroup>
 

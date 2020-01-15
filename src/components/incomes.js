@@ -41,7 +41,7 @@ const Incomes = (props) => {
         </Container>
       </Jumbotron>
       <IncomeItem incomes={Incomes}></IncomeItem>
-      <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
+      <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
         <ActionButton Feature="income"></ActionButton>
       </div>
