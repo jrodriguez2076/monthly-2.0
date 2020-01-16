@@ -16,13 +16,14 @@ const Home = (props) => {
 
     const changeTotalExpense = () => {
         let d = new Date();
-        fetch(`/api/expenses?month=${d.getMonth()}`)
+        fetch(`/api/expenses?month=${d.getMonth()+1}`)
             .then(data => { return data.json() }
             )
             .then(res => {
                 console.log(res)
                 let total = 0;
                 for (const el of res){
+                    console.log(`Adding expense: ${el.amount}`)
                     total += el.amount
                     console.log(total)
                 }
