@@ -12,6 +12,7 @@ const ExpenseItem = (props) => {
             <td>{item.location}</td>
             <td>{item.amount}</td>
             <td>{item.description}</td>
+            <td>{item.budget}</td>
         </tr>
     })
 

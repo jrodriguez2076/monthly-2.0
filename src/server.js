@@ -1,5 +1,8 @@
 import express from 'express';
 import path, { dirname } from 'path';
+import mongoose from 'mongoose'
+import models, { connectDb } from './models';
+
 import 'dotenv/config';
 var fs = require('fs');
 
@@ -174,6 +177,9 @@ app.use(express.static('dist'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
+    req.context = {
+        models,
+    };
     next();
 });
 
@@ -211,92 +217,140 @@ app.get('/api/icons', (req, res) => {
     else res.send('no icons found in this folder');
 });
 
-app.get('/api/expenses', (req, res) => {
+app.get('/api/expenses', async (req, res) => {
     if (req.query.month) {
-        let month;
-        month = req.query.month;
+        let queriedMonth;
+        queriedMonth = parseInt(req.query.month);
         console.log("Fetching latest expenses for the month...")
-        res.send(expenseQuery[month]);
+        const expensesdb = await req.context.models.Expense.aggregate([
+            { $addFields: { month: { $month: '$date' } } },
+            { $match: { month: queriedMonth } }
+        ]);
+
+        console.log(expensesdb)
+
+        res.send(expensesdb);
     }
     else res.send('Here we will get the expenses');
 });
 
-app.post('/api/expenses', (req, res) => {
-    if (req.query.month) {
-        let month;
-        month = req.query.month;
-        let newExpense = req.body;
-        newExpense["amount"] = parseInt(newExpense["amount"]);
-        newExpense["id"] = parseInt(newExpense["id"]);
-        console.log(newExpense)
-        expenseQuery[month].push(newExpense);
-        res.send(`successfully posted new income: ${expenseQuery}`)
-    }
+app.post('/api/expenses', async (req, res) => {
+    // if (req.query.month) {
+    //     let month;
+    //     month = req.query.month;
+        // let newExpense = req.body;
+        let expenseDate = Date.parse(req.body.date)
+        // newExpense["amount"] = parseInt(newExpense["amount"]);
+        // newExpense["id"] = parseInt(newExpense["id"]);
+        // console.log(newExpense)
+        // expenseQuery[month].push(newExpense);
+        const expenseDb = await req.context.models.Expense.create({
+            user: req.body.user,
+            date: expenseDate,
+            location: req.body.location,
+            amount: req.body.amount,
+            description: req.body.description,
+            budget: req.body.budget
+        })
+        console.log(expenseDb)
+        res.send(`successfully posted new income: ${expenseDb}`)
+    // }
 });
 
-app.put('/api/expenses', (req, res) => {
-    res.send('Here we will UPDATE expenses')
+app.put('/api/expenses', async (req, res) => {
+    let selectedExpense = req.body;
+    let update = JSON.parse(req.body.update)
+    const expense = await req.context.models.Expense.findByIdAndUpdate(selectedExpense.expenseId, update)
+    res.send('Successfully updated Expense')
 });
 
-app.delete('/api/expenses', (req, res) => {
-    res.send('Here we will DELETE expenses')
+app.delete('/api/expenses', async (req, res) => {
+    let selectedExpense = req.body;
+    const expenseToDelete = await req.context.models.Expense.findByIdAndDelete(selectedExpense.expenseId)
+    res.send('Successfully deleted Expense')
 });
 
 // incomes API
 
-app.get('/api/incomes', (req, res) => {
+app.get('/api/incomes', async (req, res) => {
     console.log("getting the incomes...")
-    res.send(incomes);
+    const incomesdb = await req.context.models.Income.find();
+    res.send(incomesdb);
 });
 
-app.post('/api/incomes', (req, res) => {
-    let newIncome = req.body;
-    incomes.push(newIncome);
+app.post('/api/incomes', async (req, res) => {
+
+    const newIncome = await req.context.models.Income.create({
+        user: req.body.user,
+        amount: req.body.amount,
+        description: req.body.description,
+        monthly: req.body.monthly,
+    })
+    console.log(newIncome)
     res.send(`successfully posted new income: ${newIncome}`)
 });
 
-app.put('/api/incomes', (req, res) => {
-    res.send('Here we will UPDATE incomes')
+app.put('/api/incomes', async (req, res) => {
+    let selectedIncome = req.body;
+    let update = JSON.parse(req.body.update)
+    const income = await req.context.models.Income.findByIdAndUpdate(selectedIncome.incomeId, update)
+    res.send('Successfully updated Income')
 });
 
-app.delete('/api/incomes', (req, res) => {
-    res.send('Here we will DELETE incomes')
+app.delete('/api/incomes', async (req, res) => {
+    let selectedIncome = req.body;
+    const incomeToDelete = await req.context.models.Income.findByIdAndDelete(selectedIncome.incomeId)
+    res.send('Successfully deleted Income')
 });
 
 // Budgets API
 
-app.get('/api/budgets', (req, res) => {
-    console.log("getting the budgets...")
-    res.send(budgets)
+app.get('/api/budgets', async (req, res) => {
+    const budgetDb = await req.context.models.Budget.find();
+
+    res.send(budgetDb)
 });
 
-app.post('/api/budgets', (req, res) => {
+app.post('/api/budgets', async (req, res) => {
     let newBudget = req.body;
     budgets.push(newBudget);
+
+    const budgetDb = await req.context.models.Budget.create({
+        name: req.body.name,
+        amount: req.body.amount,
+        description: req.body.description,
+        icon: req.body.icon,
+    })
+    console.log(budgetDb)
     res.send(`successfully posted new income: ${newBudget}`)
 });
 
-app.put('/api/budgets', (req, res) => {
-    res.send('Here we will UPDATE the BUDGETS')
+app.put('/api/budgets', async (req, res) => {
+    let selectedBudget = req.body;
+    let update = JSON.parse(req.body.update)
+    const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget.budgetId, update)
+    res.send('Successfully updated Budget')
 });
 
-app.delete('/api/budgets', (req, res) => {
-    res.send('Here we will DELETE the BUDGETS')
+app.delete('/api/budgets', async (req, res) => {
+    let selectedBudget = req.body;
+    const budgetToDelete = await req.context.models.Budget.findByIdAndDelete(selectedBudget.budgetId)
+    res.send('Successfully deleted Budget')
 });
 
 // Goals API
 
-app.get('/api/goals', (req, res) => {
-    res.send('Here we will get the GOALS')
-});
+// app.get('/api/goals', (req, res) => {
+//     res.send('Here we will get the GOALS')
+// });
 
-app.post('/api/goals', (req, res) => {
-    res.send('Here we will POST new GOALS')
-});
+// app.post('/api/goals', (req, res) => {
+//     res.send('Here we will POST new GOALS')
+// });
 
-app.delete('/api/budgets', (req, res) => {
-    res.send('Here we will DELETE the GOALS')
-});
+// app.delete('/api/budgets', (req, res) => {
+//     res.send('Here we will DELETE the GOALS')
+// });
 
 //Users API
 
@@ -306,7 +360,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/budgets', (req, res) => {
-    let newBudget = req.body;
+    let newUsera = req.body;
     res.send('Here we will POST the USERS')
 });
 
@@ -328,8 +382,10 @@ app.get('*', (req, res) => {
 
 // Server Start
 
-app.listen(process.env.PORT, () => {
-    console.log(`Now listening on port ${process.env.PORT}`); app.use((req, res, next) => {
-        next();
-    });
-})
+connectDb().then(() => {
+    app.listen(process.env.PORT, () => {
+        console.log(`Now listening on port ${process.env.PORT}`); app.use((req, res, next) => {
+            next();
+        });
+    })
+});

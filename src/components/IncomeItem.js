@@ -40,12 +40,13 @@ const IncomeItem = (props) => {
 
 
     const incomeMapper = props.incomes.map((item, i) => {
-        return <div className="col-md-6" style={{ marginBottom: "2rem" }}>
-            <Card key={i}>
+        return <div key={i} className="col-md-6" style={{ marginBottom: "2rem" }}>
+            <Card >
                 <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Card image cap" />
-                <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader>
+                {/* <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader> */}
                 <CardBody>
-                    <CardTitle>{item.user}</CardTitle>
+                    <CardTitle tag="h3">{toCurrency(item.amount)}</CardTitle>
+                    <CardText>{item.user}</CardText>
                     <CardText>{item.description}</CardText>
                 </CardBody>
             </Card>
@@ -56,8 +57,6 @@ const IncomeItem = (props) => {
         <CardGroup className="row text-center">
             {incomeMapper}
         </CardGroup>
-
-
     );
 }
 
