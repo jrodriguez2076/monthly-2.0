@@ -279,15 +279,17 @@ app.get('/api/incomes', async (req, res) => {
 });
 
 app.post('/api/incomes', async (req, res) => {
-
-    const newIncome = await req.context.models.Income.create({
-        user: req.body.user,
-        amount: req.body.amount,
-        description: req.body.description,
-        monthly: req.body.monthly,
-    })
-    console.log(newIncome)
-    res.send(`successfully posted new income: ${newIncome}`)
+    console.log(req.body)
+    if (req.body){
+        const newIncome = await req.context.models.Income.create({
+            user: req.body.user,
+            amount: req.body.amount,
+            description: req.body.description,
+            monthly: req.body.monthly,
+        })
+        console.log(newIncome)
+        res.send(`successfully posted new income: ${newIncome}`)
+    }
 });
 
 app.put('/api/incomes', async (req, res) => {
@@ -313,13 +315,17 @@ app.get('/api/budgets', async (req, res) => {
 
 app.post('/api/budgets', async (req, res) => {
     let newBudget = req.body;
+    let iconName = '';
     budgets.push(newBudget);
+    if (req.body.icon == 0) {
+        iconName = "004-house.svg";
+    } else iconName = req.body.icon
 
     const budgetDb = await req.context.models.Budget.create({
         name: req.body.name,
         amount: req.body.amount,
         description: req.body.description,
-        icon: req.body.icon,
+        icon: iconName,
     })
     console.log(budgetDb)
     res.send(`successfully posted new income: ${newBudget}`)
