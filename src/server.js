@@ -235,33 +235,39 @@ app.get('/api/expenses', async (req, res) => {
 });
 
 app.post('/api/expenses', async (req, res) => {
-    if (req.query.month) {
-        let month;
-        month = req.query.month;
-        let newExpense = req.body;
+    // if (req.query.month) {
+    //     let month;
+    //     month = req.query.month;
+        // let newExpense = req.body;
         let expenseDate = Date.parse(req.body.date)
-        newExpense["amount"] = parseInt(newExpense["amount"]);
-        newExpense["id"] = parseInt(newExpense["id"]);
-        console.log(newExpense)
-        expenseQuery[month].push(newExpense);
-        const ExpenseDb = await req.context.models.Expense.create({
+        // newExpense["amount"] = parseInt(newExpense["amount"]);
+        // newExpense["id"] = parseInt(newExpense["id"]);
+        // console.log(newExpense)
+        // expenseQuery[month].push(newExpense);
+        const expenseDb = await req.context.models.Expense.create({
             user: req.body.user,
             date: expenseDate,
             location: req.body.location,
             amount: req.body.amount,
             description: req.body.description,
+            budget: req.body.budget
         })
-        console.log(ExpenseDb)
-        res.send(`successfully posted new income: ${expenseQuery}`)
-    }
+        console.log(expenseDb)
+        res.send(`successfully posted new income: ${expenseDb}`)
+    // }
 });
 
-app.put('/api/expenses', (req, res) => {
-    res.send('Here we will UPDATE expenses')
+app.put('/api/expenses', async (req, res) => {
+    let selectedExpense = req.body;
+    let update = JSON.parse(req.body.update)
+    const expense = await req.context.models.Expense.findByIdAndUpdate(selectedExpense.expenseId, update)
+    res.send('Successfully updated Expense')
 });
 
-app.delete('/api/expenses', (req, res) => {
-    res.send('Here we will DELETE expenses')
+app.delete('/api/expenses', async (req, res) => {
+    let selectedExpense = req.body;
+    const expenseToDelete = await req.context.models.Expense.findByIdAndDelete(selectedExpense.expenseId)
+    res.send('Successfully deleted Expense')
 });
 
 // incomes API
@@ -281,23 +287,25 @@ app.post('/api/incomes', async (req, res) => {
         monthly: req.body.monthly,
     })
     console.log(newIncome)
-    // let newIncome = req.body;
-    // incomes.push(newIncome);
     res.send(`successfully posted new income: ${newIncome}`)
 });
 
-app.put('/api/incomes', (req, res) => {
-    res.send('Here we will UPDATE incomes')
+app.put('/api/incomes', async (req, res) => {
+    let selectedIncome = req.body;
+    let update = JSON.parse(req.body.update)
+    const income = await req.context.models.Income.findByIdAndUpdate(selectedIncome.incomeId, update)
+    res.send('Successfully updated Income')
 });
 
-app.delete('/api/incomes', (req, res) => {
-    res.send('Here we will DELETE incomes')
+app.delete('/api/incomes', async (req, res) => {
+    let selectedIncome = req.body;
+    const incomeToDelete = await req.context.models.Income.findByIdAndDelete(selectedIncome.incomeId)
+    res.send('Successfully deleted Income')
 });
 
 // Budgets API
 
 app.get('/api/budgets', async (req, res) => {
-    console.log("getting the budgets...")
     const budgetDb = await req.context.models.Budget.find();
 
     res.send(budgetDb)
@@ -317,28 +325,32 @@ app.post('/api/budgets', async (req, res) => {
     res.send(`successfully posted new income: ${newBudget}`)
 });
 
-app.put('/api/budgets', (req, res) => {
-    
-    res.send('Here we will UPDATE the BUDGETS')
+app.put('/api/budgets', async (req, res) => {
+    let selectedBudget = req.body;
+    let update = JSON.parse(req.body.update)
+    const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget.budgetId, update)
+    res.send('Successfully updated Budget')
 });
 
-app.delete('/api/budgets', (req, res) => {
-    res.send('Here we will DELETE the BUDGETS')
+app.delete('/api/budgets', async (req, res) => {
+    let selectedBudget = req.body;
+    const budgetToDelete = await req.context.models.Budget.findByIdAndDelete(selectedBudget.budgetId)
+    res.send('Successfully deleted Budget')
 });
 
 // Goals API
 
-app.get('/api/goals', (req, res) => {
-    res.send('Here we will get the GOALS')
-});
+// app.get('/api/goals', (req, res) => {
+//     res.send('Here we will get the GOALS')
+// });
 
-app.post('/api/goals', (req, res) => {
-    res.send('Here we will POST new GOALS')
-});
+// app.post('/api/goals', (req, res) => {
+//     res.send('Here we will POST new GOALS')
+// });
 
-app.delete('/api/budgets', (req, res) => {
-    res.send('Here we will DELETE the GOALS')
-});
+// app.delete('/api/budgets', (req, res) => {
+//     res.send('Here we will DELETE the GOALS')
+// });
 
 //Users API
 
@@ -348,7 +360,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/budgets', (req, res) => {
-    let newBudget = req.body;
+    let newUsera = req.body;
     res.send('Here we will POST the USERS')
 });
 

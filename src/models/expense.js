@@ -6,6 +6,7 @@ const expenseSchema = new mongoose.Schema({
   location: String,
   amount: Number,
   description: String,
+  budget: String,
   monthly: Boolean,
 });
 const Expense = mongoose.model('Expense', expenseSchema);
