@@ -1,8 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddExpense = (props) => {
+
+    useEffect(() =>{ 
+        getBudgets();
+        getUsers()
+    }, []);
 
     const [ExpenseDate, setExpenseDate] = useState('')
     const [Amount, setAmount] = useState(0)
@@ -11,6 +16,41 @@ const AddExpense = (props) => {
     const [Budget, setBudget] = useState('')
     const [Location, setLocation] = useState('')
     const [Method, setMethod] = useState(0)
+    const [ExistingBudgets, setExistingBudgets] = useState()
+    const [ExistingUsers, setExistingUsers] = useState()
+
+    // const BudgetOptions = [];
+
+    const getBudgets = () => {
+        console.log('Getting all budgets')
+        fetch(`/api/budgets`)
+            .then(data => {
+                return data.json()
+            }
+            )
+            .then(res => {
+                let BudgetOptions = res.map(function (item, i) {
+                    return <option key={i}>{item.name}</option>
+                })
+                setExistingBudgets(BudgetOptions);
+                setBudget(res[0].name)
+            })
+    };
+    const getUsers = () => {
+        console.log('Getting all users')
+        fetch(`/api/users`)
+            .then(data => {
+                return data.json()
+            }
+            )
+            .then(res => {
+                let UserOptions = res.map(function (item, i) {
+                    return <option key={i} value = {item.name}>{item.name}</option>
+                })
+                setExistingUsers(UserOptions);
+                setUser(res[0].name)
+            })
+    };
 
     const handleChangeDate = (event) => {
         setExpenseDate(event.target.value)
@@ -84,6 +124,10 @@ const AddExpense = (props) => {
 
     }
 
+    // const budgetMapper = ExistingBudgets.map(function (item, i) {
+    //     return <option key={i}>{item.name}</option>
+    // })
+
     return (
         <Form onSubmit={handleSubmit}>
             <FormGroup>
@@ -109,22 +153,13 @@ const AddExpense = (props) => {
             <FormGroup>
                 <Label for="user">Who made the expense?</Label>
                 <Input type="select" name="user" id="user" onChange={handleChangeUser}>
-                    <option>Jose</option>
-                    <option>Ana</option>
+                    {ExistingUsers}
                 </Input>
             </FormGroup>
             <FormGroup>
                 <Label for="budget">Budget associated</Label>
                 <Input type="select" name="budget" id="budget" onChange={handleChangeBudget}>
-                    <option>Rent</option>
-                    <option>Building Administration</option>
-                    <option>Foods & groceries</option>
-                    <option>Water Bill</option>
-                    <option>Electricity Bill</option>
-                    <option>Gas Bill</option>
-                    <option>Phone Credit</option>
-                    <option>Transportation</option>
-                    <option>Leisure</option>
+                    {ExistingBudgets}
                 </Input>
             </FormGroup>
             <FormGroup>
@@ -137,20 +172,21 @@ const AddExpense = (props) => {
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" onChange={handleChangeMethod} /> Cash
+                    <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Cash
                 </Label>
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" /> Electronic
+                    <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Electronic
                 </Label>
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" /> Credit
+                    <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Credit
                 </Label>
             </FormGroup>
-            <Button type="submit">Submit</Button>
+            <Button color="primary" type="submit">Submit</Button>
+            <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </Form >
     )
 }

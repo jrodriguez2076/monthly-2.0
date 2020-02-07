@@ -3,11 +3,32 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddIncome = (props) => {
+    useEffect(() =>{ 
+        getUsers()
+    }, []);
 
-    const [Amount, setAmount] = useState(0)
-    const [User, setUser] = useState('')
-    const [Description, setDescription] = useState('')
-    const [Monthly, setMonthly] = useState(true)
+    const getUsers = () => {
+        console.log('Getting all users')
+        fetch(`/api/users`)
+            .then(data => {
+                return data.json()
+            }
+            )
+            .then(res => {
+                let UserOptions = res.map(function (item, i) {
+                    return <option key={i}>{item.name}</option>
+                })
+                setExistingUsers(UserOptions);
+            })
+    };
+
+    const [Amount, setAmount] = useState(0);
+    const [User, setUser] = useState('');
+    const [Description, setDescription] = useState('');
+    const [Monthly, setMonthly] = useState(false);
+    const [ExistingUsers, setExistingUsers] = useState();
+
+
 
     const handleChangeAmount = (event) => {
         setAmount(event.target.value)
@@ -89,8 +110,7 @@ const AddIncome = (props) => {
                                 name="user"
                                 id="user"
                                 onChange={handleChangeUser}>
-                                <option>Jose</option>
-                                <option>Ana</option>
+                                {ExistingUsers}
                             </Input>
                         </FormGroup>
                     </div>

@@ -244,6 +244,7 @@ app.post('/api/expenses', async (req, res) => {
         // newExpense["id"] = parseInt(newExpense["id"]);
         // console.log(newExpense)
         // expenseQuery[month].push(newExpense);
+        console.log(req.body)
         const expenseDb = await req.context.models.Expense.create({
             user: req.body.user,
             date: expenseDate,

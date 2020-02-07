@@ -5,8 +5,10 @@ import "regenerator-runtime/runtime";
 
 import {
     Card, CardImg, CardTitle, CardText, CardDeck,
-    CardBody, CardHeader, CardGroup
+    CardBody, CardHeader, CardGroup, Button
 } from 'reactstrap';
+
+import toCurrency from './submodules/submodule'
 
 
 const IncomeItem = (props) => {
@@ -27,10 +29,6 @@ const IncomeItem = (props) => {
         getIconPaths()
     }, []);
 
-    const toCurrency = (number) => {
-        return "ARS ".concat(number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1."))
-    }
-
     const getUsers = async () => {
         let response = await fetch('/api/users');
         let data = await response.json()
@@ -48,6 +46,8 @@ const IncomeItem = (props) => {
                     <CardTitle tag="h3">{toCurrency(item.amount)}</CardTitle>
                     <CardText>{item.user}</CardText>
                     <CardText>{item.description}</CardText>
+                    <Button color="success" type="submit">Edit</Button>
+                    <Button color="danger" onClick={props.toggle}>Delete</Button>
                 </CardBody>
             </Card>
         </div>

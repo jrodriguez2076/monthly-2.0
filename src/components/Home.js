@@ -6,6 +6,7 @@ import { Button, Row, Container } from 'reactstrap';
 
 import ActionButton from './ActionButton';
 import ExpenseTotal from './ExpenseTotal';
+import toCurrency from './submodules/submodule';
 
 const Home = (props) => {
     useEffect(() => changeTotalExpense(), []);
@@ -32,9 +33,9 @@ const Home = (props) => {
         
     };
 
-    const toCurrency = (number) => {
-        return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
-    }
+    // const toCurrency = (number) => {
+    //     return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
+    // }
 
     return (
         <div>

@@ -7,10 +7,12 @@ import {
 import BudgetItem from './BudgetItem'
 import ActionButton from './ActionButton';
 
-
 const Budgets = (props) => {
 
-  useEffect(() => getBudgets(), []);
+  useEffect(() => {
+    getBudgets();
+    getLatestExpenses();
+  }, []);
 
   const [Budgets, setBudgets] = useState([{
     "name": "",
@@ -18,6 +20,8 @@ const Budgets = (props) => {
     "description": "",
     "icon": "",
   },]);
+
+  const [Expenses, setExpenses] = useState()
 
   const getBudgets = () => {
     let d = new Date();
@@ -31,6 +35,16 @@ const Budgets = (props) => {
       })
   };
 
+  const getLatestExpenses = () => {
+    let d = new Date();
+    fetch(`/api/expenses?month=${d.getMonth() + 1}`)
+        .then(data => { return data.json() }
+        )
+        .then(res => {
+            setExpenses(res);
+        })
+};
+
 
 
   return (
@@ -41,7 +55,7 @@ const Budgets = (props) => {
           <hr></hr>
         </Container>
       </Jumbotron>
-      <BudgetItem budgets={Budgets}></BudgetItem>
+      <BudgetItem budgets={Budgets} expenses={Expenses}></BudgetItem>
       <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
       <div className="d-flex justify-content-center">
         <ActionButton Feature="budget"></ActionButton>
