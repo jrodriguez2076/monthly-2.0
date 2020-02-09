@@ -11,7 +11,7 @@ const Budgets = (props) => {
 
   useEffect(() => {
     getBudgets();
-    getLatestExpenses();
+    // getLatestExpenses();
   }, []);
 
   const [Budgets, setBudgets] = useState([{
@@ -24,6 +24,7 @@ const Budgets = (props) => {
   const [Expenses, setExpenses] = useState()
 
   const getBudgets = () => {
+    console.log("GETTING BUDGETS!!!")
     let d = new Date();
     fetch(`/api/budgets`)
       .then(data => {
@@ -31,7 +32,8 @@ const Budgets = (props) => {
       }
       )
       .then(res => {
-        setBudgets(res);
+        setBudgets([...res]);
+        getLatestExpenses();
       })
   };
 
@@ -58,7 +60,7 @@ const Budgets = (props) => {
       <BudgetItem budgets={Budgets} expenses={Expenses}></BudgetItem>
       <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
       <div className="d-flex justify-content-center">
-        <ActionButton Feature="budget"></ActionButton>
+        <ActionButton Feature="budget" updateBudgets={getBudgets}></ActionButton>
       </div>
     </div>
   );

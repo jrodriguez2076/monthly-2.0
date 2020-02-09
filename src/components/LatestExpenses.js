@@ -20,13 +20,14 @@ const LatestExpenses = (props) => {
     },]);
 
     const getLatestExpenses = () => {
+        console.log('Expense Function called!!');
         let d = new Date();
         fetch(`/api/expenses?month=${d.getMonth() + 1}`)
             .then(data => { return data.json() }
             )
             .then(res => {
-                console.log(res);
-                setExpenses(res);
+                console.log('Adding New Expense!!');
+                setExpenses([...res]);
             })
     };
 
@@ -60,7 +61,7 @@ const LatestExpenses = (props) => {
             </div>
             <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
             <div className="d-flex justify-content-center">
-                <ActionButton Feature="expense"></ActionButton>
+                <ActionButton Feature="expense" updateExpenses={getLatestExpenses}></ActionButton>
             </div>
         </div>
     );

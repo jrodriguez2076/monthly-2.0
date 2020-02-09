@@ -79,7 +79,8 @@ const AddIncome = (props) => {
             )
             .then(res => {
                 console.log(res);
-                props.toggle()
+                props.update();
+                props.toggle();
             })
 
     }

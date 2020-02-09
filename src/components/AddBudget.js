@@ -61,6 +61,9 @@ const AddBudget = (props) => {
                 props.toggle()
             })
 
+        console.log("NOW TO REFRESH BUDGETS")    
+        props.update();
+
     }
 
     const radioStyle = {
