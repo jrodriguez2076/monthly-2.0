@@ -24,7 +24,7 @@ const BudgetItem = (props) => {
     const toggle = () => setConfirmModal(!ConfirmModal);
 
     const selectItem = (item, action) => {
-        console.log(`Item Selected: ${item}`);
+        console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
         if (action==0){
             setItemAction("budget");

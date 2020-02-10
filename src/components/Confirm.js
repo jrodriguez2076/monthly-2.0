@@ -6,7 +6,7 @@ const Confirm = (props) => {
     return (
         <div>
             <p>Are you sure that you want to delete this item?</p>
-            <p>{props.item}</p>
+            <p>{props.item.name}</p>
             <Button onClick={props.action}>Confirm</Button>
             <Button onClick={props.toggle}>Cancel</Button>
         </div>)

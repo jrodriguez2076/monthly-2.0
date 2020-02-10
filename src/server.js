@@ -186,8 +186,11 @@ app.post('/api/budgets', async (req, res) => {
 
 app.put('/api/budgets', async (req, res) => {
     let selectedBudget = req.body._id;
-    let update = JSON.parse(req.body.update)
-    const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget, update)
+    console.log(`*****************${typeof(req.body.update)}`)
+    let update = req.body.update;
+    console.log(update)
+    const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget,update)
+    console.log(budget)
     res.send('Successfully updated Budget')
 });
 

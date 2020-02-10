@@ -4,12 +4,12 @@ import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddBudget = (props) => {
 
-    const [Amount, setAmount] = props.item? useState(props.item.amount):useState(0)
-    const [Name, setName] = props.item? useState(props.item.name):useState('')
-    const [Description, setDescription] = props.item? useState(props.item.description):useState('')
-    const [Icon, setIcon] = props.item? useState(props.item.icon):useState(0)
+    const [Amount, setAmount] = props.item ? useState(props.item.amount) : useState(0)
+    const [Name, setName] = props.item ? useState(props.item.name) : useState('')
+    const [Description, setDescription] = props.item ? useState(props.item.description) : useState('')
+    const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState(0)
 
-    
+
 
     const handleChangeAmount = (event) => {
         setAmount(event.target.value)
@@ -42,10 +42,18 @@ const AddBudget = (props) => {
         let budgetRequest = {};
 
         if (props.edit) {
+            let _id = props.item._id;
+            let update = props.item;
             console.log("entering edit")
+            console.log(`${Amount}, ${Name}, ${Description}, ${Icon}`)
             data = {
-                "_id": props.item._id,
-                "update": props.item
+                "_id": _id,
+                "update": {
+                    "amount": Amount,
+                    "name": Name,
+                    "description": Description,
+                    "icon": Icon
+                }
             }
 
             budgetRequest = new Request(`/api/budgets`, {
@@ -56,7 +64,7 @@ const AddBudget = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(budgetRequest);
+            console.log(JSON.stringify(data));
 
         } else {
             console.log("this is not edit")
@@ -111,7 +119,7 @@ const AddBudget = (props) => {
         <Form onSubmit={handleSubmit}>
             <FormGroup>
                 <Label for="name">Budget Name</Label>
-                <Input type="text" name="name" id="name" onChange={handleChangeName} value={Name}/>
+                <Input type="text" name="name" id="name" onChange={handleChangeName} value={Name} />
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Budget Amount</Label>
@@ -177,7 +185,7 @@ const AddBudget = (props) => {
                 </Label>
             </FormGroup>
             <hr></hr>
-            <Button color="primary" type="submit" onClick={handleSubmit}>Create</Button>
+            <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit? "Update":"Create"}</Button>
             <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </Form >
     )
