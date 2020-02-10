@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Ripples from 'react-ripples';
 
@@ -30,7 +30,16 @@ const ActionButton = (props) => {
                     </Card>
                 </Ripples>
             </div>
-            <GenericModal modal={modal} toggle={toggle} type={props.Feature}></GenericModal>
+            <GenericModal
+                modal={modal}
+                toggle={toggle}
+                type={props.Feature}
+                updateBudgets={props.updateBudgets}
+                updateExpenses={props.updateExpenses}
+                updateIncomes={props.updateIncomes}
+                fromHome={props.fromHome}>
+                
+            </GenericModal>
         </Col>
     )
 }

@@ -6,6 +6,7 @@ import { Button, Row, Container } from 'reactstrap';
 
 import ActionButton from './ActionButton';
 import ExpenseTotal from './ExpenseTotal';
+import toCurrency from './submodules/submodule';
 
 const Home = (props) => {
     useEffect(() => changeTotalExpense(), []);
@@ -32,9 +33,9 @@ const Home = (props) => {
         
     };
 
-    const toCurrency = (number) => {
-        return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
-    }
+    // const toCurrency = (number) => {
+    //     return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
+    // }
 
     return (
         <div>
@@ -44,9 +45,9 @@ const Home = (props) => {
             <Container>
                 <div >
                     <Row className="d-flex justify-content-center">
-                        <ActionButton Feature="expense" HandleNewExpense=""></ActionButton>
-                        <ActionButton Feature="income"></ActionButton>
-                        <ActionButton Feature="budget"></ActionButton>
+                        <ActionButton Feature="expense" fromHome={true}></ActionButton>
+                        <ActionButton Feature="income" fromHome={true}></ActionButton>
+                        <ActionButton Feature="budget" fromHome={true}></ActionButton>
                     </Row>
                 </div>
                 <div className="row">

@@ -8,154 +8,6 @@ var fs = require('fs');
 
 const app = express();
 
-const expenseQuery = {
-    "11": [
-        {
-            "id": 1,
-            "user": "Jose",
-            "date": "12/12/2019",
-            "location": "Villa Urquiza",
-            "amount": 5000,
-            "description": "Christmas Dinner"
-        },
-        {
-            "id": 2,
-            "user": "Ana",
-            "date": "5/12/2019",
-            "location": "Villa Urquiza",
-            "amount": 400,
-            "description": "Christmas gift"
-        },
-        {
-            "id": 3,
-            "user": "Ana",
-            "date": "6/12/2019",
-            "location": "Villa Urquiza",
-            "amount": 1000,
-            "description": "Taxi"
-        },
-        {
-            "id": 4,
-            "user": "Jose",
-            "date": "1/12/2019",
-            "location": "Microcentro",
-            "amount": 500,
-            "description": "Gift"
-        },
-    ],
-    "0": [
-        {
-            "id": 5,
-            "user": "Ana",
-            "date": "1/1/2019",
-            "location": "Vicente Lopez",
-            "amount": 600,
-            "description": "Christmas Dinner"
-        },
-        {
-            "id": 6,
-            "user": "Ana",
-            "date": "5/1/2019",
-            "location": "Urquiza",
-            "amount": 4600,
-            "description": "Christmas gift"
-        },
-        {
-            "id": 7,
-            "user": "Jose",
-            "date": "6/1/2019",
-            "location": "Mar del Plata",
-            "amount": 15900,
-            "description": "Rent"
-        },
-        {
-            "id": 8,
-            "user": "Jose",
-            "date": "12/1/2019",
-            "location": "Iguazu",
-            "amount": 1500,
-            "description": "Birthday Gift"
-        },
-    ],
-    "1": [
-        {
-            "id": 9,
-            "user": "Jose",
-            "date": "16/2/2019",
-            "location": "Villa Urquiza",
-            "amount": 5000,
-            "description": "stuff"
-        },
-        {
-            "id": 10,
-            "user": "Ana",
-            "date": "18/2/2019",
-            "location": "Villa Urquiza",
-            "amount": 4050,
-            "description": "more stuff"
-        },
-        {
-            "id": 11,
-            "user": "Ana",
-            "date": "6/2/2019",
-            "location": "Villa Martelli",
-            "amount": 300,
-            "description": "another Taxi"
-        },
-        {
-            "id": 12,
-            "user": "Jose",
-            "date": "8/2/2019",
-            "location": "Microcentro",
-            "amount": 5600,
-            "description": "yet more stuff"
-        },
-    ],
-}
-
-const budgets = [
-    {
-        "id": 1,
-        "name": "Rent",
-        "amount": 10000,
-        "description": "Rent for the month",
-        "icon": "004-house.svg",
-    },
-    {
-        "id": 2,
-        "name": "Vacations",
-        "amount": 8850,
-        "description": "plane tickets, hotels, events, suitcases, etc.",
-        "icon": "aircraft.png",
-    },
-    {
-        "id": 3,
-        "name": "Food",
-        "amount": 10000,
-        "description": "Food for market, meals, take-outs and out-of-house foods",
-        "icon": "034-store.svg",
-    }
-]
-
-const incomes = [
-    {
-        "id": 1,
-        "user": "Jose",
-        "amount": 20000,
-        "description": "base salary",
-        "icon": "dragon.png",
-        "monthly": true
-    },
-    {
-        "id": 2,
-        "user": "Ana",
-        "amount": 20000,
-        "description": "base salary",
-        "icon": "duck.png",
-        "monthly": true
-    }
-]
-
 const users = [
     {
         "name": "Jose",
@@ -244,6 +96,7 @@ app.post('/api/expenses', async (req, res) => {
         // newExpense["id"] = parseInt(newExpense["id"]);
         // console.log(newExpense)
         // expenseQuery[month].push(newExpense);
+        console.log(req.body)
         const expenseDb = await req.context.models.Expense.create({
             user: req.body.user,
             date: expenseDate,
@@ -279,15 +132,17 @@ app.get('/api/incomes', async (req, res) => {
 });
 
 app.post('/api/incomes', async (req, res) => {
-
-    const newIncome = await req.context.models.Income.create({
-        user: req.body.user,
-        amount: req.body.amount,
-        description: req.body.description,
-        monthly: req.body.monthly,
-    })
-    console.log(newIncome)
-    res.send(`successfully posted new income: ${newIncome}`)
+    console.log(req.body)
+    if (req.body){
+        const newIncome = await req.context.models.Income.create({
+            user: req.body.user,
+            amount: req.body.amount,
+            description: req.body.description,
+            monthly: req.body.monthly,
+        })
+        console.log(newIncome)
+        res.send(`successfully posted new income: ${newIncome}`)
+    }
 });
 
 app.put('/api/incomes', async (req, res) => {
@@ -313,13 +168,17 @@ app.get('/api/budgets', async (req, res) => {
 
 app.post('/api/budgets', async (req, res) => {
     let newBudget = req.body;
-    budgets.push(newBudget);
+    let iconName = '';
+    // budgets.push(newBudget);
+    if (req.body.icon == 0) {
+        iconName = "004-house.svg";
+    } else iconName = req.body.icon
 
     const budgetDb = await req.context.models.Budget.create({
         name: req.body.name,
         amount: req.body.amount,
         description: req.body.description,
-        icon: req.body.icon,
+        icon: iconName,
     })
     console.log(budgetDb)
     res.send(`successfully posted new income: ${newBudget}`)
