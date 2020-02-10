@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
     Card, CardImg, CardTitle, CardText, CardDeck,
@@ -11,18 +11,60 @@ import {
 import { get } from 'mongoose';
 
 import toCurrency from './submodules/submodule'
+import GenericModal from './GenericModal';
 
 
 
 const BudgetItem = (props) => {
 
+    const [ConfirmModal, setConfirmModal] = useState(false);
+    const [SelectedItem, setSelectedItem] = useState();
+    const [ItemAction, setItemAction] = useState();
+
+    const toggle = () => setConfirmModal(!ConfirmModal);
+
+    const selectItem = (item, action) => {
+        console.log(`Item Selected: ${item}`);
+        setSelectedItem(item);
+        if (action==0){
+            setItemAction("budget");
+        } else if (action == 1) setItemAction("confirm");
+        toggle();
+    }
 
     const getIconPath = (item) => {
         return "/img/icon/budgets/".concat(item.icon)
     }
 
-    const budgetMapper = props.budgets.map(function (item, i) {
+    const deleteItem = () => {
+        console.log(`DELETING THE FOLLOWING: ${SelectedItem._id}`)
+        let data = {
+            "budgetId": SelectedItem._id
+        }
 
+        let budgetDeleteRequest = new Request(`/api/budgets`, {
+            method: 'DELETE',
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+
+        fetch(budgetDeleteRequest)
+            .then(data => {
+                console.log(data)
+                return data
+            })
+            .then(res => {
+                props.updateBudgets();
+                toggle();
+            })
+
+
+    }
+
+    const budgetMapper = props.budgets.map((item, i) => {
         let spent = 0;
 
         try {
@@ -44,11 +86,18 @@ const BudgetItem = (props) => {
                 <CardBody>
                     <CardText tag="h5"> ARS {toCurrency(item.amount)}</CardText>
                     <CardText>Available: ARS {toCurrency(item.amount - spent)}</CardText>
-                    <Button color="success" type="submit">Edit</Button>
-                    <Button color="danger" onClick={props.toggle}>Delete</Button>
+                    <Button color="success" onClick={() => selectItem(item,0)}>Edit</Button>
+                    <Button color="danger" onClick={() => selectItem(item,1)}>Delete</Button>
+                    <GenericModal
+                        modal={ConfirmModal}
+                        toggle={toggle}
+                        type={ItemAction}
+                        action={() => { deleteItem() }}
+                        item={SelectedItem}
+                        delete></GenericModal>
                 </CardBody>
                 {/* <CardFooter> */}
-                    
+
                 {/* </CardFooter> */}
             </Card>
         </div>
@@ -61,6 +110,5 @@ const BudgetItem = (props) => {
 
     );
 }
-// style={{maxWidth: "10rem", margin: "auto"}}
 
 export default BudgetItem

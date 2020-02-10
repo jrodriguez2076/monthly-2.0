@@ -57,7 +57,7 @@ const Budgets = (props) => {
           <hr></hr>
         </Container>
       </Jumbotron>
-      <BudgetItem budgets={Budgets} expenses={Expenses}></BudgetItem>
+      <BudgetItem budgets={Budgets} expenses={Expenses} updateBudgets={getBudgets}></BudgetItem>
       <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
       <div className="d-flex justify-content-center">
         <ActionButton Feature="budget" updateBudgets={getBudgets}></ActionButton>

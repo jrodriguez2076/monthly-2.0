@@ -36,7 +36,8 @@ const ActionButton = (props) => {
                 type={props.Feature}
                 updateBudgets={props.updateBudgets}
                 updateExpenses={props.updateExpenses}
-                updateIncomes={props.updateIncomes}>
+                updateIncomes={props.updateIncomes}
+                fromHome={props.fromHome}>
                 
             </GenericModal>
         </Col>

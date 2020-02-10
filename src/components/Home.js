@@ -45,9 +45,9 @@ const Home = (props) => {
             <Container>
                 <div >
                     <Row className="d-flex justify-content-center">
-                        <ActionButton Feature="expense" HandleNewExpense=""></ActionButton>
-                        <ActionButton Feature="income"></ActionButton>
-                        <ActionButton Feature="budget"></ActionButton>
+                        <ActionButton Feature="expense" fromHome={true}></ActionButton>
+                        <ActionButton Feature="income" fromHome={true}></ActionButton>
+                        <ActionButton Feature="budget" fromHome={true}></ActionButton>
                     </Row>
                 </div>
                 <div className="row">

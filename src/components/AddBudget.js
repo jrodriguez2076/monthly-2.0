@@ -61,8 +61,10 @@ const AddBudget = (props) => {
                 props.toggle()
             })
 
-        console.log("NOW TO REFRESH BUDGETS")    
-        props.update();
+        if (!props.fromHome) {
+            console.log("NOW TO REFRESH BUDGETS")
+            props.update();
+        }
 
     }
 
@@ -82,7 +84,7 @@ const AddBudget = (props) => {
         <Form onSubmit={handleSubmit}>
             <FormGroup>
                 <Label for="name">Budget Name</Label>
-                <Input type="text" name="name" id="name" onChange={handleChangeName} />
+                <Input type="text" name="name" id="name" onChange={handleChangeName} value={props.item? props.item.name:undefined}/>
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Budget Amount</Label>
@@ -92,18 +94,19 @@ const AddBudget = (props) => {
                     id="amount"
                     placeholder="Enter a general budget amount"
                     onChange={handleChangeAmount}
+                    value={props.item? props.item.amount:undefined}
                 />
             </FormGroup>
             <FormGroup>
                 <Label for="description">Enter a brief budget description</Label>
-                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} />
+                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} value={props.item? props.item.description:undefined}/>
             </FormGroup>
             <FormGroup>
                 <p>Choose an Icon for the Budget</p>
                 <Label htmlFor="iconSelect" style={{ "margin": ".8rem" }}>
                     <img src="/img/icon/budgets/aircraft.png" style={{ maxWidth: "3rem" }}></img>
                 </Label>
-                <Input type="radio" name="iconSelect" id="iconSelect" style={radioStyle} onChange={handleChangeIcon}>
+                <Input type="radio" name="iconSelect" id="iconSelect" style={radioStyle} onChange={handleChangeIcon} >
                 </Input>
                 <Label htmlFor="iconSelect2" style={{ "margin": ".8rem" }}>
                     <img src="/img/icon/budgets/tray.png" style={{ maxWidth: "3rem" }}></img>
