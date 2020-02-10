@@ -11,7 +11,6 @@ const Budgets = (props) => {
 
   useEffect(() => {
     getBudgets();
-    // getLatestExpenses();
   }, []);
 
   const [Budgets, setBudgets] = useState([{

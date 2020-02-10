@@ -4,18 +4,18 @@ import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddExpense = (props) => {
 
-    useEffect(() =>{ 
+    useEffect(() => {
         getBudgets();
         getUsers()
     }, []);
 
-    const [ExpenseDate, setExpenseDate] = useState('')
-    const [Amount, setAmount] = useState(0)
-    const [User, setUser] = useState('')
-    const [Description, setDescription] = useState('')
-    const [Budget, setBudget] = useState('')
-    const [Location, setLocation] = useState('')
-    const [Method, setMethod] = useState(0)
+    const [ExpenseDate, setExpenseDate] = props.item ? useState(props.item.expenseDate) : useState('')
+    const [Amount, setAmount] = props.item ? useState(props.item.amount) : useState(0)
+    const [User, setUser] = props.item ? useState(props.item.user) : useState('')
+    const [Description, setDescription] = props.item ? useState(props.item.description) : useState('')
+    const [Budget, setBudget] = props.item ? useState(props.item.budget) : useState('')
+    const [Location, setLocation] = props.item ? useState(props.item.location) : useState('')
+    const [Method, setMethod] = props.item ? useState(props.item.method) : useState(0)
     const [ExistingBudgets, setExistingBudgets] = useState()
     const [ExistingUsers, setExistingUsers] = useState()
 
@@ -45,7 +45,7 @@ const AddExpense = (props) => {
             )
             .then(res => {
                 let UserOptions = res.map(function (item, i) {
-                    return <option key={i} value = {item.name}>{item.name}</option>
+                    return <option key={i} value={item.name}>{item.name}</option>
                 })
                 setExistingUsers(UserOptions);
                 setUser(res[0].name)
@@ -54,73 +54,123 @@ const AddExpense = (props) => {
 
     const handleChangeDate = (event) => {
         setExpenseDate(event.target.value)
-        console.log(ExpenseDate);
     }
 
     const handleChangeAmount = (event) => {
         setAmount(event.target.value)
-        console.log(Amount);
     }
 
     const handleChangeUser = (event) => {
         setUser(event.target.value)
-        console.log(User);
     }
 
     const handleChangeDescription = (event) => {
         setDescription(event.target.value)
-        console.log(Description);
     }
 
     const handleChangeBudget = (event) => {
         setBudget(event.target.value)
-        console.log(Budget);
     }
 
     const handleChangeLocation = (event) => {
         setLocation(event.target.value)
-        console.log(Location);
     }
 
     const handleChangeMethod = (event) => {
         // setMonthly(event.target.value)
-        console.log(Method)
 
         // console.log(setMonthly);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        let data = {
-            "amount": Amount,
-            "date": ExpenseDate,
-            "user": User,
-            "budget": Budget,
-            "description": Description,
-            "location": Location,
-            "method": Method
-        };
+        let data = {}
+        let expenseRequest = {};
 
-        let incomeRequest = new Request(`/api/expenses`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        if (props.edit) {
+            let _id = props.item._id;
+            // let update = props.item;
+            console.log("entering edit")
+            console.log(`${Amount}, ${ExpenseDate}, ${Description}`)
+            data = {
+                "_id": _id,
+                "update": {
+                    "amount": Amount,
+                    "date": ExpenseDate,
+                    "user": User,
+                    "budget": Budget,
+                    "description": Description,
+                    "location": Location,
+                    "method": Method
+                }
             }
-        })
 
-        fetch(incomeRequest)
+            expenseRequest = new Request(`/api/expenses`, {
+                method: 'PUT',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(JSON.stringify(data));
+
+        } else {
+
+            data = {
+                "amount": Amount,
+                "date": ExpenseDate,
+                "user": User,
+                "budget": Budget,
+                "description": Description,
+                "location": Location,
+                "method": Method
+            };
+
+            expenseRequest = new Request(`/api/expenses`, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+
+        }
+
+        // data = {
+        //     "amount": Amount,
+        //     "date": ExpenseDate,
+        //     "user": User,
+        //     "budget": Budget,
+        //     "description": Description,
+        //     "location": Location,
+        //     "method": Method
+        // };
+
+        // let expenseRequest = new Request(`/api/expenses`, {
+        //     method: 'POST',
+        //     body: JSON.stringify(data),
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     }
+        // })
+
+        fetch(expenseRequest)
             .then(data => {
-                console.log(data)
                 return data
             }
             )
             .then(res => {
                 console.log(res);
-                props.update();
                 props.toggle();
             })
+
+        if (!props.fromHome) {
+            console.log("NOW TO REFRESH EXPENSES")
+            props.update();
+        }
 
 
     }
@@ -139,6 +189,7 @@ const AddExpense = (props) => {
                     id="expenseDate"
                     placeholder="Choose a date for the expense"
                     onChange={handleChangeDate}
+                    value={ExpenseDate}
                 />
             </FormGroup>
             <FormGroup>
@@ -149,31 +200,32 @@ const AddExpense = (props) => {
                     id="amount"
                     placeholder="How much was spent?"
                     onChange={handleChangeAmount}
+                    value={Amount}
                 />
             </FormGroup>
             <FormGroup>
                 <Label for="user">Who made the expense?</Label>
-                <Input type="select" name="user" id="user" onChange={handleChangeUser}>
+                <Input type="select" name="user" id="user" onChange={handleChangeUser} value={User}>
                     {ExistingUsers}
                 </Input>
             </FormGroup>
             <FormGroup>
                 <Label for="budget">Budget associated</Label>
-                <Input type="select" name="budget" id="budget" onChange={handleChangeBudget}>
+                <Input type="select" name="budget" id="budget" onChange={handleChangeBudget} value={Budget}>
                     {ExistingBudgets}
                 </Input>
             </FormGroup>
             <FormGroup>
                 <Label for="description">Brief description</Label>
-                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} />
+                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} value={Description} />
             </FormGroup>
             <FormGroup>
                 <Label for="location">Location</Label>
-                <Input type="text" name="location" id="location" onChange={handleChangeLocation} />
+                <Input type="text" name="location" id="location" onChange={handleChangeLocation} value={Location} />
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Cash
+                    <Input type="checkbox" name="method" onChange={handleChangeMethod} value={Method} /> Cash
                 </Label>
             </FormGroup>
             <FormGroup check>
@@ -186,7 +238,7 @@ const AddExpense = (props) => {
                     <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Credit
                 </Label>
             </FormGroup>
-            <Button color="primary" type="submit">Submit</Button>
+            <Button color="primary" type="submit">{props.edit ? "Update" : "Create"}</Button>
             <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </Form >
     )
