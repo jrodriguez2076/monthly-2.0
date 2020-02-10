@@ -4,10 +4,12 @@ import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddBudget = (props) => {
 
-    const [Amount, setAmount] = useState(0)
-    const [Name, setName] = useState('')
-    const [Description, setDescription] = useState('')
-    const [Icon, setIcon] = useState(0)
+    const [Amount, setAmount] = props.item? useState(props.item.amount):useState(0)
+    const [Name, setName] = props.item? useState(props.item.name):useState('')
+    const [Description, setDescription] = props.item? useState(props.item.description):useState('')
+    const [Icon, setIcon] = props.item? useState(props.item.icon):useState(0)
+
+    
 
     const handleChangeAmount = (event) => {
         setAmount(event.target.value)
@@ -34,21 +36,46 @@ const AddBudget = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        let data = {
-            "amount": Amount,
-            "name": Name,
-            "description": Description,
-            "icon": Icon
-        };
 
-        let budgetRequest = new Request(`/api/budgets`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        let data = {}
+
+        let budgetRequest = {};
+
+        if (props.edit) {
+            console.log("entering edit")
+            data = {
+                "_id": props.item._id,
+                "update": props.item
             }
-        })
+
+            budgetRequest = new Request(`/api/budgets`, {
+                method: 'PUT',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(budgetRequest);
+
+        } else {
+            console.log("this is not edit")
+            data = {
+                "amount": Amount,
+                "name": Name,
+                "description": Description,
+                "icon": Icon
+            }
+
+            budgetRequest = new Request(`/api/budgets`, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
 
         fetch(budgetRequest)
             .then(data => {
@@ -65,8 +92,8 @@ const AddBudget = (props) => {
             console.log("NOW TO REFRESH BUDGETS")
             props.update();
         }
-
     }
+
 
     const radioStyle = {
         "marginTop": ".2rem",
@@ -84,7 +111,7 @@ const AddBudget = (props) => {
         <Form onSubmit={handleSubmit}>
             <FormGroup>
                 <Label for="name">Budget Name</Label>
-                <Input type="text" name="name" id="name" onChange={handleChangeName} value={props.item? props.item.name:undefined}/>
+                <Input type="text" name="name" id="name" onChange={handleChangeName} value={Name}/>
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Budget Amount</Label>
@@ -94,12 +121,12 @@ const AddBudget = (props) => {
                     id="amount"
                     placeholder="Enter a general budget amount"
                     onChange={handleChangeAmount}
-                    value={props.item? props.item.amount:undefined}
+                    value={Amount}
                 />
             </FormGroup>
             <FormGroup>
                 <Label for="description">Enter a brief budget description</Label>
-                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} value={props.item? props.item.description:undefined}/>
+                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} value={Description} />
             </FormGroup>
             <FormGroup>
                 <p>Choose an Icon for the Budget</p>

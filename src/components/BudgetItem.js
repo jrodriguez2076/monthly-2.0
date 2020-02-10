@@ -92,8 +92,10 @@ const BudgetItem = (props) => {
                         modal={ConfirmModal}
                         toggle={toggle}
                         type={ItemAction}
+                        edit={true}
                         action={() => { deleteItem() }}
                         item={SelectedItem}
+                        updateBudgets={props.updateBudgets}
                         delete></GenericModal>
                 </CardBody>
                 {/* <CardFooter> */}
