@@ -51,9 +51,10 @@ const LatestExpenses = (props) => {
                             <th>Amount</th>
                             <th>Description</th>
                             <th>Budget</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <ExpenseItem expenses={Expenses}></ExpenseItem>
+                    <ExpenseItem expenses={Expenses} updateExpenses={getLatestExpenses}></ExpenseItem>
                 </Table>
             </div>
             <div className="row d-flex justify-content-center">

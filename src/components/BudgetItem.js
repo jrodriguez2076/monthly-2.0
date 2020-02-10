@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
-    Card, CardImg, CardTitle, CardText, CardDeck,
+    Card, CardImg, CardText,
     CardBody,
     CardGroup,
     CardHeader,
-    CardFooter,
     Button
 } from 'reactstrap';
-import { get } from 'mongoose';
 
 import toCurrency from './submodules/submodule'
 import GenericModal from './GenericModal';
@@ -60,13 +58,10 @@ const BudgetItem = (props) => {
                 props.updateBudgets();
                 toggle();
             })
-
-
     }
 
     const budgetMapper = props.budgets.map((item, i) => {
         let spent = 0;
-
         try {
             props.expenses.forEach(element => {
                 if (element.budget == item.name) {
@@ -74,11 +69,9 @@ const BudgetItem = (props) => {
                 }
             });
         }
-
         catch (err) {
         }
-
-
+        
         return <div key={i} className="col-md-6" style={{ marginBottom: "2rem" }}>
             <Card key={i} >
                 <CardImg className="mx-auto" top width="100%" src={getIconPath(item)} style={{ width: "7rem" }} alt="Card image cap" />
@@ -98,9 +91,6 @@ const BudgetItem = (props) => {
                         updateBudgets={props.updateBudgets}
                         delete></GenericModal>
                 </CardBody>
-                {/* <CardFooter> */}
-
-                {/* </CardFooter> */}
             </Card>
         </div>
     })

@@ -3,9 +3,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 const AddIncome = (props) => {
-    useEffect(() =>{ 
+    useEffect(() => {
         getUsers()
     }, []);
+
+    const [Amount, setAmount] = props.item ? useState(props.item.amount) : useState(0);
+    const [User, setUser] = props.item ? useState(props.item.user) : useState('');
+    const [Description, setDescription] = props.item ? useState(props.item.description) : useState('');
+    const [Monthly, setMonthly] = props.item ? useState(props.item.monthly) : useState(false);
+    const [ExistingUsers, setExistingUsers] = useState();
 
     const getUsers = () => {
         console.log('Getting all users')
@@ -22,66 +28,84 @@ const AddIncome = (props) => {
             })
     };
 
-    const [Amount, setAmount] = useState(0);
-    const [User, setUser] = useState('');
-    const [Description, setDescription] = useState('');
-    const [Monthly, setMonthly] = useState(false);
-    const [ExistingUsers, setExistingUsers] = useState();
-
-
-
     const handleChangeAmount = (event) => {
         setAmount(event.target.value)
-        console.log(Amount);
     }
 
     const handleChangeUser = (event) => {
         setUser(event.target.value)
-        console.log(User);
     }
 
     const handleChangeDescription = (event) => {
         setDescription(event.target.value)
-        console.log(Description);
     }
 
     const handleChangeMonthly = (event) => {
-        // setMonthly(event.target.value)
         setMonthly(!Monthly)
-        console.log(Monthly)
-
-        // console.log(setMonthly);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        let data = {
-            "amount": Amount,
-            "user": User,
-            "description": Description,
-            "monthly": Monthly
-        };
+        let data = {}
+        let incomeRequest = {};
 
-        let incomeRequest = new Request(`/api/incomes`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        if (props.edit) {
+            let _id = props.item._id;
+            console.log("entering edit")
+            console.log(`${Amount}, ${User}, ${Description}, ${Monthly}`)
+            data = {
+                "_id": _id,
+                "update": {
+                    "amount": Amount,
+                    "user": User,
+                    "description": Description,
+                    "monthly": Monthly
+                }
             }
-        })
+
+            incomeRequest = new Request(`/api/incomes`, {
+                method: 'PUT',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(JSON.stringify(data));
+
+        } else {
+            console.log("this is not edit")
+            data = {
+                "amount": Amount,
+                "user": User,
+                "description": Description,
+                "monthly": Monthly
+            };
+
+            incomeRequest = new Request(`/api/incomes`, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
 
         fetch(incomeRequest)
             .then(data => {
-                console.log(data)
                 return data
             }
             )
             .then(res => {
                 console.log(res);
-                props.update();
                 props.toggle();
             })
+
+        if (!props.fromHome) {
+            console.log("NOW TO REFRESH INCOMES")
+            props.update();
+        }
 
     }
 
@@ -99,7 +123,7 @@ const AddIncome = (props) => {
                                 id="amount"
                                 placeholder="Income amount"
                                 onChange={handleChangeAmount}
-                                required
+                                value={Amount}
                             />
                         </FormGroup>
                     </div>
@@ -110,7 +134,8 @@ const AddIncome = (props) => {
                                 type="select"
                                 name="user"
                                 id="user"
-                                onChange={handleChangeUser}>
+                                onChange={handleChangeUser}
+                                value={User}>
                                 {ExistingUsers}
                             </Input>
                         </FormGroup>
@@ -124,7 +149,8 @@ const AddIncome = (props) => {
                                 type="textarea"
                                 name="description"
                                 id="description"
-                                onChange={handleChangeDescription} />
+                                onChange={handleChangeDescription} 
+                                value={Description}/>
                         </FormGroup>
                     </div>
                 </div>
@@ -148,7 +174,7 @@ const AddIncome = (props) => {
                 <div className="row">
 
                     <div className="col-sm-2">
-                        <Button color="primary" type="submit" onClick={handleSubmit}>Create</Button>
+                        <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit? "Update":"Create"}</Button>
                     </div>
                     <div className="col-sm-2">
                         <Button color="secondary" onClick={props.toggle}>Cancel</Button>

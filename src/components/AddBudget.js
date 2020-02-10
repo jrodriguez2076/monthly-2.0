@@ -13,37 +13,30 @@ const AddBudget = (props) => {
 
     const handleChangeAmount = (event) => {
         setAmount(event.target.value)
-        console.log(Amount);
     }
 
     const handleChangeName = (event) => {
         setName(event.target.value)
-        console.log(Name);
     }
 
     const handleChangeDescription = (event) => {
         setDescription(event.target.value)
-        console.log(Description);
     }
 
     const handleChangeIcon = (event) => {
         // setMonthly(event.target.value)
         setIcon(0)
-        console.log(Icon)
-
         // console.log(setMonthly);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-
         let data = {}
-
         let budgetRequest = {};
 
         if (props.edit) {
             let _id = props.item._id;
-            let update = props.item;
+            // let update = props.item;
             console.log("entering edit")
             console.log(`${Amount}, ${Name}, ${Description}, ${Icon}`)
             data = {
@@ -87,7 +80,6 @@ const AddBudget = (props) => {
 
         fetch(budgetRequest)
             .then(data => {
-                console.log(data)
                 return data
             }
             )
@@ -102,24 +94,21 @@ const AddBudget = (props) => {
         }
     }
 
-
     const radioStyle = {
         "marginTop": ".2rem",
         "marginLeft": "-.6rem"
     }
 
-    // useEffect(() => getIcons(), []);
-
-    // const getIcons = async ()=>{
-
-    // }
-
-
     return (
         <Form onSubmit={handleSubmit}>
             <FormGroup>
                 <Label for="name">Budget Name</Label>
-                <Input type="text" name="name" id="name" onChange={handleChangeName} value={Name} />
+                <Input 
+                    type="text" 
+                    name="name" 
+                    id="name" 
+                    onChange={handleChangeName} 
+                    value={Name}/>
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Budget Amount</Label>
@@ -134,7 +123,11 @@ const AddBudget = (props) => {
             </FormGroup>
             <FormGroup>
                 <Label for="description">Enter a brief budget description</Label>
-                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} value={Description} />
+                <Input type="textarea" 
+                name="description" 
+                id="description" 
+                onChange={handleChangeDescription} 
+                value={Description} />
             </FormGroup>
             <FormGroup>
                 <p>Choose an Icon for the Budget</p>

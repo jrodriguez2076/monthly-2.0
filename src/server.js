@@ -111,9 +111,9 @@ app.post('/api/expenses', async (req, res) => {
 });
 
 app.put('/api/expenses', async (req, res) => {
-    let selectedExpense = req.body;
-    let update = JSON.parse(req.body.update)
-    const expense = await req.context.models.Expense.findByIdAndUpdate(selectedExpense.expenseId, update)
+    let selectedExpense = req.body._id;
+    let update = req.body.update;
+    const expense = await req.context.models.Expense.findByIdAndUpdate(selectedExpense, update)
     res.send('Successfully updated Expense')
 });
 
@@ -146,9 +146,9 @@ app.post('/api/incomes', async (req, res) => {
 });
 
 app.put('/api/incomes', async (req, res) => {
-    let selectedIncome = req.body;
-    let update = JSON.parse(req.body.update)
-    const income = await req.context.models.Income.findByIdAndUpdate(selectedIncome.incomeId, update)
+    let selectedIncome = req.body._id;
+    let update = req.body.update;
+    const income = await req.context.models.Income.findByIdAndUpdate(selectedIncome, update)
     res.send('Successfully updated Income')
 });
 
@@ -186,11 +186,8 @@ app.post('/api/budgets', async (req, res) => {
 
 app.put('/api/budgets', async (req, res) => {
     let selectedBudget = req.body._id;
-    console.log(`*****************${typeof(req.body.update)}`)
     let update = req.body.update;
-    console.log(update)
     const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget,update)
-    console.log(budget)
     res.send('Successfully updated Budget')
 });
 

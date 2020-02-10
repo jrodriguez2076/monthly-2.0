@@ -7,7 +7,6 @@ import {
 import IncomeItem from './IncomeItem'
 import ActionButton from './ActionButton';
 
-
 const Incomes = (props) => {
 
   useEffect(() => getIncomes(), []);
@@ -28,7 +27,7 @@ const Incomes = (props) => {
       }
       )
       .then(res => {
-        setIncomes(res);
+        setIncomes([...res]);
       })
   };
 
@@ -40,7 +39,7 @@ const Incomes = (props) => {
           <hr></hr>
         </Container>
       </Jumbotron>
-      <IncomeItem incomes={Incomes}></IncomeItem>
+      <IncomeItem incomes={Incomes} updateIncomes={getIncomes}></IncomeItem>
       <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
         <ActionButton Feature="income" updateIncomes={getIncomes}></ActionButton>
