@@ -39,6 +39,7 @@ app.use((req, res, next) => {
 
 // Expenses API
 app.get('/api/icons', (req, res) => {
+    //Check if user specified section (avatar,income,budget.etc)
     if (req.query.section) {
         let iconSection = req.query.section;
         const prefix = "dist/img/icon/";
@@ -69,6 +70,22 @@ app.get('/api/icons', (req, res) => {
     else res.send('no icons found in this folder');
 });
 
+app.get('/api/icons/all', (req, res) => {
+    let sectionPath = path.join(process.cwd(), req.body.section);
+    console.log(req.body.section)
+    fs.readdir(sectionPath, (err, files) => {
+        try {
+            files.forEach((item) => {
+                console.log(item)
+            })
+        }
+        catch{
+            console.log(err)
+        }
+        res.send("Icons")
+    })
+});
+
 app.get('/api/expenses', async (req, res) => {
     if (req.query.month) {
         let queriedMonth;
@@ -90,23 +107,23 @@ app.post('/api/expenses', async (req, res) => {
     // if (req.query.month) {
     //     let month;
     //     month = req.query.month;
-        // let newExpense = req.body;
-        let expenseDate = Date.parse(req.body.date)
-        // newExpense["amount"] = parseInt(newExpense["amount"]);
-        // newExpense["id"] = parseInt(newExpense["id"]);
-        // console.log(newExpense)
-        // expenseQuery[month].push(newExpense);
-        console.log(req.body)
-        const expenseDb = await req.context.models.Expense.create({
-            user: req.body.user,
-            date: expenseDate,
-            location: req.body.location,
-            amount: req.body.amount,
-            description: req.body.description,
-            budget: req.body.budget
-        })
-        console.log(expenseDb)
-        res.send(`successfully posted new income: ${expenseDb}`)
+    // let newExpense = req.body;
+    let expenseDate = Date.parse(req.body.date)
+    // newExpense["amount"] = parseInt(newExpense["amount"]);
+    // newExpense["id"] = parseInt(newExpense["id"]);
+    // console.log(newExpense)
+    // expenseQuery[month].push(newExpense);
+    console.log(req.body)
+    const expenseDb = await req.context.models.Expense.create({
+        user: req.body.user,
+        date: expenseDate,
+        location: req.body.location,
+        amount: req.body.amount,
+        description: req.body.description,
+        budget: req.body.budget
+    })
+    console.log(expenseDb)
+    res.send(`successfully posted new income: ${expenseDb}`)
     // }
 });
 
@@ -133,7 +150,7 @@ app.get('/api/incomes', async (req, res) => {
 
 app.post('/api/incomes', async (req, res) => {
     console.log(req.body)
-    if (req.body){
+    if (req.body) {
         const newIncome = await req.context.models.Income.create({
             user: req.body.user,
             amount: req.body.amount,
@@ -187,7 +204,7 @@ app.post('/api/budgets', async (req, res) => {
 app.put('/api/budgets', async (req, res) => {
     let selectedBudget = req.body._id;
     let update = req.body.update;
-    const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget,update)
+    const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget, update)
     res.send('Successfully updated Budget')
 });
 
