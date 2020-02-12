@@ -24,7 +24,7 @@ const IncomeItem = (props) => {
     const selectItem = (item, action) => {
         console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
-        if (action==0){
+        if (action == 0) {
             setItemAction("income");
         } else if (action == 1) setItemAction("confirm");
         toggle();
@@ -85,8 +85,14 @@ const IncomeItem = (props) => {
                     <CardTitle tag="h3">{toCurrency(item.amount)}</CardTitle>
                     <CardText>{item.user}</CardText>
                     <CardText>{item.description}</CardText>
-                    <Button color="success" onClick={() => selectItem(item,0)}>Edit</Button>
-                    <Button color="danger" onClick={() => selectItem(item,1)}>Delete</Button>
+                    <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 0)}>
+                        <img src="/img/icon/edit.png"></img>
+                    </Button>
+                    <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 1)}>
+                        <img src="/img/icon/close.png" ></img>
+                    </Button>
+                    {/* <Button color="success" onClick={() => selectItem(item,0)}>Edit</Button>
+                    <Button color="danger" onClick={() => selectItem(item,1)}>Delete</Button> */}
                     <GenericModal
                         modal={ConfirmModal}
                         toggle={toggle}

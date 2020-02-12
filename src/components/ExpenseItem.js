@@ -48,10 +48,14 @@ const ExpenseItem = (props) => {
     }
 
     const arrayMapper = props.expenses.map(function (item, i) {
+
+        let formattedDate = new Date(item.date);
+        formattedDate = formattedDate.getDate() + "/" + (formattedDate.getMonth() +1) + "/" + formattedDate.getUTCFullYear();
+
         return <tr key={i}>
             <th scope="row">{i + 1}</th>
             <td>{item.user}</td>
-            <td>{item.date}</td>
+            <td>{formattedDate}</td>
             <td>{item.location}</td>
             <td>{item.amount}</td>
             <td>{item.description}</td>

@@ -26,7 +26,6 @@ const LatestExpenses = (props) => {
             .then(data => { return data.json() }
             )
             .then(res => {
-                console.log('Adding New Expense!!');
                 setExpenses([...res]);
             })
     };

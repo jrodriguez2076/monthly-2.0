@@ -24,7 +24,7 @@ const BudgetItem = (props) => {
     const selectItem = (item, action) => {
         console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
-        if (action==0){
+        if (action == 0) {
             setItemAction("budget");
         } else if (action == 1) setItemAction("confirm");
         toggle();
@@ -71,7 +71,7 @@ const BudgetItem = (props) => {
         }
         catch (err) {
         }
-        
+
         return <div key={i} className="col-md-6" style={{ marginBottom: "2rem" }}>
             <Card key={i} >
                 <CardImg className="mx-auto" top width="100%" src={getIconPath(item)} style={{ width: "7rem" }} alt="Card image cap" />
@@ -79,8 +79,14 @@ const BudgetItem = (props) => {
                 <CardBody>
                     <CardText tag="h5"> ARS {toCurrency(item.amount)}</CardText>
                     <CardText>Available: ARS {toCurrency(item.amount - spent)}</CardText>
-                    <Button color="success" onClick={() => selectItem(item,0)}>Edit</Button>
-                    <Button color="danger" onClick={() => selectItem(item,1)}>Delete</Button>
+                    <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 0)}>
+                        <img src="/img/icon/edit.png"></img>
+                    </Button>
+                    <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 1)}>
+                        <img src="/img/icon/close.png" ></img>
+                    </Button>
+                    {/* <Button color="success" onClick={() => selectItem(item, 0)}>Edit</Button>
+                    <Button color="danger" onClick={() => selectItem(item, 1)}>Delete</Button> */}
                     <GenericModal
                         modal={ConfirmModal}
                         toggle={toggle}

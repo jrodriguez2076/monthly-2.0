@@ -71,19 +71,22 @@ app.get('/api/icons', (req, res) => {
 });
 
 app.get('/api/icons/all', (req, res) => {
-    let sectionPath = path.join(process.cwd(), req.body.section);
-    console.log(req.body.section)
-    fs.readdir(sectionPath, (err, files) => {
-        try {
-            files.forEach((item) => {
-                console.log(item)
-            })
-        }
-        catch{
-            console.log(err)
-        }
-        res.send("Icons")
-    })
+    if (req.query.section) {
+        let sectionPath = path.join(process.cwd(), 'dist/img/icon', req.query.section);
+        console.log(req.query.section)
+        fs.readdir(sectionPath, (err, files) => {
+            try {
+                files.forEach((item) => {
+                    console.log(item)
+                })
+            }
+            catch{
+                console.log(err)
+            }
+            console.log(files);
+            res.send(files)
+        })
+    }
 });
 
 app.get('/api/expenses', async (req, res) => {
@@ -96,7 +99,7 @@ app.get('/api/expenses', async (req, res) => {
             { $match: { month: queriedMonth } }
         ]);
 
-        console.log(expensesdb)
+        console.log(typeof(expensesdb[0].date))
 
         res.send(expensesdb);
     }
@@ -185,11 +188,7 @@ app.get('/api/budgets', async (req, res) => {
 
 app.post('/api/budgets', async (req, res) => {
     let newBudget = req.body;
-    let iconName = '';
-    // budgets.push(newBudget);
-    if (req.body.icon == 0) {
-        iconName = "004-house.svg";
-    } else iconName = req.body.icon
+    let iconName = req.body.icon;
 
     const budgetDb = await req.context.models.Budget.create({
         name: req.body.name,
@@ -197,13 +196,16 @@ app.post('/api/budgets', async (req, res) => {
         description: req.body.description,
         icon: iconName,
     })
-    console.log(budgetDb)
     res.send(`successfully posted new income: ${newBudget}`)
 });
 
 app.put('/api/budgets', async (req, res) => {
     let selectedBudget = req.body._id;
     let update = req.body.update;
+    let iconName = '';
+    if (req.body.icon == 0) {
+        iconName = "house.svg";
+    } else iconName = req.body.icon;
     const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget, update)
     res.send('Successfully updated Budget')
 });
