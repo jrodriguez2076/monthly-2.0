@@ -32,14 +32,16 @@ const Incomes = (props) => {
   };
 
   return (
-    <div className="container">
+    <div>
       <Jumbotron fluid className="row" style={{ backgroundColor: "#E3F6FF" }}>
         <Container fluid className="col-lg-4 offset-lg-4 text-center">
           <h1 className="display-3">Incomes</h1>
           <hr></hr>
         </Container>
       </Jumbotron>
-      <IncomeItem incomes={Incomes} updateIncomes={getIncomes}></IncomeItem>
+      <div className="container">
+        <IncomeItem incomes={Incomes} updateIncomes={getIncomes}></IncomeItem>
+      </div>
       <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
         <ActionButton Feature="income" updateIncomes={getIncomes}></ActionButton>

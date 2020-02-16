@@ -35,7 +35,6 @@ const BudgetItem = (props) => {
     }
 
     const deleteItem = () => {
-        console.log(`DELETING THE FOLLOWING: ${SelectedItem._id}`)
         let data = {
             "budgetId": SelectedItem._id
         }
@@ -57,6 +56,15 @@ const BudgetItem = (props) => {
             .then(res => {
                 props.updateBudgets();
                 toggle();
+                if (res.status >= 200 && res.status < 400) {
+                    props.notifData({
+                        "title": "Budget deleted",
+                        "message": "Budget deleted successfully",
+                        "icon": "delete.gif"
+                    })
+                }
+                props.showToastMessage();
+
             })
     }
 
@@ -95,6 +103,8 @@ const BudgetItem = (props) => {
                         action={() => { deleteItem() }}
                         item={SelectedItem}
                         updateBudgets={props.updateBudgets}
+                        showToastMessage={props.showToastMessage}
+                        notifData={props.notifData}
                         delete></GenericModal>
                 </CardBody>
             </Card>

@@ -5,15 +5,16 @@ import IconItem from './IconItem';
 
 const AddBudget = (props) => {
 
-    useEffect(()=>{
+    useEffect(() => {
         getIcons();
-    },[]);
+    }, []);
 
     const [Amount, setAmount] = props.item ? useState(props.item.amount) : useState(0)
     const [Name, setName] = props.item ? useState(props.item.name) : useState('')
     const [Description, setDescription] = props.item ? useState(props.item.description) : useState('')
     const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState("house.svg")
     const [IconList, setIconList] = useState([]);
+    const [Monthly, setMonthly] = useState(false);
 
 
 
@@ -30,14 +31,24 @@ const AddBudget = (props) => {
     }
 
     const handleChangeIcon = (event) => {
-        console.log(event.target.value);
-        setIcon(IconList[event.target.value]);
+        try {
+            console.log(` from input: ${event.target.value}`);
+            setIcon(IconList[event.target.value]);
+        } catch {
+            setIcon(IconList[event]);
+            console.log(`from clicking image: ${event}`);
+        }
+    }
+
+    const handleChangeMonthly = (event) => {
+        setMonthly(!Monthly)
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         let data = {}
         let budgetRequest = {};
+        let notifInfo = {};
 
         if (props.edit) {
             let _id = props.item._id;
@@ -50,8 +61,15 @@ const AddBudget = (props) => {
                     "amount": Amount,
                     "name": Name,
                     "description": Description,
-                    "icon": Icon
+                    "icon": Icon,
+                    "monthly": Monthly
                 }
+            }
+
+            notifInfo = {
+                "title": "Updated!",
+                "message": "Budget updated successfully",
+                "icon": "success-2.gif"
             }
 
             budgetRequest = new Request(`/api/budgets`, {
@@ -62,15 +80,20 @@ const AddBudget = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(JSON.stringify(data));
 
         } else {
-            console.log("this is not edit")
             data = {
                 "amount": Amount,
                 "name": Name,
                 "description": Description,
-                "icon": Icon
+                "icon": Icon,
+                "monthly": Monthly
+            }
+
+            notifInfo = {
+                "title": "Added!",
+                "message": "Budget added successfully",
+                "icon": "success-2.gif"
             }
 
             budgetRequest = new Request(`/api/budgets`, {
@@ -91,11 +114,15 @@ const AddBudget = (props) => {
             .then(res => {
                 console.log(res);
                 props.toggle();
-                props.toggleToastMessage();
+
+                if (res.status >= 200 && res.status < 400) {
+                    props.notifData(notifInfo)
+                    props.showToastMessage();
+                }
             })
 
         if (!props.fromHome) {
-            props.update();          
+            props.update();
         }
     }
 
@@ -113,7 +140,7 @@ const AddBudget = (props) => {
                 console.log(`data received: ${data}`)
                 return data.json()
             })
-            .then(res=>{
+            .then(res => {
                 setIconList([...res])
             })
     }
@@ -159,7 +186,7 @@ const AddBudget = (props) => {
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" /> This is a monthly budget
+                    <Input type="checkbox" onChange={handleChangeMonthly} /> This is a monthly budget
                 </Label>
             </FormGroup>
             <hr></hr>

@@ -189,12 +189,15 @@ app.get('/api/budgets', async (req, res) => {
 app.post('/api/budgets', async (req, res) => {
     let newBudget = req.body;
     let iconName = req.body.icon;
+    let today = new Date();
 
     const budgetDb = await req.context.models.Budget.create({
         name: req.body.name,
         amount: req.body.amount,
         description: req.body.description,
         icon: iconName,
+        month: today.getMonth() + 1,
+        monthly:req.body.monthly
     })
     res.send(`successfully posted new income: ${newBudget}`)
 });

@@ -39,7 +39,7 @@ const Home = (props) => {
 
     return (
         <div>
-            <div className="container">
+            <div >
                 <ExpenseTotal totalMonthlyAmount={toCurrency(Amount)} currency="ARS"></ExpenseTotal>
             </div>
             <Container>

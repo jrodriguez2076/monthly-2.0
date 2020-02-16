@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Card, CardImg, CardTitle, CardText, CardDeck,
   CardBody, Jumbotron, Container
@@ -9,8 +9,6 @@ import ActionButton from './ActionButton';
 import ToastMessage from './ToastMessage';
 
 const Budgets = (props) => {
-
-
 
   useEffect(() => {
     getBudgets();
@@ -23,15 +21,20 @@ const Budgets = (props) => {
     "icon": "",
   },]);
 
+  const [NotifData, setNotifData] = useState({
+    "title": "",
+    "message": "",
+    "icon": ""
+  })
+
   const [Expenses, setExpenses] = useState();
   const [showToast, setShowToast] = useState(false);
-  const toggleToastMessage = async () => {
-    setShowToast(!showToast)
-    console.log('toggling')
+
+  const showToastMessage = async () => {
+    setShowToast(true);
   };
 
   const getBudgets = () => {
-    console.log("GETTING BUDGETS!!!")
     let d = new Date();
     fetch(`/api/budgets`)
       .then(data => {
@@ -57,18 +60,28 @@ const Budgets = (props) => {
 
 
   return (
-    <div className="container">
-      <ToastMessage toastTitle="Success!" show={showToast} toggleToastMessage={toggleToastMessage}></ToastMessage>
+    <div>
+      <ToastMessage 
+      toastTitle={NotifData.title} 
+      show={showToast} 
+      hideToastMessage={() => setShowToast(false)}
+      ToastMessage={NotifData.message}
+      toastIcon={NotifData.icon}
+      info={NotifData}>
+      </ToastMessage>
       <Jumbotron fluid className="row" style={{ backgroundColor: "#CCCA8D" }}>
         <Container fluid className="col-lg-4 offset-lg-4 text-center">
           <h1 className="display-3">Budgets</h1>
           <hr></hr>
         </Container>
       </Jumbotron>
-      <BudgetItem budgets={Budgets} expenses={Expenses} updateBudgets={getBudgets}></BudgetItem>
+      <div className="container">
+        <BudgetItem budgets={Budgets} expenses={Expenses} updateBudgets={getBudgets} showToastMessage={showToastMessage} notifData={setNotifData}></BudgetItem>
+      </div>
       <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
-        <ActionButton Feature="budget" updateBudgets={getBudgets} toggleToastMessage={toggleToastMessage}></ActionButton>
+
+        <ActionButton Feature="budget" updateBudgets={getBudgets} showToastMessage={showToastMessage} notifData={setNotifData}></ActionButton>
       </div>
     </div>
   );
