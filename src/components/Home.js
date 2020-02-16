@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { Button, Row, Container } from 'reactstrap';
+import { Button, Row, Container, Spinner } from 'reactstrap';
 
 
 import ActionButton from './ActionButton';
@@ -13,24 +13,24 @@ const Home = (props) => {
 
     const [Amount, setAmount] = useState(0);
 
-    
+
 
     const changeTotalExpense = () => {
         let d = new Date();
-        fetch(`/api/expenses?month=${d.getMonth()+1}`)
+        fetch(`/api/expenses?month=${d.getMonth() + 1}`)
             .then(data => { return data.json() }
             )
             .then(res => {
                 console.log(res)
                 let total = 0;
-                for (const el of res){
+                for (const el of res) {
                     console.log(`Adding expense: ${el.amount}`)
                     total += el.amount
                     console.log(total)
                 }
                 setAmount(total)
             })
-        
+
     };
 
     // const toCurrency = (number) => {
@@ -51,6 +51,7 @@ const Home = (props) => {
                     </Row>
                 </div>
                 <div className="row">
+                    <Spinner color="primary" size="lg"/>
                 </div>
             </Container>
         </div>

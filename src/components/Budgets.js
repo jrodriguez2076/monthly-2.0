@@ -6,8 +6,11 @@ import {
 
 import BudgetItem from './BudgetItem'
 import ActionButton from './ActionButton';
+import ToastMessage from './ToastMessage';
 
 const Budgets = (props) => {
+
+
 
   useEffect(() => {
     getBudgets();
@@ -20,7 +23,12 @@ const Budgets = (props) => {
     "icon": "",
   },]);
 
-  const [Expenses, setExpenses] = useState()
+  const [Expenses, setExpenses] = useState();
+  const [showToast, setShowToast] = useState(false);
+  const toggleToastMessage = async () => {
+    setShowToast(!showToast)
+    console.log('toggling')
+  };
 
   const getBudgets = () => {
     console.log("GETTING BUDGETS!!!")
@@ -39,17 +47,18 @@ const Budgets = (props) => {
   const getLatestExpenses = () => {
     let d = new Date();
     fetch(`/api/expenses?month=${d.getMonth() + 1}`)
-        .then(data => { return data.json() }
-        )
-        .then(res => {
-            setExpenses(res);
-        })
-};
+      .then(data => { return data.json() }
+      )
+      .then(res => {
+        setExpenses(res);
+      })
+  };
 
 
 
   return (
     <div className="container">
+      <ToastMessage toastTitle="Success!" show={showToast} toggleToastMessage={toggleToastMessage}></ToastMessage>
       <Jumbotron fluid className="row" style={{ backgroundColor: "#CCCA8D" }}>
         <Container fluid className="col-lg-4 offset-lg-4 text-center">
           <h1 className="display-3">Budgets</h1>
@@ -57,9 +66,9 @@ const Budgets = (props) => {
         </Container>
       </Jumbotron>
       <BudgetItem budgets={Budgets} expenses={Expenses} updateBudgets={getBudgets}></BudgetItem>
-      <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
+      <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
-        <ActionButton Feature="budget" updateBudgets={getBudgets}></ActionButton>
+        <ActionButton Feature="budget" updateBudgets={getBudgets} toggleToastMessage={toggleToastMessage}></ActionButton>
       </div>
     </div>
   );

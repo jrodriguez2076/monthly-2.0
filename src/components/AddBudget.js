@@ -90,12 +90,12 @@ const AddBudget = (props) => {
             )
             .then(res => {
                 console.log(res);
-                props.toggle()
+                props.toggle();
+                props.toggleToastMessage();
             })
 
         if (!props.fromHome) {
-            console.log("NOW TO REFRESH BUDGETS")
-            props.update();
+            props.update();          
         }
     }
 
