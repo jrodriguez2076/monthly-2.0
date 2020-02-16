@@ -15,11 +15,17 @@ const AddBudget = (props) => {
     const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState("house.svg")
     const [IconList, setIconList] = useState([]);
     const [Monthly, setMonthly] = useState(false);
+    const [Validation, setValidation] = useState(false)
 
 
 
     const handleChangeAmount = (event) => {
-        setAmount(event.target.value)
+        // if ( typeof (event.target.value) == Number) {
+        console.log(event.target.value)
+        if (!event.target.value) setValidation(true)
+        else setValidation(false)
+        setAmount(event.target.value);
+        // }
     }
 
     const handleChangeName = (event) => {
@@ -32,11 +38,9 @@ const AddBudget = (props) => {
 
     const handleChangeIcon = (event) => {
         try {
-            console.log(` from input: ${event.target.value}`);
             setIcon(IconList[event.target.value]);
         } catch {
             setIcon(IconList[event]);
-            console.log(`from clicking image: ${event}`);
         }
     }
 
@@ -50,6 +54,7 @@ const AddBudget = (props) => {
         let budgetRequest = {};
         let notifInfo = {};
 
+        if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
             // let update = props.item;
@@ -118,6 +123,13 @@ const AddBudget = (props) => {
                 if (res.status >= 200 && res.status < 400) {
                     props.notifData(notifInfo)
                     props.showToastMessage();
+                } else if (res.status == 422) {
+                    props.notifData({
+                        "title": "Error!",
+                        "message": "Budget data is wrong. Try again!",
+                        "icon": "warning.gif"
+                    })
+                    props.showToastMessage();
                 }
             })
 
@@ -171,6 +183,7 @@ const AddBudget = (props) => {
                     onChange={handleChangeAmount}
                     value={Amount}
                 />
+                {Validation? <div style={{color: "red"}}> Please add only numbers!</div>: null }
             </FormGroup>
             <FormGroup>
                 <Label for="description">Enter a brief budget description</Label>

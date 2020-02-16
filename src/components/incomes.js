@@ -11,13 +11,7 @@ const Incomes = (props) => {
 
   useEffect(() => getIncomes(), []);
 
-  const [Incomes, setIncomes] = useState([{
-    "user": "",
-    "amount": 0,
-    "description": "",
-    "icon": "",
-    "monthly": false
-  },]);
+  const [Incomes, setIncomes] = useState([]);
 
   const getIncomes = () => {
     let d = new Date();
@@ -28,6 +22,8 @@ const Incomes = (props) => {
       )
       .then(res => {
         setIncomes([...res]);
+        console.log(`RESPONSE:`)
+        console.log(res)
       })
   };
 

@@ -36,7 +36,8 @@ const Budgets = (props) => {
 
   const getBudgets = () => {
     let d = new Date();
-    fetch(`/api/budgets`)
+    let month = d.getMonth() + 1
+    fetch(`/api/budgets?month=${month}`)
       .then(data => {
         return data.json()
       }

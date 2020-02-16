@@ -12,6 +12,8 @@ const AddIncome = (props) => {
     const [Description, setDescription] = props.item ? useState(props.item.description) : useState('');
     const [Monthly, setMonthly] = props.item ? useState(props.item.monthly) : useState(false);
     const [ExistingUsers, setExistingUsers] = useState();
+    const [Validation, setValidation] = useState(false)
+
 
     const getUsers = () => {
         console.log('Getting all users')
@@ -25,14 +27,18 @@ const AddIncome = (props) => {
                     return <option key={i}>{item.name}</option>
                 })
                 setExistingUsers(UserOptions);
+                setUser(res[0].name)
             })
     };
 
     const handleChangeAmount = (event) => {
+        if (!event.target.value) setValidation(true)
+        else setValidation(false)
         setAmount(event.target.value)
     }
 
     const handleChangeUser = (event) => {
+        // if (event.target.value == '') setUser(event.target.value)
         setUser(event.target.value)
     }
 
@@ -49,6 +55,7 @@ const AddIncome = (props) => {
         let data = {}
         let incomeRequest = {};
 
+        if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
             console.log("entering edit")
@@ -125,6 +132,7 @@ const AddIncome = (props) => {
                                 onChange={handleChangeAmount}
                                 value={Amount}
                             />
+                            {Validation ? <div style={{ color: "red" }}> Please add only numbers!</div> : null}
                         </FormGroup>
                     </div>
                     <div className="col-lg-6">
@@ -149,8 +157,8 @@ const AddIncome = (props) => {
                                 type="textarea"
                                 name="description"
                                 id="description"
-                                onChange={handleChangeDescription} 
-                                value={Description}/>
+                                onChange={handleChangeDescription}
+                                value={Description} />
                         </FormGroup>
                     </div>
                 </div>
@@ -174,7 +182,7 @@ const AddIncome = (props) => {
                 <div className="row">
 
                     <div className="col-sm-2">
-                        <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit? "Update":"Create"}</Button>
+                        <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit ? "Update" : "Create"}</Button>
                     </div>
                     <div className="col-sm-2">
                         <Button color="secondary" onClick={props.toggle}>Cancel</Button>
