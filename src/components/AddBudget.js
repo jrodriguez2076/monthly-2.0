@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import IconItem from './IconItem';
 
 const AddBudget = (props) => {
+
+    useEffect(() => {
+        getIcons();
+    }, []);
 
     const [Amount, setAmount] = props.item ? useState(props.item.amount) : useState(0)
     const [Name, setName] = props.item ? useState(props.item.name) : useState('')
     const [Description, setDescription] = props.item ? useState(props.item.description) : useState('')
-    const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState(0)
+    const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState("house.svg")
+    const [IconList, setIconList] = useState([]);
+    const [Monthly, setMonthly] = useState(false);
+    const [Validation, setValidation] = useState(false)
 
 
 
     const handleChangeAmount = (event) => {
-        setAmount(event.target.value)
+        // if ( typeof (event.target.value) == Number) {
+        console.log(event.target.value)
+        if (!event.target.value) setValidation(true)
+        else setValidation(false)
+        setAmount(event.target.value);
+        // }
     }
 
     const handleChangeName = (event) => {
@@ -24,16 +37,24 @@ const AddBudget = (props) => {
     }
 
     const handleChangeIcon = (event) => {
-        // setMonthly(event.target.value)
-        setIcon(0)
-        // console.log(setMonthly);
+        try {
+            setIcon(IconList[event.target.value]);
+        } catch {
+            setIcon(IconList[event]);
+        }
+    }
+
+    const handleChangeMonthly = (event) => {
+        setMonthly(!Monthly)
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         let data = {}
         let budgetRequest = {};
+        let notifInfo = {};
 
+        if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
             // let update = props.item;
@@ -45,8 +66,15 @@ const AddBudget = (props) => {
                     "amount": Amount,
                     "name": Name,
                     "description": Description,
-                    "icon": Icon
+                    "icon": Icon,
+                    "monthly": Monthly
                 }
+            }
+
+            notifInfo = {
+                "title": "Updated!",
+                "message": "Budget updated successfully",
+                "icon": "success-2.gif"
             }
 
             budgetRequest = new Request(`/api/budgets`, {
@@ -57,15 +85,20 @@ const AddBudget = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(JSON.stringify(data));
 
         } else {
-            console.log("this is not edit")
             data = {
                 "amount": Amount,
                 "name": Name,
                 "description": Description,
-                "icon": Icon
+                "icon": Icon,
+                "monthly": Monthly
+            }
+
+            notifInfo = {
+                "title": "Added!",
+                "message": "Budget added successfully",
+                "icon": "success-2.gif"
             }
 
             budgetRequest = new Request(`/api/budgets`, {
@@ -85,13 +118,43 @@ const AddBudget = (props) => {
             )
             .then(res => {
                 console.log(res);
-                props.toggle()
+                props.toggle();
+
+                if (res.status >= 200 && res.status < 400) {
+                    props.notifData(notifInfo)
+                    props.showToastMessage();
+                } else if (res.status == 422) {
+                    props.notifData({
+                        "title": "Error!",
+                        "message": "Budget data is wrong. Try again!",
+                        "icon": "warning.gif"
+                    })
+                    props.showToastMessage();
+                }
             })
 
         if (!props.fromHome) {
-            console.log("NOW TO REFRESH BUDGETS")
             props.update();
         }
+    }
+
+    const getIcons = () => {
+        let iconRequest = new Request(`/api/icons/all?section=${props.section}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+
+        fetch(iconRequest)
+            .then(data => {
+                console.log(`data received: ${data}`)
+                return data.json()
+            })
+            .then(res => {
+                setIconList([...res])
+            })
     }
 
     const radioStyle = {
@@ -103,12 +166,12 @@ const AddBudget = (props) => {
         <Form onSubmit={handleSubmit}>
             <FormGroup>
                 <Label for="name">Budget Name</Label>
-                <Input 
-                    type="text" 
-                    name="name" 
-                    id="name" 
-                    onChange={handleChangeName} 
-                    value={Name}/>
+                <Input
+                    type="text"
+                    name="name"
+                    id="name"
+                    onChange={handleChangeName}
+                    value={Name} />
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Budget Amount</Label>
@@ -120,65 +183,27 @@ const AddBudget = (props) => {
                     onChange={handleChangeAmount}
                     value={Amount}
                 />
+                {Validation? <div style={{color: "red"}}> Please add only numbers!</div>: null }
             </FormGroup>
             <FormGroup>
                 <Label for="description">Enter a brief budget description</Label>
-                <Input type="textarea" 
-                name="description" 
-                id="description" 
-                onChange={handleChangeDescription} 
-                value={Description} />
+                <Input type="textarea"
+                    name="description"
+                    id="description"
+                    onChange={handleChangeDescription}
+                    value={Description} />
             </FormGroup>
             <FormGroup>
                 <p>Choose an Icon for the Budget</p>
-                <Label htmlFor="iconSelect" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/aircraft.png" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input type="radio" name="iconSelect" id="iconSelect" style={radioStyle} onChange={handleChangeIcon} >
-                </Input>
-                <Label htmlFor="iconSelect2" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/tray.png" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect2">
-                </Input>
-                <Label htmlFor="iconSelect3" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/003-bank.svg" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect3">
-                </Input>
-                <Label htmlFor="iconSelect4" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/004-house.svg" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect4">
-                </Input>
-                <Label htmlFor="iconSelect5" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/006-bus.svg" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect5">
-                </Input>
-                <Label htmlFor="iconSelect6" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/033-hospital.svg" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect6">
-                </Input>
-                <Label htmlFor="iconSelect7" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/toilet-paper.png" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect7">
-                </Input>
-                <Label htmlFor="iconSelect8" style={{ "margin": ".8rem" }}>
-                    <img src="/img/icon/budgets/hairdryer.png" style={{ maxWidth: "3rem" }}></img>
-                </Label>
-                <Input style={radioStyle} type="radio" name="iconSelect" id="iconSelect8">
-                </Input>
+                <IconItem icons={IconList} radioStyle={radioStyle} handleChangeIcon={handleChangeIcon}></IconItem>
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" /> This is a monthly budget
+                    <Input type="checkbox" onChange={handleChangeMonthly} /> This is a monthly budget
                 </Label>
             </FormGroup>
             <hr></hr>
-            <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit? "Update":"Create"}</Button>
+            <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit ? "Update" : "Create"}</Button>
             <Button color="secondary" onClick={props.toggle}>Cancel</Button>
         </Form >
     )

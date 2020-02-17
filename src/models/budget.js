@@ -5,6 +5,8 @@ const budgetSchema = new mongoose.Schema({
   amount: Number,
   description: String,
   icon: String,
+  month: Number,
+  monthly: Boolean,
 });
 const Budget = mongoose.model('Budget', budgetSchema);
 export default Budget;

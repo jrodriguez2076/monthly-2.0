@@ -17,9 +17,9 @@ const GenericModal = (props) => {
         <Modal isOpen={props.modal} toggle={props.toggle} className={className}>
     <ModalHeader toggle={props.toggle}>Add new {props.type}</ModalHeader>
           <ModalBody>
-          {props.type == 'expense'? <AddExpense {...props} update={props.updateExpenses}></AddExpense>: null }
+          {props.type == 'expense'? <AddExpense {...props} update={props.updateExpenses} section="expenses"></AddExpense>: null }
           {props.type == 'income'? <AddIncome {...props} update={props.updateIncomes}></AddIncome>: null }
-          {props.type == 'budget'? <AddBudget {...props} update={props.updateBudgets}></AddBudget>: null }
+          {props.type == 'budget'? <AddBudget {...props} update={props.updateBudgets} section="budgets"></AddBudget>: null }
           {props.type == 'confirm'? <Confirm {...props}></Confirm>: null }
           </ModalBody>
           {/* <ModalFooter>

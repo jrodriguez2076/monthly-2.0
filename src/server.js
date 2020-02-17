@@ -9,19 +9,35 @@ var fs = require('fs');
 const app = express();
 
 const users = [
-    {
-        "name": "Jose",
-        "lastName": "Rodriguez",
-        "avatar": "dragon.png",
-        "email": "myplaceholder@gmail.com"
-    },
+    // {
+    //     "name": "Jose",
+    //     "lastName": "Rodriguez",
+    //     "avatar": "boat.png",
+    //     "email": "myplaceholder@gmail.com"
+    // },
+    
     {
         "name": "Ana",
         "lastName": "Smith",
         "avatar": "duck.png",
         "email": "myotherplaceholder@gmail.com"
+    },
+    {
+        "name": "Jose",
+        "lastName": "Smith",
+        "avatar": "boat.png",
+        "email": "myotherplaceholder@gmail.com"
     }
 ]
+
+const checkProperties = (obj) => {
+    for (var key in obj) {
+        if (obj[key] == null || obj[key] == undefined)
+            return false
+
+    }
+    return true
+}
 
 // Middlewares
 
@@ -71,19 +87,22 @@ app.get('/api/icons', (req, res) => {
 });
 
 app.get('/api/icons/all', (req, res) => {
-    let sectionPath = path.join(process.cwd(), req.body.section);
-    console.log(req.body.section)
-    fs.readdir(sectionPath, (err, files) => {
-        try {
-            files.forEach((item) => {
-                console.log(item)
-            })
-        }
-        catch{
-            console.log(err)
-        }
-        res.send("Icons")
-    })
+    if (req.query.section) {
+        let sectionPath = path.join(process.cwd(), 'dist/img/icon', req.query.section);
+        console.log(req.query.section)
+        fs.readdir(sectionPath, (err, files) => {
+            try {
+                files.forEach((item) => {
+                    console.log(item)
+                })
+            }
+            catch{
+                console.log(err)
+            }
+            console.log(files);
+            res.send(files)
+        })
+    }
 });
 
 app.get('/api/expenses', async (req, res) => {
@@ -95,8 +114,6 @@ app.get('/api/expenses', async (req, res) => {
             { $addFields: { month: { $month: '$date' } } },
             { $match: { month: queriedMonth } }
         ]);
-
-        console.log(expensesdb)
 
         res.send(expensesdb);
     }
@@ -178,32 +195,51 @@ app.delete('/api/incomes', async (req, res) => {
 // Budgets API
 
 app.get('/api/budgets', async (req, res) => {
-    const budgetDb = await req.context.models.Budget.find();
-
-    res.send(budgetDb)
+    if (req.query.month) {
+        let queriedMonth = parseInt(req.query.month);
+        console.log("Fetching budgets for the month...")
+        const budgets = await req.context.models.Budget.find(
+            { month: queriedMonth }
+        );
+        // const budgetDb = await req.context.models.Budget.find();
+        res.send(budgets)
+    }
 });
 
 app.post('/api/budgets', async (req, res) => {
     let newBudget = req.body;
-    let iconName = '';
-    // budgets.push(newBudget);
-    if (req.body.icon == 0) {
-        iconName = "004-house.svg";
-    } else iconName = req.body.icon
+    let iconName = req.body.icon;
+    let today = new Date();
 
-    const budgetDb = await req.context.models.Budget.create({
-        name: req.body.name,
-        amount: req.body.amount,
-        description: req.body.description,
-        icon: iconName,
-    })
-    console.log(budgetDb)
-    res.send(`successfully posted new income: ${newBudget}`)
+    console.log(req.body)
+
+    if (!req.body.amount) {
+        console.log("FIELD NULL OR UNDEFINED")
+
+        res.status(422).send(`invalid budget format: ${newBudget}`)
+    }
+
+    else {
+
+        const budgetDb = await req.context.models.Budget.create({
+            name: req.body.name,
+            amount: req.body.amount,
+            description: req.body.description,
+            icon: iconName,
+            month: today.getMonth() + 1,
+            monthly: req.body.monthly
+        })
+        res.send(`successfully posted new budget: ${budgetDb}`)
+    }
 });
 
 app.put('/api/budgets', async (req, res) => {
     let selectedBudget = req.body._id;
     let update = req.body.update;
+    let iconName = '';
+    if (req.body.icon == 0) {
+        iconName = "house.svg";
+    } else iconName = req.body.icon;
     const budget = await req.context.models.Budget.findByIdAndUpdate(selectedBudget, update)
     res.send('Successfully updated Budget')
 });
@@ -236,7 +272,7 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/api/budgets', (req, res) => {
-    let newUsera = req.body;
+    let newUser = req.body;
     res.send('Here we will POST the USERS')
 });
 

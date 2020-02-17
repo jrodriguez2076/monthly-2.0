@@ -10,6 +10,7 @@ import {
 
 import toCurrency from './submodules/submodule';
 import GenericModal from './GenericModal';
+import { path } from 'dotenv/lib/env-options';
 
 
 const IncomeItem = (props) => {
@@ -24,7 +25,7 @@ const IncomeItem = (props) => {
     const selectItem = (item, action) => {
         console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
-        if (action==0){
+        if (action == 0) {
             setItemAction("income");
         } else if (action == 1) setItemAction("confirm");
         toggle();
@@ -33,10 +34,17 @@ const IncomeItem = (props) => {
     useEffect(() => {
         const getIconPaths = async () => {
             let users = await getUsers()
+            console.log(" use EFFECT users:")
+            console.log(users)
             let paths = {}
             users.forEach(element => {
+                console.log("Putting it all together:")
+                console.log(element.name)
+                console.log(element.avatar)
                 paths[element.name] = "/img/icon/avatar/".concat(element.avatar)
             });
+            console.log("Icon paths")
+            console.log(paths)
             setIconPaths(paths)
             return;
         }
@@ -71,22 +79,34 @@ const IncomeItem = (props) => {
     }
 
     const getUsers = async () => {
+        
         let response = await fetch('/api/users');
         let data = await response.json()
+        console.log("Response from user API")
+        console.log(data)
         return data
     }
 
     const incomeMapper = props.incomes.map((item, i) => {
+
+        console.log(item)
+
         return <div key={i} className="col-md-6" style={{ marginBottom: "2rem" }}>
             <Card >
-                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Card image cap" />
+                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Avatar goes here" onClick= {()=> console.log(iconPaths[item.user])} />
                 {/* <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader> */}
                 <CardBody>
                     <CardTitle tag="h3">{toCurrency(item.amount)}</CardTitle>
                     <CardText>{item.user}</CardText>
                     <CardText>{item.description}</CardText>
-                    <Button color="success" onClick={() => selectItem(item,0)}>Edit</Button>
-                    <Button color="danger" onClick={() => selectItem(item,1)}>Delete</Button>
+                    <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 0)}>
+                        <img src="/img/icon/edit.png"></img>
+                    </Button>
+                    <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 1)}>
+                        <img src="/img/icon/close.png" ></img>
+                    </Button>
+                    {/* <Button color="success" onClick={() => selectItem(item,0)}>Edit</Button>
+                    <Button color="danger" onClick={() => selectItem(item,1)}>Delete</Button> */}
                     <GenericModal
                         modal={ConfirmModal}
                         toggle={toggle}

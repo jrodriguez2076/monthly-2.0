@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Card, CardImg, CardTitle, CardText, CardDeck,
   CardBody, Jumbotron, Container
@@ -6,6 +6,7 @@ import {
 
 import BudgetItem from './BudgetItem'
 import ActionButton from './ActionButton';
+import ToastMessage from './ToastMessage';
 
 const Budgets = (props) => {
 
@@ -20,12 +21,23 @@ const Budgets = (props) => {
     "icon": "",
   },]);
 
-  const [Expenses, setExpenses] = useState()
+  const [NotifData, setNotifData] = useState({
+    "title": "",
+    "message": "",
+    "icon": ""
+  })
+
+  const [Expenses, setExpenses] = useState();
+  const [showToast, setShowToast] = useState(false);
+
+  const showToastMessage = async () => {
+    setShowToast(true);
+  };
 
   const getBudgets = () => {
-    console.log("GETTING BUDGETS!!!")
     let d = new Date();
-    fetch(`/api/budgets`)
+    let month = d.getMonth() + 1
+    fetch(`/api/budgets?month=${month}`)
       .then(data => {
         return data.json()
       }
@@ -39,27 +51,38 @@ const Budgets = (props) => {
   const getLatestExpenses = () => {
     let d = new Date();
     fetch(`/api/expenses?month=${d.getMonth() + 1}`)
-        .then(data => { return data.json() }
-        )
-        .then(res => {
-            setExpenses(res);
-        })
-};
+      .then(data => { return data.json() }
+      )
+      .then(res => {
+        setExpenses(res);
+      })
+  };
 
 
 
   return (
-    <div className="container">
+    <div>
+      <ToastMessage 
+      toastTitle={NotifData.title} 
+      show={showToast} 
+      hideToastMessage={() => setShowToast(false)}
+      ToastMessage={NotifData.message}
+      toastIcon={NotifData.icon}
+      info={NotifData}>
+      </ToastMessage>
       <Jumbotron fluid className="row" style={{ backgroundColor: "#CCCA8D" }}>
         <Container fluid className="col-lg-4 offset-lg-4 text-center">
           <h1 className="display-3">Budgets</h1>
           <hr></hr>
         </Container>
       </Jumbotron>
-      <BudgetItem budgets={Budgets} expenses={Expenses} updateBudgets={getBudgets}></BudgetItem>
-      <hr style={{ marginTop: "3rem", maxWidth: "50%"}}></hr>
+      <div className="container">
+        <BudgetItem budgets={Budgets} expenses={Expenses} updateBudgets={getBudgets} showToastMessage={showToastMessage} notifData={setNotifData}></BudgetItem>
+      </div>
+      <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
-        <ActionButton Feature="budget" updateBudgets={getBudgets}></ActionButton>
+
+        <ActionButton Feature="budget" updateBudgets={getBudgets} showToastMessage={showToastMessage} notifData={setNotifData}></ActionButton>
       </div>
     </div>
   );

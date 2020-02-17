@@ -18,12 +18,15 @@ const AddExpense = (props) => {
     const [Method, setMethod] = props.item ? useState(props.item.method) : useState(0)
     const [ExistingBudgets, setExistingBudgets] = useState()
     const [ExistingUsers, setExistingUsers] = useState()
+    const [Validation, setValidation] = useState(false)
 
     // const BudgetOptions = [];
 
     const getBudgets = () => {
         console.log('Getting all budgets')
-        fetch(`/api/budgets`)
+        let d = new Date()
+
+        fetch(`/api/budgets?month=${d.getMonth() + 1}`)
             .then(data => {
                 return data.json()
             }
@@ -57,6 +60,8 @@ const AddExpense = (props) => {
     }
 
     const handleChangeAmount = (event) => {
+        if (!event.target.value) setValidation(true)
+        else setValidation(false)
         setAmount(event.target.value)
     }
 
@@ -87,6 +92,7 @@ const AddExpense = (props) => {
         let data = {}
         let expenseRequest = {};
 
+        if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
             // let update = props.item;
@@ -202,6 +208,7 @@ const AddExpense = (props) => {
                     onChange={handleChangeAmount}
                     value={Amount}
                 />
+                {Validation? <div style={{color: "red"}}> Please add only numbers!</div>: null }
             </FormGroup>
             <FormGroup>
                 <Label for="user">Who made the expense?</Label>
