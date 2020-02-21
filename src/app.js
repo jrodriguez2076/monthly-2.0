@@ -13,6 +13,7 @@ import Pagination from './components/Pagination';
 import Budgets from './components/Budgets';
 import Home from './components/Home';
 import Incomes from './components/incomes';
+import Users from './components/users';
 
 const title = 'More functions coming soon...';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/expenses" exact component={LatestExpenses} />
           <Route path="/incomes" exact component={Incomes} />
           <Route path="/budgets" exact component={Budgets} />
+          <Route path="/users" exact component={Users} />
           <Route path="/" exact component={Home} />
         </Switch>
       </div>
