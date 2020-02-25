@@ -13,7 +13,7 @@ import GenericModal from './GenericModal';
 import { path } from 'dotenv/lib/env-options';
 
 
-const IncomeItem = (props) => {
+const UserItem = (props) => {
 
     const [iconPaths, setIconPaths] = useState({});
     const [ConfirmModal, setConfirmModal] = useState(false);
@@ -22,36 +22,37 @@ const IncomeItem = (props) => {
 
     const toggle = () => setConfirmModal(!ConfirmModal);
 
+    //Set the action to be performed according to the button clicked
     const selectItem = (item, action) => {
-        console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
-        if (action == 0) {
-            setItemAction("income");
-        } else if (action == 1) setItemAction("confirm");
+        if (action == 0) { //if Edit function clicked
+            setItemAction("user");
+        } else if (action == 1) setItemAction("confirm"); //if Delete function clicked
         toggle();
     }
 
     useEffect(() => {
-        const getIconPaths = async () => {
-            let users = await getUsers()
+        const getIconPaths = () => {
             let paths = {}
-            users.forEach(element => {
+            console.log('users')
+            console.log(props.users)
+            props.users.forEach(element => {
                 paths[element.name] = "/img/icon/avatar/".concat(element.avatar)
             });
+            console.log(paths)
             setIconPaths(paths)
             return;
         }
 
         getIconPaths()
-    }, []);
+    }, [props.users]);
 
     const deleteItem = () => {
-        console.log(`DELETING THE FOLLOWING: ${SelectedItem._id}`)
         let data = {
-            "incomeId": SelectedItem._id
+            "userId": SelectedItem._id
         }
 
-        let incomeDeleteRequest = new Request(`/api/incomes`, {
+        let userDeleteRequest = new Request(`/api/users`, {
             method: 'DELETE',
             body: JSON.stringify(data),
             headers: {
@@ -60,38 +61,34 @@ const IncomeItem = (props) => {
             }
         })
 
-        fetch(incomeDeleteRequest)
+        fetch(userDeleteRequest)
             .then(data => {
-                console.log(data)
                 return data
             })
             .then(res => {
-                props.updateIncomes();
+                props.updateUsers();
                 toggle();
             })
     }
 
-    const getUsers = async () => {
+    // const getUsers = async () => {
         
-        let response = await fetch('/api/users');
-        let data = await response.json()
-        console.log("Response from user API")
-        console.log(data)
-        return data
-    }
+    //     let response = await fetch('/api/users');
+    //     let data = await response.json()
+    //     console.log("Response from user API")
+    //     console.log(data)
+    //     return data
+    // }
 
-    const incomeMapper = props.incomes.map((item, i) => {
-
-        console.log(item)
+    const userMapper = props.users.map((item, i) => {
 
         return <div key={i} className="col-md-6" style={{ marginBottom: "2rem" }}>
             <Card >
-                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Avatar goes here" onClick= {()=> console.log(iconPaths[item.user])} />
+                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.name]} style={{ width: "7rem" }} alt="Avatar goes here"/>
                 {/* <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader> */}
                 <CardBody>
-                    <CardTitle tag="h3">{toCurrency(item.amount)}</CardTitle>
-                    <CardText>{item.user}</CardText>
-                    <CardText>{item.description}</CardText>
+                    <CardTitle tag="h3">{item.name}</CardTitle>
+                    <CardText>{item.email}</CardText>
                     <Button color="link" style={{ padding: "1rem" }} onClick={() => selectItem(item, 0)}>
                         <img src="/img/icon/edit.png"></img>
                     </Button>
@@ -107,7 +104,7 @@ const IncomeItem = (props) => {
                         edit={true}
                         action={() => { deleteItem() }}
                         item={SelectedItem}
-                        updateIncomes={props.updateIncomes}
+                        updateUsers={props.updateUsers}
                         delete></GenericModal>
                 </CardBody>
             </Card>
@@ -116,9 +113,9 @@ const IncomeItem = (props) => {
 
     return (
         <CardGroup className="row text-center">
-            {incomeMapper}
+            {userMapper}
         </CardGroup>
     );
 }
 
-export default IncomeItem
+export default UserItem

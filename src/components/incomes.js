@@ -14,6 +14,7 @@ const Incomes = (props) => {
   const [Incomes, setIncomes] = useState([]);
 
   const getIncomes = () => {
+    console.log('Incomes')
     let d = new Date();
     fetch(`/api/incomes`)
       .then(data => {

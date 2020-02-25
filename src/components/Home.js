@@ -51,7 +51,6 @@ const Home = (props) => {
                     </Row>
                 </div>
                 <div className="row">
-                    <Spinner color="primary" size="lg"/>
                 </div>
             </Container>
         </div>

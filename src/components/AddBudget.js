@@ -195,7 +195,7 @@ const AddBudget = (props) => {
             </FormGroup>
             <FormGroup>
                 <p>Choose an Icon for the Budget</p>
-                <IconItem icons={IconList} radioStyle={radioStyle} handleChangeIcon={handleChangeIcon}></IconItem>
+                <IconItem icons={IconList} radioStyle={radioStyle} handleChangeIcon={handleChangeIcon} section="budgets"></IconItem>
             </FormGroup>
             <FormGroup check>
                 <Label check>

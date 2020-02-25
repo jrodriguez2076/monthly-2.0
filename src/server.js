@@ -2,6 +2,8 @@ import express from 'express';
 import path, { dirname } from 'path';
 import mongoose from 'mongoose'
 import models, { connectDb } from './models';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 import 'dotenv/config';
 var fs = require('fs');
@@ -19,25 +21,16 @@ const users = [
     {
         "name": "Ana",
         "lastName": "Smith",
-        "avatar": "duck.png",
+        "avatar": "avatar-31.png",
         "email": "myotherplaceholder@gmail.com"
     },
     {
         "name": "Jose",
         "lastName": "Smith",
-        "avatar": "boat.png",
+        "avatar": "avatar-27.png",
         "email": "myotherplaceholder@gmail.com"
     }
 ]
-
-const checkProperties = (obj) => {
-    for (var key in obj) {
-        if (obj[key] == null || obj[key] == undefined)
-            return false
-
-    }
-    return true
-}
 
 // Middlewares
 
@@ -70,7 +63,6 @@ app.get('/api/icons', (req, res) => {
         if (req.query.iconid) {
             let icon = req.query.iconid;
             iconPath = path.join(iconSection, icon)
-            console.log(iconPath)
         }
 
         fs.readdir(dir, (err, files) => {
@@ -89,17 +81,14 @@ app.get('/api/icons', (req, res) => {
 app.get('/api/icons/all', (req, res) => {
     if (req.query.section) {
         let sectionPath = path.join(process.cwd(), 'dist/img/icon', req.query.section);
-        console.log(req.query.section)
         fs.readdir(sectionPath, (err, files) => {
             try {
                 files.forEach((item) => {
-                    console.log(item)
                 })
             }
             catch{
                 console.log(err)
             }
-            console.log(files);
             res.send(files)
         })
     }
@@ -250,30 +239,26 @@ app.delete('/api/budgets', async (req, res) => {
     res.send('Successfully deleted Budget')
 });
 
-// Goals API
-
-// app.get('/api/goals', (req, res) => {
-//     res.send('Here we will get the GOALS')
-// });
-
-// app.post('/api/goals', (req, res) => {
-//     res.send('Here we will POST new GOALS')
-// });
-
-// app.delete('/api/budgets', (req, res) => {
-//     res.send('Here we will DELETE the GOALS')
-// });
-
 //Users API
 
-app.get('/api/users', (req, res) => {
+app.get('/api/users', async (req, res) => {
     console.log("getting the users...")
+    const users = await req.context.models.User.find()
     res.send(users)
 });
 
-app.post('/api/budgets', (req, res) => {
-    let newUser = req.body;
-    res.send('Here we will POST the USERS')
+app.post('/api/users', async (req, res) => {
+    console.log(req.body)
+    if (req.body) {
+        const newUser = await req.context.models.User.create({
+            name: req.body.name,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            avatar: req.body.avatar,
+        })
+        console.log(newUser)
+        res.send(`successfully posted new user: ${newUser}`)
+    }
 });
 
 app.put('/api/budgets', (req, res) => {

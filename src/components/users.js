@@ -4,10 +4,26 @@ import {
   CardSubtitle, CardBody, Jumbotron, Container
 } from 'reactstrap';
 
-import IncomeItem from './IncomeItem'
 import ActionButton from './ActionButton';
+import UserItem from './UserItem';
 
 const Users = (props) => {
+
+  useEffect(() => getUsers(), [])
+
+  const [CurrentUsers, setCurrentUsers] = useState([]);
+
+  const getUsers = () => {
+    console.log('Getting all users')
+    fetch(`/api/users`)
+      .then(data => {
+        return data.json()
+      }
+      )
+      .then(res => {
+        setCurrentUsers([...res])
+      })
+  };
 
   // useEffect(() => getIncomes(), []);
 
@@ -25,6 +41,8 @@ const Users = (props) => {
   //     })
   // };
 
+  // const usersMapper = CurrentUsers.map((item, i) => { return <h3 key={i}>{item.name}</h3> })
+
   return (
     <div>
       <Jumbotron fluid className="row" style={{ backgroundColor: "#E3F6FF" }}>
@@ -34,11 +52,11 @@ const Users = (props) => {
         </Container>
       </Jumbotron>
       <div className="container">
-        {/* <IncomeItem incomes={Incomes} updateIncomes={getIncomes}></IncomeItem> */}
+        <UserItem users={CurrentUsers} updateUsers={getUsers}></UserItem>
       </div>
       <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
       <div className="d-flex justify-content-center">
-        {/* <ActionButton Feature="income" updateIncomes={getIncomes}></ActionButton> */}
+        <ActionButton Feature="user" updateUsers={getUsers}></ActionButton>
       </div>
     </div>
   );
