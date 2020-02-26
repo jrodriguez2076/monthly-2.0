@@ -17,7 +17,7 @@ const users = [
     //     "avatar": "boat.png",
     //     "email": "myplaceholder@gmail.com"
     // },
-    
+
     {
         "name": "Ana",
         "lastName": "Smith",
@@ -105,23 +105,63 @@ app.get('/api/expenses', async (req, res) => {
 
         res.send(expensesdb);
     }
-    else res.send('Here we will get the expenses');
+    else res.send('No month specified');
 });
 
 app.post('/api/expenses', async (req, res) => {
 
     let expenseDate = Date.parse(req.body.date)
 
+    //Add new Expense to the db
     const expenseDb = await req.context.models.Expense.create({
         user: req.body.user,
         date: expenseDate,
         location: req.body.location,
         amount: req.body.amount,
         description: req.body.description,
-        budget: req.body.budget
+        budget: req.body.budget,
+        method: req.body.method,
+        payments: req.body.payments
     })
+
+    //Check if expense was made with credit card
+    if (req.body.method=="credit" && req.body.payments > 1) {
+        let iconName = "bank.svg";
+        let today = new Date();
+        let startDate = new Date(Date.parse(req.body.startDate))
+        for (let i = 0; i < req.body.payments; i++) {
+            //Check if there are already budgets with credit card payments in the upcoming months
+            const existingBudget = await req.context.models.Budget.find(
+                {
+                    month: (startDate.getMonth() + 1) + i,
+                    name: "Credit card payment"
+                }
+            )
+            //If there is no existing budget, then create it
+            if (existingBudget.length < 1) {
+                const budgetDb = await req.context.models.Budget.create({
+                    name: "Credit card payment",
+                    amount: (req.body.amount / req.body.payments), //Divide the total amount of the expense between all payments
+                    description: req.body.description,
+                    icon: iconName,
+                    creationDate: startDate,
+                    month: (startDate.getMonth() + 1) + i,
+                    monthly: false
+                })
+            } else {
+                let newAmount = existingBudget[0].amount + parseFloat(req.body.amount)
+                let newDescription = existingBudget.description + ' - ' + req.body.description
+                let update = {
+                    amount: newAmount,
+                    description: newDescription
+                }
+                const budget = await req.context.models.Budget.findByIdAndUpdate(existingBudget[0]._id, update)
+            }
+        }
+    }
+    // res.send(`successfully posted new budget: ${budgetDb}`)
     res.send(`successfully posted new income: ${expenseDb}`)
-    // }
+
 });
 
 app.put('/api/expenses', async (req, res) => {
@@ -179,7 +219,7 @@ app.get('/api/budgets', async (req, res) => {
         );
         // const budgetDb = await req.context.models.Budget.find();
         res.send(budgets)
-    }
+    } else res.send("no month Selected")
 });
 
 app.post('/api/budgets', async (req, res) => {
@@ -198,6 +238,7 @@ app.post('/api/budgets', async (req, res) => {
             amount: req.body.amount,
             description: req.body.description,
             icon: iconName,
+            creationDate: today,
             month: today.getMonth() + 1,
             monthly: req.body.monthly
         })

@@ -8,6 +8,8 @@ const expenseSchema = new mongoose.Schema({
   description: String,
   budget: String,
   monthly: Boolean,
+  method: String,
+  payments: Number
 });
 const Expense = mongoose.model('Expense', expenseSchema);
 export default Expense;

@@ -15,7 +15,9 @@ const AddExpense = (props) => {
     const [Description, setDescription] = props.item ? useState(props.item.description) : useState('')
     const [Budget, setBudget] = props.item ? useState(props.item.budget) : useState('')
     const [Location, setLocation] = props.item ? useState(props.item.location) : useState('')
-    const [Method, setMethod] = props.item ? useState(props.item.method) : useState(0)
+    const [Method, setMethod] = props.item ? useState(props.item.method) : useState('cash')
+    const [Payments, setPayments] = props.item ? useState(props.item.Payments) : useState(1)
+    const [StartDate, setStartDate] = props.item ? useState(props.item.StartDate) : useState('')
     const [ExistingBudgets, setExistingBudgets] = useState()
     const [ExistingUsers, setExistingUsers] = useState()
     const [Validation, setValidation] = useState(false)
@@ -55,6 +57,7 @@ const AddExpense = (props) => {
 
     const handleChangeDate = (event) => {
         setExpenseDate(event.target.value)
+        if (Method == "credit") setStartDate(event.target.value)
     }
 
     const handleChangeAmount = (event) => {
@@ -80,10 +83,20 @@ const AddExpense = (props) => {
     }
 
     const handleChangeMethod = (event) => {
+        setMethod(event.target.value);
+        setBudget("Credit card payment");
+        if (event.target.value != 'credit') setPayments(1)
 
+    }
 
-        // setMonthly(event.target.value)
+    const handleChangePayments = (event) => {
+        setPayments(event.target.value)
+        console.log(event.target.value)
+    }
 
+    const handleChangeStartDate = (event) => {
+        setStartDate(event.target.value)
+        setExpenseDate(event.target.value)
     }
 
     const handleSubmit = (event) => {
@@ -103,7 +116,9 @@ const AddExpense = (props) => {
                     "budget": Budget,
                     "description": Description,
                     "location": Location,
-                    "method": Method
+                    "method": Method,
+                    "payments": Payments,
+                    "startDate": StartDate
                 }
             }
 
@@ -124,7 +139,9 @@ const AddExpense = (props) => {
                 "budget": Budget,
                 "description": Description,
                 "location": Location,
-                "method": Method
+                "method": Method,
+                "payments": Payments,
+                "startDate": StartDate
             };
 
             expenseRequest = new Request(`/api/expenses`, {
@@ -138,25 +155,6 @@ const AddExpense = (props) => {
 
         }
 
-        // data = {
-        //     "amount": Amount,
-        //     "date": ExpenseDate,
-        //     "user": User,
-        //     "budget": Budget,
-        //     "description": Description,
-        //     "location": Location,
-        //     "method": Method
-        // };
-
-        // let expenseRequest = new Request(`/api/expenses`, {
-        //     method: 'POST',
-        //     body: JSON.stringify(data),
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     }
-        // })
-
         fetch(expenseRequest)
             .then(data => {
                 return data
@@ -167,7 +165,7 @@ const AddExpense = (props) => {
             })
 
         // if (!props.fromHome) {
-            props.update();
+        props.update();
         // }
 
 
@@ -200,7 +198,7 @@ const AddExpense = (props) => {
                     onChange={handleChangeAmount}
                     value={Amount}
                 />
-                {Validation? <div style={{color: "red"}}> Please add only numbers!</div>: null }
+                {Validation ? <div style={{ color: "red" }}> Please add only numbers!</div> : null}
             </FormGroup>
             <FormGroup>
                 <Label for="user">Who made the expense?</Label>
@@ -210,7 +208,7 @@ const AddExpense = (props) => {
             </FormGroup>
             <FormGroup>
                 <Label for="budget">Budget associated</Label>
-                <Input type="select" name="budget" id="budget" onChange={handleChangeBudget} value={Budget}>
+                <Input type="select" name="budget" id="budget" onChange={handleChangeBudget} value={Budget} disabled={Method == "credit" ? "disabled" : ""}>
                     {ExistingBudgets}
                 </Input>
             </FormGroup>
@@ -220,25 +218,59 @@ const AddExpense = (props) => {
             </FormGroup>
             <FormGroup>
                 <Label for="location">Location</Label>
-                <Input type="text" name="location" id="location" onChange={handleChangeLocation} value={Location}/>
+                <Input type="text" name="location" id="location" onChange={handleChangeLocation} value={Location} />
             </FormGroup>
-            <FormGroup check>
-                <Label check style={{ "padding-bottom": "1rem"}}>
-                    <Input type="checkbox" name="method" onChange={handleChangeMethod} value={Method} /> Cash
+            <FormGroup>
+                <Label for="method">Select payment method</Label>
+                <Input type="select" name="method" id="method" onChange={handleChangeMethod} value={Method}>
+                    <option value="cash">Cash</option>
+                    <option value="electronic">Electronic</option>
+                    <option value="credit">Credit card</option>
+                </Input>
+            </FormGroup>
+            {Method == 'credit' ?
+                <div>
+                    <FormGroup>
+                        <Label for="startDate"> When will the first payment be due? </Label>
+                        <Input
+                            type="date"
+                            name="startDate"
+                            id="startDate"
+                            placeholder="Choose a date for the initial payment"
+                            onChange={handleChangeStartDate}
+                            value={StartDate}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="payments"> Select how many payments </Label>
+                        <Input type="select" name="payments" id="payments" onChange={handleChangePayments} value={Payments}>
+                            <option value={1}>1 payment</option>
+                            <option value={3}>3 payments</option>
+                            <option value={6}>6 payments</option>
+                            <option value={12}>12 payments</option>
+                            <option value={18}>18 payments</option>
+                        </Input>
+
+                    </FormGroup>
+                </div>
+                : null}
+            {/* <FormGroup check>
+                <Label check style={{ paddingBottom: "1rem"}}>
+                    <Input type="checkbox" name="method" onChange={handleChangeMethod} value="cash" {Method="cash"? "checked":''} /> Cash
                 </Label>
             </FormGroup>
             <FormGroup check>
-                <Label check style={{ "padding-bottom": "1rem"}}>
-                    <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Electronic
+                <Label check style={{ paddingBottom: "1rem"}}>
+                    <Input type="checkbox" name="method" onChange={handleChangeMethod} value="electronic"/> Electronic
                 </Label>
             </FormGroup>
             <FormGroup check>
-                <Label check style={{ "padding-bottom": "1rem"}}>
+                <Label check style={{ paddingBottom: "1rem"}}>
                     <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Credit
                 </Label>
-            </FormGroup>
-            <Button color="primary" type="submit" style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
-            <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
+            </FormGroup> */}
+            <Button color="primary" type="submit" style={{ marginRight: "1rem" }}>{props.edit ? "Update" : "Create"}</Button>
+            <Button color="secondary" onClick={props.toggle} style={{ marginRight: "1rem" }}>Cancel</Button>
         </Form >
     )
 }

@@ -246,10 +246,16 @@ var AddBudget = function AddBudget(props) {
   }), " This is a monthly budget")), _react["default"].createElement("hr", null), _react["default"].createElement(_reactstrap.Button, {
     color: "primary",
     type: "submit",
-    onClick: handleSubmit
+    onClick: handleSubmit,
+    style: {
+      marginRight: "1rem"
+    }
   }, props.edit ? "Update" : "Create"), _react["default"].createElement(_reactstrap.Button, {
     color: "secondary",
-    onClick: props.toggle
+    onClick: props.toggle,
+    style: {
+      marginRight: "1rem"
+    }
   }, "Cancel"));
 };
 

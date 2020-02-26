@@ -14,6 +14,7 @@ var budgetSchema = new _mongoose["default"].Schema({
   amount: Number,
   description: String,
   icon: String,
+  creationDate: Date,
   month: Number,
   monthly: Boolean
 });

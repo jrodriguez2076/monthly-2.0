@@ -209,12 +209,18 @@ var AddIncome = function AddIncome(props) {
   }, _react["default"].createElement(_reactstrap.Button, {
     color: "primary",
     type: "submit",
-    onClick: handleSubmit
+    onClick: handleSubmit,
+    style: {
+      "margin-right": "1rem"
+    }
   }, props.edit ? "Update" : "Create")), _react["default"].createElement("div", {
     className: "col-sm-2"
   }, _react["default"].createElement(_reactstrap.Button, {
     color: "secondary",
-    onClick: props.toggle
+    onClick: props.toggle,
+    style: {
+      "margin-right": "1rem"
+    }
   }, "Cancel")))));
 };
 
