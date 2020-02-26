@@ -132,7 +132,7 @@ app.get('/api/expenses', function _callee(req, res) {
           break;
 
         case 8:
-          res.send('Here we will get the expenses');
+          res.send('No month specified');
 
         case 9:
         case "end":
@@ -142,12 +142,13 @@ app.get('/api/expenses', function _callee(req, res) {
   });
 });
 app.post('/api/expenses', function _callee2(req, res) {
-  var expenseDate, expenseDb;
+  var expenseDate, expenseDb, iconName, today, startDate, i, existingBudget, budgetDb, newAmount, newDescription, update, budget;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          expenseDate = Date.parse(req.body.date);
+          expenseDate = Date.parse(req.body.date); //Add new Expense to the db
+
           _context2.next = 3;
           return regeneratorRuntime.awrap(req.context.models.Expense.create({
             user: req.body.user,
@@ -155,14 +156,84 @@ app.post('/api/expenses', function _callee2(req, res) {
             location: req.body.location,
             amount: req.body.amount,
             description: req.body.description,
-            budget: req.body.budget
+            budget: req.body.budget,
+            method: req.body.method,
+            payments: req.body.payments
           }));
 
         case 3:
           expenseDb = _context2.sent;
-          res.send("successfully posted new income: ".concat(expenseDb)); // }
 
-        case 5:
+          if (!(req.body.method == "credit" && req.body.payments > 1)) {
+            _context2.next = 28;
+            break;
+          }
+
+          iconName = "bank.svg";
+          today = new Date();
+          startDate = new Date(Date.parse(req.body.startDate));
+          i = 0;
+
+        case 9:
+          if (!(i < req.body.payments)) {
+            _context2.next = 28;
+            break;
+          }
+
+          _context2.next = 12;
+          return regeneratorRuntime.awrap(req.context.models.Budget.find({
+            month: startDate.getMonth() + 1 + i,
+            name: "Credit card payment"
+          }));
+
+        case 12:
+          existingBudget = _context2.sent;
+
+          if (!(existingBudget.length < 1)) {
+            _context2.next = 19;
+            break;
+          }
+
+          _context2.next = 16;
+          return regeneratorRuntime.awrap(req.context.models.Budget.create({
+            name: "Credit card payment",
+            amount: req.body.amount / req.body.payments,
+            //Divide the total amount of the expense between all payments
+            description: req.body.description,
+            icon: iconName,
+            creationDate: startDate,
+            month: startDate.getMonth() + 1 + i,
+            monthly: false
+          }));
+
+        case 16:
+          budgetDb = _context2.sent;
+          _context2.next = 25;
+          break;
+
+        case 19:
+          newAmount = existingBudget[0].amount + parseFloat(req.body.amount);
+          newDescription = existingBudget.description + ' - ' + req.body.description;
+          update = {
+            amount: newAmount,
+            description: newDescription
+          };
+          _context2.next = 24;
+          return regeneratorRuntime.awrap(req.context.models.Budget.findByIdAndUpdate(existingBudget[0]._id, update));
+
+        case 24:
+          budget = _context2.sent;
+
+        case 25:
+          i++;
+          _context2.next = 9;
+          break;
+
+        case 28:
+          // res.send(`successfully posted new budget: ${budgetDb}`)
+          res.send("successfully posted new income: ".concat(expenseDb));
+
+        case 29:
         case "end":
           return _context2.stop();
       }
@@ -314,7 +385,7 @@ app.get('/api/budgets', function _callee9(req, res) {
       switch (_context9.prev = _context9.next) {
         case 0:
           if (!req.query.month) {
-            _context9.next = 6;
+            _context9.next = 8;
             break;
           }
 
@@ -328,8 +399,13 @@ app.get('/api/budgets', function _callee9(req, res) {
           budgets = _context9.sent;
           // const budgetDb = await req.context.models.Budget.find();
           res.send(budgets);
+          _context9.next = 9;
+          break;
 
-        case 6:
+        case 8:
+          res.send("no month Selected");
+
+        case 9:
         case "end":
           return _context9.stop();
       }
@@ -362,6 +438,7 @@ app.post('/api/budgets', function _callee10(req, res) {
             amount: req.body.amount,
             description: req.body.description,
             icon: iconName,
+            creationDate: today,
             month: today.getMonth() + 1,
             monthly: req.body.monthly
           }));

@@ -61,10 +61,20 @@ var AddExpense = function AddExpense(props) {
       Location = _ref12[0],
       setLocation = _ref12[1];
 
-  var _ref13 = props.item ? (0, _react.useState)(props.item.method) : (0, _react.useState)(0),
+  var _ref13 = props.item ? (0, _react.useState)(props.item.method) : (0, _react.useState)('cash'),
       _ref14 = _slicedToArray(_ref13, 2),
       Method = _ref14[0],
       setMethod = _ref14[1];
+
+  var _ref15 = props.item ? (0, _react.useState)(props.item.Payments) : (0, _react.useState)(1),
+      _ref16 = _slicedToArray(_ref15, 2),
+      Payments = _ref16[0],
+      setPayments = _ref16[1];
+
+  var _ref17 = props.item ? (0, _react.useState)(props.item.StartDate) : (0, _react.useState)(''),
+      _ref18 = _slicedToArray(_ref17, 2),
+      StartDate = _ref18[0],
+      setStartDate = _ref18[1];
 
   var _useState = (0, _react.useState)(),
       _useState2 = _slicedToArray(_useState, 2),
@@ -114,6 +124,7 @@ var AddExpense = function AddExpense(props) {
 
   var handleChangeDate = function handleChangeDate(event) {
     setExpenseDate(event.target.value);
+    if (Method == "credit") setStartDate(event.target.value);
   };
 
   var handleChangeAmount = function handleChangeAmount(event) {
@@ -137,7 +148,20 @@ var AddExpense = function AddExpense(props) {
     setLocation(event.target.value);
   };
 
-  var handleChangeMethod = function handleChangeMethod(event) {// setMonthly(event.target.value)
+  var handleChangeMethod = function handleChangeMethod(event) {
+    setMethod(event.target.value);
+    setBudget("Credit card payment");
+    if (event.target.value != 'credit') setPayments(1);
+  };
+
+  var handleChangePayments = function handleChangePayments(event) {
+    setPayments(event.target.value);
+    console.log(event.target.value);
+  };
+
+  var handleChangeStartDate = function handleChangeStartDate(event) {
+    setStartDate(event.target.value);
+    setExpenseDate(event.target.value);
   };
 
   var handleSubmit = function handleSubmit(event) {
@@ -157,7 +181,9 @@ var AddExpense = function AddExpense(props) {
           "budget": Budget,
           "description": Description,
           "location": Location,
-          "method": Method
+          "method": Method,
+          "payments": Payments,
+          "startDate": StartDate
         }
       };
       expenseRequest = new Request("/api/expenses", {
@@ -176,7 +202,9 @@ var AddExpense = function AddExpense(props) {
         "budget": Budget,
         "description": Description,
         "location": Location,
-        "method": Method
+        "method": Method,
+        "payments": Payments,
+        "startDate": StartDate
       };
       expenseRequest = new Request("/api/expenses", {
         method: 'POST',
@@ -186,24 +214,7 @@ var AddExpense = function AddExpense(props) {
           'Content-Type': 'application/json'
         }
       });
-    } // data = {
-    //     "amount": Amount,
-    //     "date": ExpenseDate,
-    //     "user": User,
-    //     "budget": Budget,
-    //     "description": Description,
-    //     "location": Location,
-    //     "method": Method
-    // };
-    // let expenseRequest = new Request(`/api/expenses`, {
-    //     method: 'POST',
-    //     body: JSON.stringify(data),
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     }
-    // })
-
+    }
 
     fetch(expenseRequest).then(function (data) {
       return data;
@@ -256,7 +267,8 @@ var AddExpense = function AddExpense(props) {
     name: "budget",
     id: "budget",
     onChange: handleChangeBudget,
-    value: Budget
+    value: Budget,
+    disabled: Method == "credit" ? "disabled" : ""
   }, ExistingBudgets)), _react["default"].createElement(_reactstrap.FormGroup, null, _react["default"].createElement(_reactstrap.Label, {
     "for": "description"
   }, "Brief description"), _react["default"].createElement(_reactstrap.Input, {
@@ -273,37 +285,59 @@ var AddExpense = function AddExpense(props) {
     id: "location",
     onChange: handleChangeLocation,
     value: Location
-  })), _react["default"].createElement(_reactstrap.FormGroup, {
-    check: true
-  }, _react["default"].createElement(_reactstrap.Label, {
-    check: true
-  }, _react["default"].createElement(_reactstrap.Input, {
-    type: "checkbox",
+  })), _react["default"].createElement(_reactstrap.FormGroup, null, _react["default"].createElement(_reactstrap.Label, {
+    "for": "method"
+  }, "Select payment method"), _react["default"].createElement(_reactstrap.Input, {
+    type: "select",
     name: "method",
+    id: "method",
     onChange: handleChangeMethod,
     value: Method
-  }), " Cash")), _react["default"].createElement(_reactstrap.FormGroup, {
-    check: true
-  }, _react["default"].createElement(_reactstrap.Label, {
-    check: true
-  }, _react["default"].createElement(_reactstrap.Input, {
-    type: "checkbox",
-    name: "method",
-    onChange: handleChangeMethod
-  }), " Electronic")), _react["default"].createElement(_reactstrap.FormGroup, {
-    check: true
-  }, _react["default"].createElement(_reactstrap.Label, {
-    check: true
-  }, _react["default"].createElement(_reactstrap.Input, {
-    type: "checkbox",
-    name: "method",
-    onChange: handleChangeMethod
-  }), " Credit")), _react["default"].createElement(_reactstrap.Button, {
+  }, _react["default"].createElement("option", {
+    value: "cash"
+  }, "Cash"), _react["default"].createElement("option", {
+    value: "electronic"
+  }, "Electronic"), _react["default"].createElement("option", {
+    value: "credit"
+  }, "Credit card"))), Method == 'credit' ? _react["default"].createElement("div", null, _react["default"].createElement(_reactstrap.FormGroup, null, _react["default"].createElement(_reactstrap.Label, {
+    "for": "startDate"
+  }, " When will the first payment be due? "), _react["default"].createElement(_reactstrap.Input, {
+    type: "date",
+    name: "startDate",
+    id: "startDate",
+    placeholder: "Choose a date for the initial payment",
+    onChange: handleChangeStartDate,
+    value: StartDate
+  })), _react["default"].createElement(_reactstrap.FormGroup, null, _react["default"].createElement(_reactstrap.Label, {
+    "for": "payments"
+  }, " Select how many payments "), _react["default"].createElement(_reactstrap.Input, {
+    type: "select",
+    name: "payments",
+    id: "payments",
+    onChange: handleChangePayments,
+    value: Payments
+  }, _react["default"].createElement("option", {
+    value: 1
+  }, "1 payment"), _react["default"].createElement("option", {
+    value: 3
+  }, "3 payments"), _react["default"].createElement("option", {
+    value: 6
+  }, "6 payments"), _react["default"].createElement("option", {
+    value: 12
+  }, "12 payments"), _react["default"].createElement("option", {
+    value: 18
+  }, "18 payments")))) : null, _react["default"].createElement(_reactstrap.Button, {
     color: "primary",
-    type: "submit"
+    type: "submit",
+    style: {
+      marginRight: "1rem"
+    }
   }, props.edit ? "Update" : "Create"), _react["default"].createElement(_reactstrap.Button, {
     color: "secondary",
-    onClick: props.toggle
+    onClick: props.toggle,
+    style: {
+      marginRight: "1rem"
+    }
   }, "Cancel"));
 };
 

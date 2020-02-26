@@ -196,8 +196,8 @@ const AddBudget = (props) => {
                 </Label>
             </FormGroup>
             <hr></hr>
-            <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
-            <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
+            <Button color="primary" type="submit" onClick={handleSubmit} style={{ marginRight: "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
+            <Button color="secondary" onClick={props.toggle} style={{ marginRight: "1rem"}}>Cancel</Button>
         </Form >
     )
 }

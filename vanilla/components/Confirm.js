@@ -19,9 +19,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 var Confirm = function Confirm(props) {
   return _react["default"].createElement("div", null, _react["default"].createElement("p", null, "Are you sure that you want to delete this item?"), _react["default"].createElement("p", null, props.item.name), _react["default"].createElement(_reactstrap.Button, {
-    onClick: props.action
+    color: "danger",
+    onClick: props.action,
+    style: {
+      "margin-right": "1rem"
+    }
   }, "Confirm"), _react["default"].createElement(_reactstrap.Button, {
-    onClick: props.toggle
+    onClick: props.toggle,
+    style: {
+      "margin-right": "1rem"
+    }
   }, "Cancel"));
 };
 

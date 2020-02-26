@@ -16,7 +16,9 @@ var expenseSchema = new _mongoose["default"].Schema({
   amount: Number,
   description: String,
   budget: String,
-  monthly: Boolean
+  monthly: Boolean,
+  method: String,
+  payments: Number
 });
 
 var Expense = _mongoose["default"].model('Expense', expenseSchema);

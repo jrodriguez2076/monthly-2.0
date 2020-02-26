@@ -5,6 +5,7 @@ const budgetSchema = new mongoose.Schema({
   amount: Number,
   description: String,
   icon: String,
+  creationDate: Date,
   month: Number,
   monthly: Boolean,
 });
