@@ -14,7 +14,6 @@ const Users = (props) => {
   const [CurrentUsers, setCurrentUsers] = useState([]);
 
   const getUsers = () => {
-    console.log('Getting all users')
     fetch(`/api/users`)
       .then(data => {
         return data.json()

@@ -34,12 +34,9 @@ const UserItem = (props) => {
     useEffect(() => {
         const getIconPaths = () => {
             let paths = {}
-            console.log('users')
-            console.log(props.users)
             props.users.forEach(element => {
                 paths[element.name] = "/img/icon/avatar/".concat(element.avatar)
             });
-            console.log(paths)
             setIconPaths(paths)
             return;
         }
@@ -70,15 +67,6 @@ const UserItem = (props) => {
                 toggle();
             })
     }
-
-    // const getUsers = async () => {
-        
-    //     let response = await fetch('/api/users');
-    //     let data = await response.json()
-    //     console.log("Response from user API")
-    //     console.log(data)
-    //     return data
-    // }
 
     const userMapper = props.users.map((item, i) => {
 

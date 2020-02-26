@@ -6,9 +6,11 @@
   "proxy": "http://localhost:3000",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch --config ./webpack.config.js --mode development",
+    "bundle": "./node_modules/.bin/webpack --config ./webpack.config.js --mode production",
+    "build": "./node_modules/.bin/babel src --ignore components --out-dir vanilla",
+    "start": "node vanilla/server.js",
     "server": "nodemon --exec babel-node src/server.js",
-    "dev": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "dev": "webpack --watch --config ./webpack.config.js --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -22,7 +22,6 @@ const BudgetItem = (props) => {
     const toggle = () => setConfirmModal(!ConfirmModal);
 
     const selectItem = (item, action) => {
-        console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
         if (action == 0) {
             setItemAction("budget");
@@ -50,7 +49,6 @@ const BudgetItem = (props) => {
 
         fetch(budgetDeleteRequest)
             .then(data => {
-                console.log(data)
                 return data
             })
             .then(res => {

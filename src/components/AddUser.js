@@ -15,10 +15,10 @@ const AddUser = (props) => {
         getIcons()
     }, []);
 
-    const [Name, setName] = props.item ? useState(props.item.user) : useState('');
-    const [LastName, setLastName] = props.item ? useState(props.item.description) : useState('');
-    const [Avatar, setAvatar] = props.item ? useState(props.item.monthly) : useState(false);
-    const [Email, setEmail] = useState('');
+    const [Name, setName] = props.item ? useState(props.item.name) : useState('');
+    const [LastName, setLastName] = props.item ? useState(props.item.lastName) : useState('');
+    const [Avatar, setAvatar] = props.item ? useState(props.item.avatar) : useState('');
+    const [Email, setEmail] = props.item ? useState(props.item.email) : useState('');;
     const [IconList, setIconList] = useState([]);
     const [Validation, setValidation] = useState(false)
 
@@ -56,7 +56,6 @@ const AddUser = (props) => {
 
         fetch(iconRequest)
             .then(data => {
-                console.log(`data received: ${data}`)
                 return data.json()
             })
             .then(res => {
@@ -68,7 +67,6 @@ const AddUser = (props) => {
         event.preventDefault()
         let data = {}
         let userRequest = {};
-        console.log('VEDAGRGHBT')
         if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
@@ -90,10 +88,8 @@ const AddUser = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(JSON.stringify(data));
 
         } else {
-            console.log("this is not edit")
             data = {
                 "name": Name,
                 "lastName": LastName,
@@ -194,10 +190,10 @@ const AddUser = (props) => {
                 <div className="row">
 
                     <div className="col-sm-2">
-                        <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit ? "Update" : "Create"}</Button>
+                        <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
                     </div>
                     <div className="col-sm-2">
-                        <Button color="secondary" onClick={props.toggle}>Cancel</Button>
+                        <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
                     </div>
                 </div>
             </div>

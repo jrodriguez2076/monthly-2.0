@@ -16,7 +16,6 @@ const AddIncome = (props) => {
 
 
     const getUsers = () => {
-        console.log('Getting all users')
         fetch(`/api/users`)
             .then(data => {
                 return data.json()
@@ -58,8 +57,6 @@ const AddIncome = (props) => {
         if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
-            console.log("entering edit")
-            console.log(`${Amount}, ${User}, ${Description}, ${Monthly}`)
             data = {
                 "_id": _id,
                 "update": {
@@ -78,10 +75,7 @@ const AddIncome = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(JSON.stringify(data));
-
         } else {
-            console.log("this is not edit")
             data = {
                 "amount": Amount,
                 "user": User,
@@ -105,12 +99,10 @@ const AddIncome = (props) => {
             }
             )
             .then(res => {
-                console.log(res);
                 props.toggle();
             })
 
         if (!props.fromHome) {
-            console.log("NOW TO REFRESH INCOMES")
             props.update();
         }
 
@@ -182,10 +174,10 @@ const AddIncome = (props) => {
                 <div className="row">
 
                     <div className="col-sm-2">
-                        <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit ? "Update" : "Create"}</Button>
+                        <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
                     </div>
                     <div className="col-sm-2">
-                        <Button color="secondary" onClick={props.toggle}>Cancel</Button>
+                        <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
                     </div>
                 </div>
             </div>

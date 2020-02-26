@@ -23,7 +23,6 @@ const AddExpense = (props) => {
     // const BudgetOptions = [];
 
     const getBudgets = () => {
-        console.log('Getting all budgets')
         let d = new Date()
 
         fetch(`/api/budgets?month=${d.getMonth() + 1}`)
@@ -40,7 +39,6 @@ const AddExpense = (props) => {
             })
     };
     const getUsers = () => {
-        console.log('Getting all users')
         fetch(`/api/users`)
             .then(data => {
                 return data.json()
@@ -82,9 +80,10 @@ const AddExpense = (props) => {
     }
 
     const handleChangeMethod = (event) => {
+
+
         // setMonthly(event.target.value)
 
-        // console.log(setMonthly);
     }
 
     const handleSubmit = (event) => {
@@ -95,9 +94,6 @@ const AddExpense = (props) => {
         if (Validation) return;
         if (props.edit) {
             let _id = props.item._id;
-            // let update = props.item;
-            console.log("entering edit")
-            console.log(`${Amount}, ${ExpenseDate}, ${Description}`)
             data = {
                 "_id": _id,
                 "update": {
@@ -119,8 +115,6 @@ const AddExpense = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(JSON.stringify(data));
-
         } else {
 
             data = {
@@ -169,14 +163,12 @@ const AddExpense = (props) => {
             }
             )
             .then(res => {
-                console.log(res);
                 props.toggle();
             })
 
-        if (!props.fromHome) {
-            console.log("NOW TO REFRESH EXPENSES")
+        // if (!props.fromHome) {
             props.update();
-        }
+        // }
 
 
     }
@@ -228,25 +220,25 @@ const AddExpense = (props) => {
             </FormGroup>
             <FormGroup>
                 <Label for="location">Location</Label>
-                <Input type="text" name="location" id="location" onChange={handleChangeLocation} value={Location} />
+                <Input type="text" name="location" id="location" onChange={handleChangeLocation} value={Location}/>
             </FormGroup>
             <FormGroup check>
-                <Label check>
+                <Label check style={{ "padding-bottom": "1rem"}}>
                     <Input type="checkbox" name="method" onChange={handleChangeMethod} value={Method} /> Cash
                 </Label>
             </FormGroup>
             <FormGroup check>
-                <Label check>
+                <Label check style={{ "padding-bottom": "1rem"}}>
                     <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Electronic
                 </Label>
             </FormGroup>
             <FormGroup check>
-                <Label check>
+                <Label check style={{ "padding-bottom": "1rem"}}>
                     <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Credit
                 </Label>
             </FormGroup>
-            <Button color="primary" type="submit">{props.edit ? "Update" : "Create"}</Button>
-            <Button color="secondary" onClick={props.toggle}>Cancel</Button>
+            <Button color="primary" type="submit" style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
+            <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
         </Form >
     )
 }
