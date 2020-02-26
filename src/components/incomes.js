@@ -22,8 +22,6 @@ const Incomes = (props) => {
       )
       .then(res => {
         setIncomes([...res]);
-        console.log(`RESPONSE:`)
-        console.log(res)
       })
   };
 

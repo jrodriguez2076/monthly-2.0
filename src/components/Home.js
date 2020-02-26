@@ -21,12 +21,9 @@ const Home = (props) => {
             .then(data => { return data.json() }
             )
             .then(res => {
-                console.log(res)
                 let total = 0;
                 for (const el of res) {
-                    console.log(`Adding expense: ${el.amount}`)
                     total += el.amount
-                    console.log(total)
                 }
                 setAmount(total)
             })
@@ -45,13 +42,12 @@ const Home = (props) => {
             <Container>
                 <div >
                     <Row className="d-flex justify-content-center">
-                        <ActionButton Feature="expense" fromHome={true}></ActionButton>
+                        <ActionButton Feature="expense" fromHome={true} updateExpenses={changeTotalExpense}></ActionButton>
                         <ActionButton Feature="income" fromHome={true}></ActionButton>
                         <ActionButton Feature="budget" fromHome={true}></ActionButton>
                     </Row>
                 </div>
                 <div className="row">
-                    <Spinner color="primary" size="lg"/>
                 </div>
             </Container>
         </div>

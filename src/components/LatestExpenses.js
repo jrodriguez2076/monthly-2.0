@@ -20,7 +20,6 @@ const LatestExpenses = (props) => {
     },]);
 
     const getLatestExpenses = () => {
-        console.log('Expense Function called!!');
         let d = new Date();
         fetch(`/api/expenses?month=${d.getMonth() + 1}`)
             .then(data => { return data.json() }

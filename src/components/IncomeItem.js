@@ -23,7 +23,6 @@ const IncomeItem = (props) => {
     const toggle = () => setConfirmModal(!ConfirmModal);
 
     const selectItem = (item, action) => {
-        console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
         if (action == 0) {
             setItemAction("income");
@@ -34,17 +33,10 @@ const IncomeItem = (props) => {
     useEffect(() => {
         const getIconPaths = async () => {
             let users = await getUsers()
-            console.log(" use EFFECT users:")
-            console.log(users)
             let paths = {}
             users.forEach(element => {
-                console.log("Putting it all together:")
-                console.log(element.name)
-                console.log(element.avatar)
                 paths[element.name] = "/img/icon/avatar/".concat(element.avatar)
             });
-            console.log("Icon paths")
-            console.log(paths)
             setIconPaths(paths)
             return;
         }
@@ -53,7 +45,6 @@ const IncomeItem = (props) => {
     }, []);
 
     const deleteItem = () => {
-        console.log(`DELETING THE FOLLOWING: ${SelectedItem._id}`)
         let data = {
             "incomeId": SelectedItem._id
         }
@@ -69,7 +60,6 @@ const IncomeItem = (props) => {
 
         fetch(incomeDeleteRequest)
             .then(data => {
-                console.log(data)
                 return data
             })
             .then(res => {
@@ -82,18 +72,14 @@ const IncomeItem = (props) => {
         
         let response = await fetch('/api/users');
         let data = await response.json()
-        console.log("Response from user API")
-        console.log(data)
         return data
     }
 
     const incomeMapper = props.incomes.map((item, i) => {
 
-        console.log(item)
-
         return <div key={i} className="col-md-6" style={{ marginBottom: "2rem" }}>
             <Card >
-                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Avatar goes here" onClick= {()=> console.log(iconPaths[item.user])} />
+                <CardImg className="mx-auto" top width="100%" src={iconPaths[item.user]} style={{ width: "7rem" }} alt="Avatar goes here" />
                 {/* <CardHeader tag="h4">{toCurrency(item.amount)}</CardHeader> */}
                 <CardBody>
                     <CardTitle tag="h3">{toCurrency(item.amount)}</CardTitle>

@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './src/app.js',
+  entry: './src/components/app.js',
   module: {
     rules: [
       {

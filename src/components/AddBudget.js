@@ -20,12 +20,9 @@ const AddBudget = (props) => {
 
 
     const handleChangeAmount = (event) => {
-        // if ( typeof (event.target.value) == Number) {
-        console.log(event.target.value)
         if (!event.target.value) setValidation(true)
         else setValidation(false)
         setAmount(event.target.value);
-        // }
     }
 
     const handleChangeName = (event) => {
@@ -58,8 +55,6 @@ const AddBudget = (props) => {
         if (props.edit) {
             let _id = props.item._id;
             // let update = props.item;
-            console.log("entering edit")
-            console.log(`${Amount}, ${Name}, ${Description}, ${Icon}`)
             data = {
                 "_id": _id,
                 "update": {
@@ -117,7 +112,6 @@ const AddBudget = (props) => {
             }
             )
             .then(res => {
-                console.log(res);
                 props.toggle();
 
                 if (res.status >= 200 && res.status < 400) {
@@ -149,7 +143,6 @@ const AddBudget = (props) => {
 
         fetch(iconRequest)
             .then(data => {
-                console.log(`data received: ${data}`)
                 return data.json()
             })
             .then(res => {
@@ -195,7 +188,7 @@ const AddBudget = (props) => {
             </FormGroup>
             <FormGroup>
                 <p>Choose an Icon for the Budget</p>
-                <IconItem icons={IconList} radioStyle={radioStyle} handleChangeIcon={handleChangeIcon}></IconItem>
+                <IconItem icons={IconList} radioStyle={radioStyle} handleChangeIcon={handleChangeIcon} section="budgets"></IconItem>
             </FormGroup>
             <FormGroup check>
                 <Label check>
@@ -203,8 +196,8 @@ const AddBudget = (props) => {
                 </Label>
             </FormGroup>
             <hr></hr>
-            <Button color="primary" type="submit" onClick={handleSubmit}>{props.edit ? "Update" : "Create"}</Button>
-            <Button color="secondary" onClick={props.toggle}>Cancel</Button>
+            <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
+            <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
         </Form >
     )
 }

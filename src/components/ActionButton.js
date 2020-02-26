@@ -31,12 +31,14 @@ const ActionButton = (props) => {
                 </Ripples>
             </div>
             <GenericModal
+                {...props}
                 modal={modal}
                 toggle={toggle}
                 type={props.Feature}
                 updateBudgets={props.updateBudgets}
                 updateExpenses={props.updateExpenses}
                 updateIncomes={props.updateIncomes}
+                updateUsers={props.updateUsers}
                 showToastMessage={props.showToastMessage}
                 fromHome={props.fromHome}
                 notifData={props.notifData}>

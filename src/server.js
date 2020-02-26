@@ -2,6 +2,8 @@ import express from 'express';
 import path, { dirname } from 'path';
 import mongoose from 'mongoose'
 import models, { connectDb } from './models';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 import 'dotenv/config';
 var fs = require('fs');
@@ -19,25 +21,16 @@ const users = [
     {
         "name": "Ana",
         "lastName": "Smith",
-        "avatar": "duck.png",
+        "avatar": "avatar-31.png",
         "email": "myotherplaceholder@gmail.com"
     },
     {
         "name": "Jose",
         "lastName": "Smith",
-        "avatar": "boat.png",
+        "avatar": "avatar-27.png",
         "email": "myotherplaceholder@gmail.com"
     }
 ]
-
-const checkProperties = (obj) => {
-    for (var key in obj) {
-        if (obj[key] == null || obj[key] == undefined)
-            return false
-
-    }
-    return true
-}
 
 // Middlewares
 
@@ -70,7 +63,6 @@ app.get('/api/icons', (req, res) => {
         if (req.query.iconid) {
             let icon = req.query.iconid;
             iconPath = path.join(iconSection, icon)
-            console.log(iconPath)
         }
 
         fs.readdir(dir, (err, files) => {
@@ -89,17 +81,14 @@ app.get('/api/icons', (req, res) => {
 app.get('/api/icons/all', (req, res) => {
     if (req.query.section) {
         let sectionPath = path.join(process.cwd(), 'dist/img/icon', req.query.section);
-        console.log(req.query.section)
         fs.readdir(sectionPath, (err, files) => {
             try {
                 files.forEach((item) => {
-                    console.log(item)
                 })
             }
             catch{
                 console.log(err)
             }
-            console.log(files);
             res.send(files)
         })
     }
@@ -109,7 +98,6 @@ app.get('/api/expenses', async (req, res) => {
     if (req.query.month) {
         let queriedMonth;
         queriedMonth = parseInt(req.query.month);
-        console.log("Fetching latest expenses for the month...")
         const expensesdb = await req.context.models.Expense.aggregate([
             { $addFields: { month: { $month: '$date' } } },
             { $match: { month: queriedMonth } }
@@ -121,16 +109,9 @@ app.get('/api/expenses', async (req, res) => {
 });
 
 app.post('/api/expenses', async (req, res) => {
-    // if (req.query.month) {
-    //     let month;
-    //     month = req.query.month;
-    // let newExpense = req.body;
+
     let expenseDate = Date.parse(req.body.date)
-    // newExpense["amount"] = parseInt(newExpense["amount"]);
-    // newExpense["id"] = parseInt(newExpense["id"]);
-    // console.log(newExpense)
-    // expenseQuery[month].push(newExpense);
-    console.log(req.body)
+
     const expenseDb = await req.context.models.Expense.create({
         user: req.body.user,
         date: expenseDate,
@@ -139,7 +120,6 @@ app.post('/api/expenses', async (req, res) => {
         description: req.body.description,
         budget: req.body.budget
     })
-    console.log(expenseDb)
     res.send(`successfully posted new income: ${expenseDb}`)
     // }
 });
@@ -160,13 +140,11 @@ app.delete('/api/expenses', async (req, res) => {
 // incomes API
 
 app.get('/api/incomes', async (req, res) => {
-    console.log("getting the incomes...")
     const incomesdb = await req.context.models.Income.find();
     res.send(incomesdb);
 });
 
 app.post('/api/incomes', async (req, res) => {
-    console.log(req.body)
     if (req.body) {
         const newIncome = await req.context.models.Income.create({
             user: req.body.user,
@@ -174,7 +152,6 @@ app.post('/api/incomes', async (req, res) => {
             description: req.body.description,
             monthly: req.body.monthly,
         })
-        console.log(newIncome)
         res.send(`successfully posted new income: ${newIncome}`)
     }
 });
@@ -197,7 +174,6 @@ app.delete('/api/incomes', async (req, res) => {
 app.get('/api/budgets', async (req, res) => {
     if (req.query.month) {
         let queriedMonth = parseInt(req.query.month);
-        console.log("Fetching budgets for the month...")
         const budgets = await req.context.models.Budget.find(
             { month: queriedMonth }
         );
@@ -211,11 +187,7 @@ app.post('/api/budgets', async (req, res) => {
     let iconName = req.body.icon;
     let today = new Date();
 
-    console.log(req.body)
-
     if (!req.body.amount) {
-        console.log("FIELD NULL OR UNDEFINED")
-
         res.status(422).send(`invalid budget format: ${newBudget}`)
     }
 
@@ -250,38 +222,37 @@ app.delete('/api/budgets', async (req, res) => {
     res.send('Successfully deleted Budget')
 });
 
-// Goals API
-
-// app.get('/api/goals', (req, res) => {
-//     res.send('Here we will get the GOALS')
-// });
-
-// app.post('/api/goals', (req, res) => {
-//     res.send('Here we will POST new GOALS')
-// });
-
-// app.delete('/api/budgets', (req, res) => {
-//     res.send('Here we will DELETE the GOALS')
-// });
-
 //Users API
 
-app.get('/api/users', (req, res) => {
-    console.log("getting the users...")
+app.get('/api/users', async (req, res) => {
+    const users = await req.context.models.User.find()
     res.send(users)
 });
 
-app.post('/api/budgets', (req, res) => {
-    let newUser = req.body;
-    res.send('Here we will POST the USERS')
+app.post('/api/users', async (req, res) => {
+    if (req.body) {
+        const newUser = await req.context.models.User.create({
+            name: req.body.name,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            avatar: req.body.avatar,
+        })
+        res.send(`successfully posted new user: ${newUser}`)
+    }
 });
 
-app.put('/api/budgets', (req, res) => {
-    res.send('Here we will UPDATE the USERS')
+app.put('/api/users', async (req, res) => {
+    let selectedUser = req.body._id;
+    let update = req.body.update;
+    const user = await req.context.models.User.findByIdAndUpdate(selectedUser, update)
+    res.send('Successfully updated User')
+    // res.send('Here we will UPDATE the USERS')
 });
 
-app.delete('/api/budgets', (req, res) => {
-    res.send('Here we will DELETE the USERS')
+app.delete('/api/users', async (req, res) => {
+    let selectedUser = req.body;
+    const userToDelete = await req.context.models.User.findByIdAndDelete(selectedUser.userId)
+    res.send('Successfully deleted user')
 });
 
 //main index file

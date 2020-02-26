@@ -13,7 +13,6 @@ const ExpenseItem = (props) => {
     const toggle = () => setConfirmModal(!ConfirmModal);
 
     const selectItem = (item, action) => {
-        console.log(`Item Selected: ${item.name}`);
         setSelectedItem(item);
         if (action==0){
             setItemAction("expense");
@@ -22,7 +21,6 @@ const ExpenseItem = (props) => {
     }
 
     const deleteItem = () => {
-        console.log(`DELETING THE FOLLOWING: ${SelectedItem._id}`)
         let data = {
             "expenseId": SelectedItem._id
         }
@@ -38,7 +36,6 @@ const ExpenseItem = (props) => {
 
         fetch(expenseDeleteRequest)
             .then(data => {
-                console.log(data)
                 return data
             })
             .then(res => {
