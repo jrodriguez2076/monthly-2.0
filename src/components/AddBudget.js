@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import IconItem from './IconItem';
+import ValidityService from './submodules/validity';
+
 
 const AddBudget = (props) => {
+
+    const validity = new ValidityService();
 
     useEffect(() => {
         getIcons();
@@ -15,7 +19,6 @@ const AddBudget = (props) => {
     const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState("house.svg")
     const [IconList, setIconList] = useState([]);
     const [Monthly, setMonthly] = useState(false);
-    const [Validation, setValidation] = useState(false);
     const [ValidationError, setValidationError] = useState({
         amount: "",
         name: ""
@@ -23,10 +26,10 @@ const AddBudget = (props) => {
 
     const checkValidity = () => {
         const errors = ValidationError;
-        if (errors.amount.length == 0 && Amount <= 0) {
+        if (errors.amount.length == 0 && !validity.validAmount(Amount)) {
             errors.amount = "Please add a number higher than 0!";
         }
-        if (errors.name.length == 0 && Name.length == 0) {
+        if (errors.name.length == 0 && !validity.validName(Name)) {
             errors.name = "You must add a name!";
         }
         setValidationError(errors);
@@ -40,11 +43,11 @@ const AddBudget = (props) => {
         switch (name) {
             case 'amount':
                 setAmount(event.target.value);
-                errors.amount = value <= 0 ? "Please add a number higher than 0!" : "";
+                errors.amount = validity.validAmount(value) ? "":"Please add a number higher than 0!";
                 break;
             case 'name':
                 setName(event.target.value)
-                errors.name = value.length == 0 ? "You must add a name!" : "";
+                errors.name = validity.validName(value) ? "":"You must add a name!";
                 break;
             case 'description':
                 setDescription(event.target.value)
@@ -74,7 +77,6 @@ const AddBudget = (props) => {
         let budgetRequest = {};
         let notifInfo = {};
         checkValidity()
-        console.log(ValidationError)
         if (ValidationError.name.length > 0 || ValidationError.amount.length > 0) {
             setName([...Name])
             return;

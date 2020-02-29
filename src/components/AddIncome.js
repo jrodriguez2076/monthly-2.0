@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
+import ValidityService from './submodules/validity';
+
+
 const AddIncome = (props) => {
+
+    const validity = new ValidityService();
+
     useEffect(() => {
         getUsers()
     }, []);
@@ -12,7 +18,43 @@ const AddIncome = (props) => {
     const [Description, setDescription] = props.item ? useState(props.item.description) : useState('');
     const [Monthly, setMonthly] = props.item ? useState(props.item.monthly) : useState(false);
     const [ExistingUsers, setExistingUsers] = useState();
-    const [Validation, setValidation] = useState(false)
+    const [ValidationError, setValidationError] = useState({
+        amount: "",
+    });
+
+    const checkValidity = () => {
+        const errors = ValidationError;
+        if (errors.amount.length == 0 && !validity.validAmount(Amount)) {
+            errors.amount = "Please add a number higher than 0!";
+        }
+        setValidationError(errors);
+    }
+
+    const handleChange = (event) => {
+
+        const { name, value } = event.target;
+        let errors = ValidationError;
+
+        switch (name) {
+            case 'amount':
+                setAmount(event.target.value);
+                errors.amount = validity.validAmount(value) ? "" : "Please add a number higher than 0!";
+                break;
+            case 'user':
+                setUser(event.target.value)
+                break;
+            case 'description':
+                setDescription(event.target.value)
+                break;
+            case 'monthly':
+                setMonthly(!Monthly)
+                break;
+            default:
+                break;
+        }
+        setValidationError(errors);
+
+    }
 
 
     const getUsers = () => {
@@ -30,31 +72,35 @@ const AddIncome = (props) => {
             })
     };
 
-    const handleChangeAmount = (event) => {
-        if (!event.target.value) setValidation(true)
-        else setValidation(false)
-        setAmount(event.target.value)
-    }
+    // const handleChangeAmount = (event) => {
+    //     if (!event.target.value) setValidation(true)
+    //     else setValidation(false)
+    //     setAmount(event.target.value)
+    // }
 
-    const handleChangeUser = (event) => {
-        // if (event.target.value == '') setUser(event.target.value)
-        setUser(event.target.value)
-    }
+    // const handleChangeUser = (event) => {
+    //     // if (event.target.value == '') setUser(event.target.value)
+    //     setUser(event.target.value)
+    // }
 
-    const handleChangeDescription = (event) => {
-        setDescription(event.target.value)
-    }
+    // const handleChangeDescription = (event) => {
+    //     setDescription(event.target.value)
+    // }
 
-    const handleChangeMonthly = (event) => {
-        setMonthly(!Monthly)
-    }
+    // const handleChangeMonthly = (event) => {
+    //     setMonthly(!Monthly)
+    // }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         let data = {}
         let incomeRequest = {};
 
-        if (Validation) return;
+        checkValidity()
+        if (ValidationError.amount.length > 0) {
+            setAmount([...User])
+            return;
+        }
         if (props.edit) {
             let _id = props.item._id;
             data = {
@@ -118,13 +164,13 @@ const AddIncome = (props) => {
                             <Label for="amount">Amount</Label>
                             <Input
                                 type="number"
-                                name="amountnumber"
+                                name="amount"
                                 id="amount"
                                 placeholder="Income amount"
-                                onChange={handleChangeAmount}
+                                onChange={handleChange}
                                 value={Amount}
                             />
-                            {Validation ? <div style={{ color: "red" }}> Please add only numbers!</div> : null}
+                            {ValidationError.amount.length > 0 ? <div style={{ color: "red" }}> {ValidationError.amount}</div> : null}
                         </FormGroup>
                     </div>
                     <div className="col-lg-6">
@@ -134,7 +180,7 @@ const AddIncome = (props) => {
                                 type="select"
                                 name="user"
                                 id="user"
-                                onChange={handleChangeUser}
+                                onChange={handleChange}
                                 value={User}>
                                 {ExistingUsers}
                             </Input>
@@ -149,7 +195,7 @@ const AddIncome = (props) => {
                                 type="textarea"
                                 name="description"
                                 id="description"
-                                onChange={handleChangeDescription}
+                                onChange={handleChange}
                                 value={Description} />
                         </FormGroup>
                     </div>
@@ -161,8 +207,9 @@ const AddIncome = (props) => {
                             <Input
                                 className="form-check-input"
                                 type="checkbox"
+                                name="monthly"
                                 id="monthlyCheck"
-                                onChange={handleChangeMonthly}
+                                onChange={handleChange}
                                 checked={Monthly} />
                             <Label for="monthlyCheck">
                                 This is a monthly income
@@ -174,10 +221,10 @@ const AddIncome = (props) => {
                 <div className="row">
 
                     <div className="col-sm-2">
-                        <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
+                        <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem" }}>{props.edit ? "Update" : "Create"}</Button>
                     </div>
                     <div className="col-sm-2">
-                        <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
+                        <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem" }}>Cancel</Button>
                     </div>
                 </div>
             </div>

@@ -3,8 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 import IconItem from './IconItem';
+import ValidityService from './submodules/validity';
 
 const AddUser = (props) => {
+
+    const validity = new ValidityService();
 
     const radioStyle = {
         "marginTop": ".2rem",
@@ -12,6 +15,7 @@ const AddUser = (props) => {
     }
 
     useEffect(() => {
+
         getIcons()
     }, []);
 
@@ -20,18 +24,47 @@ const AddUser = (props) => {
     const [Avatar, setAvatar] = props.item ? useState(props.item.avatar) : useState('');
     const [Email, setEmail] = props.item ? useState(props.item.email) : useState('');;
     const [IconList, setIconList] = useState([]);
-    const [Validation, setValidation] = useState(false)
+    const [ValidationError, setValidationError] = useState({
+        email: "",
+        name: ""
+    });
 
-
-    const handleChangeName = (event) => {
-        if (!event.target.value) setValidation(true)
-        else setValidation(false)
-        setName(event.target.value)
+    const checkValidity = () => {
+        const errors = ValidationError;
+        if (errors.email.length == 0 && !validity.validEmail(Email)) {
+            errors.email = "You must add a valid email!";
+        }
+        if (errors.name.length == 0 && !validity.validName(Name)) {
+            errors.name = "You must add a name!";
+        }
+        setValidationError(errors);
     }
 
-    const handleChangeLastName = (event) => {
-        setLastName(event.target.value)
+    const handleChange = (event) => {
+
+        const { name, value } = event.target;
+        let errors = ValidationError;
+
+
+        switch (name) {
+            case 'userName':
+                setName(event.target.value)
+                errors.name = validity.validName(value) ? "" : "You must add a name!";
+                break;
+            case 'email':
+                setEmail(event.target.value)
+                errors.email = validity.validEmail(value) ? "" : "You must add a valid email!"
+                break;
+            case 'lastName':
+                setLastName(event.target.value)
+                break;
+            default:
+                break;
+        }
+        setValidationError(errors);
+
     }
+
 
     const handleChangeIcon = (event) => {
         try {
@@ -39,10 +72,6 @@ const AddUser = (props) => {
         } catch {
             setAvatar(IconList[event]);
         }
-    }
-
-    const handleChangeEmail = (event) => {
-        setEmail(event.target.value)
     }
 
     const getIcons = () => {
@@ -67,7 +96,14 @@ const AddUser = (props) => {
         event.preventDefault()
         let data = {}
         let userRequest = {};
-        if (Validation) return;
+        // if (Validation) return;
+
+        checkValidity()
+        if (ValidationError.name.length > 0 || ValidationError.email.length > 0) {
+            setName([...Name])
+            return;
+        }
+
         if (props.edit) {
             let _id = props.item._id;
             data = {
@@ -135,11 +171,11 @@ const AddUser = (props) => {
                                 name="userName"
                                 id="name"
                                 placeholder="New user name"
-                                onChange={handleChangeName}
+                                onChange={handleChange}
                                 value={Name}
                                 required
                             />
-                            {Validation? <div style={{ color: "red" }}> A name must be given!</div> : null}
+                            {ValidationError.name.length > 0 ? <div style={{ color: "red" }}> {ValidationError.name}</div> : null}
                         </FormGroup>
                     </div>
                     <div className="col-lg-6">
@@ -149,7 +185,7 @@ const AddUser = (props) => {
                                 type="text"
                                 name="lastName"
                                 id="lastName"
-                                onChange={handleChangeLastName}
+                                onChange={handleChange}
                                 value={LastName}>
                             </Input>
                         </FormGroup>
@@ -161,9 +197,11 @@ const AddUser = (props) => {
                             <Label for="email">email</Label>
                             <Input
                                 type="text"
+                                name="email"
                                 id="email"
-                                onChange={handleChangeEmail}
+                                onChange={handleChange}
                                 value={Email} />
+                            {ValidationError.email.length > 0 ? <div style={{ color: "red" }}> {ValidationError.email}</div> : null}
                         </FormGroup>
                     </div>
                 </div>
@@ -190,10 +228,10 @@ const AddUser = (props) => {
                 <div className="row">
 
                     <div className="col-sm-2">
-                        <Button color="primary" type="submit" onClick={handleSubmit} style={{ "margin-right": "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
+                        <Button color="primary" type="submit" onClick={handleSubmit} style={{ marginRight: "1rem" }}>{props.edit ? "Update" : "Create"}</Button>
                     </div>
                     <div className="col-sm-2">
-                        <Button color="secondary" onClick={props.toggle} style={{ "margin-right": "1rem"}}>Cancel</Button>
+                        <Button color="secondary" onClick={props.toggle} style={{ marginRight: "1rem" }}>Cancel</Button>
                     </div>
                 </div>
             </div>
