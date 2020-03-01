@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
+import ValidityService from './submodules/validity';
+
+
 const AddExpense = (props) => {
+
+    const validity = new ValidityService();
 
     useEffect(() => {
         getBudgets();
@@ -20,9 +25,60 @@ const AddExpense = (props) => {
     const [StartDate, setStartDate] = props.item ? useState(props.item.StartDate) : useState('')
     const [ExistingBudgets, setExistingBudgets] = useState()
     const [ExistingUsers, setExistingUsers] = useState()
-    const [Validation, setValidation] = useState(false)
+    const [ValidationError, setValidationError] = useState({
+        amount: "",
+        date: "",
+        description: ""
+    });
 
-    // const BudgetOptions = [];
+    const checkValidity = () => {
+        const errors = ValidationError;
+        if (errors.amount.length == 0 && !validity.validAmount(Amount)) {
+            errors.amount = "Please add a number higher than 0!";
+        }
+        if (errors.date.length == 0 && !validity.validDate(ExpenseDate)) {
+            errors.date = "Please add a valid date!";
+        }
+        if (errors.description.length == 0 && !validity.validDescription(Description)) {
+            errors.description = "Please add a valid description (limit: 50 characters)";
+        }
+        setValidationError(errors);
+    }
+
+    const handleChange = (event) => {
+
+        const { name, value } = event.target;
+        let errors = ValidationError;
+
+        switch (name) {
+            case 'date':
+                setExpenseDate(event.target.value);
+                if (Method == "credit") setStartDate(event.target.value)
+                errors.date = validity.validDate(value) ? "" : "Please add a valid date!";
+                break;
+            case 'amount':
+                setAmount(event.target.value)
+                errors.amount = validity.validAmount(value) ? "" : "You must add a name!";
+                break;
+            case 'user':
+                setUser(event.target.value)
+                break;
+            case 'budget':
+                setBudget(event.target.value)
+                break;
+            case 'description':
+                setDescription(event.target.value)
+                errors.description = validity.validDescription(value) ? "" : "Please add a valid description (limit: 50 characters)";
+                break;
+            case 'location':
+                setLocation(event.target.value)
+                break;
+            default:
+                break;
+        }
+        setValidationError(errors);
+
+    }
 
     const getBudgets = () => {
         let d = new Date()
@@ -55,33 +111,6 @@ const AddExpense = (props) => {
             })
     };
 
-    const handleChangeDate = (event) => {
-        setExpenseDate(event.target.value)
-        if (Method == "credit") setStartDate(event.target.value)
-    }
-
-    const handleChangeAmount = (event) => {
-        if (!event.target.value) setValidation(true)
-        else setValidation(false)
-        setAmount(event.target.value)
-    }
-
-    const handleChangeUser = (event) => {
-        setUser(event.target.value)
-    }
-
-    const handleChangeDescription = (event) => {
-        setDescription(event.target.value)
-    }
-
-    const handleChangeBudget = (event) => {
-        setBudget(event.target.value)
-    }
-
-    const handleChangeLocation = (event) => {
-        setLocation(event.target.value)
-    }
-
     const handleChangeMethod = (event) => {
         setMethod(event.target.value);
         setBudget("Credit card payment");
@@ -104,7 +133,11 @@ const AddExpense = (props) => {
         let data = {}
         let expenseRequest = {};
 
-        if (Validation) return;
+        checkValidity()
+        if (ValidationError.date.length > 0 || ValidationError.amount.length > 0 || ValidationError.description.length > 0) {
+            setUser([...User])
+            return;
+        }
         if (props.edit) {
             let _id = props.item._id;
             data = {
@@ -171,10 +204,6 @@ const AddExpense = (props) => {
 
     }
 
-    // const budgetMapper = ExistingBudgets.map(function (item, i) {
-    //     return <option key={i}>{item.name}</option>
-    // })
-
     return (
         <Form onSubmit={handleSubmit}>
             <FormGroup>
@@ -184,41 +213,45 @@ const AddExpense = (props) => {
                     name="date"
                     id="expenseDate"
                     placeholder="Choose a date for the expense"
-                    onChange={handleChangeDate}
+                    onChange={handleChange}
                     value={ExpenseDate}
                 />
+                {ValidationError.date.length > 0 ? <div style={{ color: "red" }}> {ValidationError.date}</div> : null}
+
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Amount</Label>
                 <Input
                     type="number"
-                    name="number"
+                    name="amount"
                     id="amount"
                     placeholder="How much was spent?"
-                    onChange={handleChangeAmount}
+                    onChange={handleChange}
                     value={Amount}
                 />
-                {Validation ? <div style={{ color: "red" }}> Please add only numbers!</div> : null}
+                {ValidationError.amount.length > 0 ? <div style={{ color: "red" }}> {ValidationError.amount}</div> : null}
+
             </FormGroup>
             <FormGroup>
                 <Label for="user">Who made the expense?</Label>
-                <Input type="select" name="user" id="user" onChange={handleChangeUser} value={User}>
+                <Input type="select" name="user" id="user" onChange={handleChange} value={User}>
                     {ExistingUsers}
                 </Input>
             </FormGroup>
             <FormGroup>
                 <Label for="budget">Budget associated</Label>
-                <Input type="select" name="budget" id="budget" onChange={handleChangeBudget} value={Budget} disabled={Method == "credit" ? "disabled" : ""}>
+                <Input type="select" name="budget" id="budget" onChange={handleChange} value={Budget} disabled={Method == "credit" ? "disabled" : ""}>
                     {ExistingBudgets}
                 </Input>
             </FormGroup>
             <FormGroup>
                 <Label for="description">Brief description</Label>
-                <Input type="textarea" name="description" id="description" onChange={handleChangeDescription} value={Description} />
+                <Input type="textarea" name="description" id="description" onChange={handleChange} value={Description} />
+                {ValidationError.description.length > 0 ? <div style={{ color: "red" }}> {ValidationError.description}</div> : null}
             </FormGroup>
             <FormGroup>
                 <Label for="location">Location</Label>
-                <Input type="text" name="location" id="location" onChange={handleChangeLocation} value={Location} />
+                <Input type="text" name="location" id="location" onChange={handleChange} value={Location} />
             </FormGroup>
             <FormGroup>
                 <Label for="method">Select payment method</Label>
@@ -254,21 +287,6 @@ const AddExpense = (props) => {
                     </FormGroup>
                 </div>
                 : null}
-            {/* <FormGroup check>
-                <Label check style={{ paddingBottom: "1rem"}}>
-                    <Input type="checkbox" name="method" onChange={handleChangeMethod} value="cash" {Method="cash"? "checked":''} /> Cash
-                </Label>
-            </FormGroup>
-            <FormGroup check>
-                <Label check style={{ paddingBottom: "1rem"}}>
-                    <Input type="checkbox" name="method" onChange={handleChangeMethod} value="electronic"/> Electronic
-                </Label>
-            </FormGroup>
-            <FormGroup check>
-                <Label check style={{ paddingBottom: "1rem"}}>
-                    <Input type="checkbox" name="method" onChange={handleChangeMethod} /> Credit
-                </Label>
-            </FormGroup> */}
             <Button color="primary" type="submit" style={{ marginRight: "1rem" }}>{props.edit ? "Update" : "Create"}</Button>
             <Button color="secondary" onClick={props.toggle} style={{ marginRight: "1rem" }}>Cancel</Button>
         </Form >

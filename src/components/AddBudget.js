@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import IconItem from './IconItem';
+import ValidityService from './submodules/validity';
+
 
 const AddBudget = (props) => {
+
+    const validity = new ValidityService();
 
     useEffect(() => {
         getIcons();
@@ -15,22 +19,47 @@ const AddBudget = (props) => {
     const [Icon, setIcon] = props.item ? useState(props.item.icon) : useState("house.svg")
     const [IconList, setIconList] = useState([]);
     const [Monthly, setMonthly] = useState(false);
-    const [Validation, setValidation] = useState(false)
+    const [ValidationError, setValidationError] = useState({
+        amount: "",
+        name: ""
+    });
 
-
-
-    const handleChangeAmount = (event) => {
-        if (!event.target.value) setValidation(true)
-        else setValidation(false)
-        setAmount(event.target.value);
+    const checkValidity = () => {
+        const errors = ValidationError;
+        if (errors.amount.length == 0 && !validity.validAmount(Amount)) {
+            errors.amount = "Please add a number higher than 0!";
+        }
+        if (errors.name.length == 0 && !validity.validName(Name)) {
+            errors.name = "You must add a name!";
+        }
+        setValidationError(errors);
     }
 
-    const handleChangeName = (event) => {
-        setName(event.target.value)
-    }
+    const handleChange = (event) => {
 
-    const handleChangeDescription = (event) => {
-        setDescription(event.target.value)
+        const { name, value } = event.target;
+        let errors = ValidationError;
+
+        switch (name) {
+            case 'amount':
+                setAmount(event.target.value);
+                errors.amount = validity.validAmount(value) ? "":"Please add a number higher than 0!";
+                break;
+            case 'name':
+                setName(event.target.value)
+                errors.name = validity.validName(value) ? "":"You must add a name!";
+                break;
+            case 'description':
+                setDescription(event.target.value)
+                break;
+            case 'monthly':
+                setMonthly(!Monthly)
+                break;
+            default:
+                break;
+        }
+        setValidationError(errors);
+
     }
 
     const handleChangeIcon = (event) => {
@@ -41,17 +70,17 @@ const AddBudget = (props) => {
         }
     }
 
-    const handleChangeMonthly = (event) => {
-        setMonthly(!Monthly)
-    }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         let data = {}
         let budgetRequest = {};
         let notifInfo = {};
-
-        if (Validation) return;
+        checkValidity()
+        if (ValidationError.name.length > 0 || ValidationError.amount.length > 0) {
+            setName([...Name])
+            return;
+        }
         if (props.edit) {
             let _id = props.item._id;
             // let update = props.item;
@@ -163,27 +192,28 @@ const AddBudget = (props) => {
                     type="text"
                     name="name"
                     id="name"
-                    onChange={handleChangeName}
+                    onChange={handleChange}
                     value={Name} />
+                {ValidationError.name.length > 0 ? <div style={{ color: "red" }}> {ValidationError.name}</div> : null}
             </FormGroup>
             <FormGroup>
                 <Label for="amount">Budget Amount</Label>
                 <Input
                     type="number"
-                    name="number"
+                    name="amount"
                     id="amount"
                     placeholder="Enter a general budget amount"
-                    onChange={handleChangeAmount}
+                    onChange={handleChange}
                     value={Amount}
                 />
-                {Validation? <div style={{color: "red"}}> Please add only numbers!</div>: null }
+                {ValidationError.amount.length > 0 ? <div style={{ color: "red" }}> {ValidationError.amount}</div> : null}
             </FormGroup>
             <FormGroup>
                 <Label for="description">Enter a brief budget description</Label>
                 <Input type="textarea"
                     name="description"
                     id="description"
-                    onChange={handleChangeDescription}
+                    onChange={handleChange}
                     value={Description} />
             </FormGroup>
             <FormGroup>
@@ -192,12 +222,12 @@ const AddBudget = (props) => {
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                    <Input type="checkbox" onChange={handleChangeMonthly} /> This is a monthly budget
+                    <Input type="checkbox" onChange={handleChange} /> This is a monthly budget
                 </Label>
             </FormGroup>
             <hr></hr>
-            <Button color="primary" type="submit" onClick={handleSubmit} style={{ marginRight: "1rem"}}>{props.edit ? "Update" : "Create"}</Button>
-            <Button color="secondary" onClick={props.toggle} style={{ marginRight: "1rem"}}>Cancel</Button>
+            <Button color="primary" type="submit" onClick={handleSubmit} style={{ marginRight: "1rem" }}>{props.edit ? "Update" : "Create"}</Button>
+            <Button color="secondary" onClick={props.toggle} style={{ marginRight: "1rem" }}>Cancel</Button>
         </Form >
     )
 }
