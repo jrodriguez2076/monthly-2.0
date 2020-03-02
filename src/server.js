@@ -2,35 +2,16 @@ import express from 'express';
 import path, { dirname } from 'path';
 import mongoose from 'mongoose'
 import models, { connectDb } from './models';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+
 
 import 'dotenv/config';
 var fs = require('fs');
 
 const app = express();
-
-const users = [
-    // {
-    //     "name": "Jose",
-    //     "lastName": "Rodriguez",
-    //     "avatar": "boat.png",
-    //     "email": "myplaceholder@gmail.com"
-    // },
-
-    {
-        "name": "Ana",
-        "lastName": "Smith",
-        "avatar": "avatar-31.png",
-        "email": "myotherplaceholder@gmail.com"
-    },
-    {
-        "name": "Jose",
-        "lastName": "Smith",
-        "avatar": "avatar-27.png",
-        "email": "myotherplaceholder@gmail.com"
-    }
-]
 
 // Middlewares
 
@@ -125,7 +106,7 @@ app.post('/api/expenses', async (req, res) => {
     })
 
     //Check if expense was made with credit card
-    if (req.body.method=="credit" && req.body.payments > 1) {
+    if (req.body.method == "credit" && req.body.payments > 1) {
         let iconName = "bank.svg";
         let today = new Date();
         let startDate = new Date(Date.parse(req.body.startDate))
@@ -271,14 +252,27 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.post('/api/users', async (req, res) => {
+
+
     if (req.body) {
+        let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+
         const newUser = await req.context.models.User.create({
             name: req.body.name,
             lastName: req.body.lastName,
+            password: hashedPassword,
             email: req.body.email,
             avatar: req.body.avatar,
-        })
-        res.send(`successfully posted new user: ${newUser}`)
+        },
+            function (err, user) {
+                if (err) return res.status(500).send("There was a problem registering the user.")
+                // create a token
+                var token = jwt.sign({ id: user._id }, process.env.SECRET, {
+                    expiresIn: 86400 // expires in 24 hours
+                });
+                res.status(200).send({ auth: true, token: token });
+            }
+        )
     }
 });
 

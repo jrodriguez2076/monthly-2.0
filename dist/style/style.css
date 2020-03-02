@@ -18,3 +18,11 @@
  .modal-backdrop.show {
     opacity: 0.1 !important;
 }
+
+html, body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}

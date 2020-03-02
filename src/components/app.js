@@ -14,13 +14,14 @@ import Budgets from './Budgets';
 import Home from './Home';
 import Incomes from './incomes';
 import Users from './users';
+import Login from './login';
 
 const title = 'More functions coming soon...';
 
 function App() {
   return (
     <Router>
-      <div>
+      <div style={{height:"100%"}}>
         <NavSection></NavSection>
 
         <Switch>
@@ -28,6 +29,7 @@ function App() {
           <Route path="/incomes" exact component={Incomes} />
           <Route path="/budgets" exact component={Budgets} />
           <Route path="/users" exact component={Users} />
+          <Route path="/login" exact component={Login} />
           <Route path="/" exact component={Home} />
         </Switch>
       </div>
