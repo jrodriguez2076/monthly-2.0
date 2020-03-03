@@ -26,3 +26,47 @@ html, body {
 #app {
   height: 100%;
 }
+
+.flex-login {
+  display: flex;
+  flex-direction: column; 
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+#external {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgb(228, 210, 112);
+  background-color: #343a40;
+  text-align: center;
+  position: relative;
+  display: flex;
+  width: 10rem;
+  height: 10rem;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-standout {
+  position: absolute;
+  z-index: 2;
+  max-width: 15rem;
+  opacity: 0.5;
+}
+
+.flex-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 15rem;
+}
+
+.login-modal {
+  width: 40%;
+  /* border-color: rgb(114, 113, 113) */
+}

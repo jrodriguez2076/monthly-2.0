@@ -24,6 +24,10 @@ class ValidityService {
     validDescription(value) {
         return (value.length > 0 && value.length <50);
     }
+
+    validPassword(value) {
+        return (value.length > 0);
+    }
 }
 
 export default ValidityService

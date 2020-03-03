@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import verifyToken from "./components/submodules/verifyToken";
 
 
 import 'dotenv/config';
@@ -246,6 +247,40 @@ app.delete('/api/budgets', async (req, res) => {
 
 //Users API
 
+app.get('/api/me', verifyToken, async (req, res) => {
+    // Execute VerifyToken logic before trying to find the corresponding user.
+
+    let userFound = await req.context.models.User.findById(req.userId, { password: 0 }, (err, user) => {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+    })
+    res.status(200).send(userFound);
+})
+
+app.post('/api/login', (req, res) => {
+
+    req.context.models.User.findOne({ email: req.body.email }, (err, user) => {
+        if (err) return res.status(500).send('Error on the server.');
+        if (!user) return res.status(404).send('No user found.');
+
+        let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+        let token = jwt.sign({ id: user._id }, process.env.SECRET, {
+            expiresIn: 86400 // expires in 24 hours
+        });
+
+        let approved = { auth: true, token: token }
+
+        res.status(200).send(approved);
+    });
+
+});
+
+app.get('/api/logout'), (req, res) => {
+    res.status(200).send({ auth: false, token: null })
+}
+
 app.get('/api/users', async (req, res) => {
     const users = await req.context.models.User.find()
     res.send(users)
@@ -255,6 +290,7 @@ app.post('/api/users', async (req, res) => {
 
 
     if (req.body) {
+        console.log(req.body)
         let hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
         const newUser = await req.context.models.User.create({
