@@ -150,12 +150,10 @@ const AddUser = (props) => {
             )
             .then(res => {
                 props.toggle();
+                if (!props.fromHome) {
+                    props.update();
+                }
             })
-
-        if (!props.fromHome) {
-            props.update();
-        }
-
     }
 
     return (

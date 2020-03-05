@@ -2,35 +2,19 @@ import express from 'express';
 import path, { dirname } from 'path';
 import mongoose from 'mongoose'
 import models, { connectDb } from './models';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import verifyToken from "./components/submodules/verifyToken";
+import https from 'https';
+
+
 
 import 'dotenv/config';
 var fs = require('fs');
 
 const app = express();
-
-const users = [
-    // {
-    //     "name": "Jose",
-    //     "lastName": "Rodriguez",
-    //     "avatar": "boat.png",
-    //     "email": "myplaceholder@gmail.com"
-    // },
-
-    {
-        "name": "Ana",
-        "lastName": "Smith",
-        "avatar": "avatar-31.png",
-        "email": "myotherplaceholder@gmail.com"
-    },
-    {
-        "name": "Jose",
-        "lastName": "Smith",
-        "avatar": "avatar-27.png",
-        "email": "myotherplaceholder@gmail.com"
-    }
-]
 
 // Middlewares
 
@@ -125,7 +109,7 @@ app.post('/api/expenses', async (req, res) => {
     })
 
     //Check if expense was made with credit card
-    if (req.body.method=="credit" && req.body.payments > 1) {
+    if (req.body.method == "credit" && req.body.payments > 1) {
         let iconName = "bank.svg";
         let today = new Date();
         let startDate = new Date(Date.parse(req.body.startDate))
@@ -265,20 +249,68 @@ app.delete('/api/budgets', async (req, res) => {
 
 //Users API
 
+app.get('/api/me', verifyToken, async (req, res) => {
+    // Execute VerifyToken logic before trying to find the corresponding user.
+
+    let userFound = await req.context.models.User.findById(req.userId, { password: 0 }, (err, user) => {
+        if (err) return res.status(500).send("There was a problem finding the user.");
+        if (!user) return res.status(404).send("No user found.");
+    })
+    res.status(200).send(userFound);
+})
+
+app.post('/api/login', (req, res) => {
+
+    req.context.models.User.findOne({ email: req.body.email }, (err, user) => {
+        if (err) return res.status(500).send('Error on the server.');
+        if (!user) return res.status(404).send('No user found.');
+
+        let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+        let token = jwt.sign({ id: user._id }, process.env.SECRET, {
+            expiresIn: 86400 // expires in 24 hours
+        });
+
+        let approved = { auth: true, token: token }
+
+        res.status(200).send(approved);
+    });
+
+});
+
+app.get('/api/logout'), (req, res) => {
+    res.status(200).send({ auth: false, token: null })
+}
+
 app.get('/api/users', async (req, res) => {
     const users = await req.context.models.User.find()
     res.send(users)
 });
 
 app.post('/api/users', async (req, res) => {
+
+
     if (req.body) {
+        console.log(req.body)
+        let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+
         const newUser = await req.context.models.User.create({
             name: req.body.name,
             lastName: req.body.lastName,
+            password: hashedPassword,
             email: req.body.email,
             avatar: req.body.avatar,
-        })
-        res.send(`successfully posted new user: ${newUser}`)
+        },
+            function (err, user) {
+                if (err) return res.status(500).send("There was a problem registering the user.")
+                // create a token
+                var token = jwt.sign({ id: user._id }, process.env.SECRET, {
+                    expiresIn: 86400 // expires in 24 hours
+                });
+                res.status(200).send({ auth: true, token: token });
+            }
+        )
     }
 });
 
@@ -307,7 +339,11 @@ app.get('*', (req, res) => {
 // Server Start
 
 connectDb().then(() => {
-    app.listen(process.env.PORT, () => {
+    https.createServer({
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert')
+      }, app)
+      .listen(process.env.PORT, () => {
         console.log(`Now listening on port ${process.env.PORT}`); app.use((req, res, next) => {
             next();
         });

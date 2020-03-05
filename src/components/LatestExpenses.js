@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Table, Jumbotron, Container } from 'reactstrap';
-
+import { Table, Jumbotron, Container } from 'reactstrap';
+import { Redirect } from "react-router-dom";
 import Pagination from './Pagination';
 import ExpenseItem from './ExpenseItem';
 import ActionButton from './ActionButton';
@@ -31,40 +31,41 @@ const LatestExpenses = (props) => {
 
 
     return (
-        <div>
-            <Jumbotron fluid className="row" style={{ backgroundColor: "#FFE7C9" }}>
-                <Container fluid className="col-lg-4 offset-lg-4 text-center">
-                    <h1 className="display-3">Expenses</h1>
-                    <hr></hr>
-                </Container>
-            </Jumbotron>
-            <div className="container">
-                <div className="row text-center">
-                    <Table responsive>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>User</th>
-                                <th>Date</th>
-                                <th>Location</th>
-                                <th>Amount</th>
-                                <th>Description</th>
-                                <th>Budget</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <ExpenseItem expenses={Expenses} updateExpenses={getLatestExpenses}></ExpenseItem>
-                    </Table>
+        sessionStorage.getItem('token') ?
+            <div>
+                <Jumbotron fluid className="row" style={{ backgroundColor: "#FFE7C9" }}>
+                    <Container fluid className="col-lg-4 offset-lg-4 text-center">
+                        <h1 className="display-3">Expenses</h1>
+                        <hr></hr>
+                    </Container>
+                </Jumbotron>
+                <div className="container">
+                    <div className="row text-center">
+                        <Table responsive>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>User</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Budget</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <ExpenseItem expenses={Expenses} updateExpenses={getLatestExpenses}></ExpenseItem>
+                        </Table>
+                    </div>
+                    <div className="row d-flex justify-content-center">
+                        <Pagination></Pagination>
+                    </div>
                 </div>
-                <div className="row d-flex justify-content-center">
-                    <Pagination></Pagination>
+                <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
+                <div className="d-flex justify-content-center">
+                    <ActionButton Feature="expense" updateExpenses={getLatestExpenses}></ActionButton>
                 </div>
-            </div>
-            <hr style={{ marginTop: "3rem", maxWidth: "50%" }}></hr>
-            <div className="d-flex justify-content-center">
-                <ActionButton Feature="expense" updateExpenses={getLatestExpenses}></ActionButton>
-            </div>
-        </div>
+            </div> : <Redirect to='/login'></Redirect>
     );
 }
 

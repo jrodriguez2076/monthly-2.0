@@ -72,25 +72,6 @@ const AddIncome = (props) => {
             })
     };
 
-    // const handleChangeAmount = (event) => {
-    //     if (!event.target.value) setValidation(true)
-    //     else setValidation(false)
-    //     setAmount(event.target.value)
-    // }
-
-    // const handleChangeUser = (event) => {
-    //     // if (event.target.value == '') setUser(event.target.value)
-    //     setUser(event.target.value)
-    // }
-
-    // const handleChangeDescription = (event) => {
-    //     setDescription(event.target.value)
-    // }
-
-    // const handleChangeMonthly = (event) => {
-    //     setMonthly(!Monthly)
-    // }
-
     const handleSubmit = (event) => {
         event.preventDefault()
         let data = {}
@@ -146,12 +127,10 @@ const AddIncome = (props) => {
             )
             .then(res => {
                 props.toggle();
+                if (!props.fromHome) {
+                    props.update();
+                }
             })
-
-        if (!props.fromHome) {
-            props.update();
-        }
-
     }
 
     return (
