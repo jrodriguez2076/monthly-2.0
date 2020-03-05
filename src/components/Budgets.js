@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Card, CardImg, CardTitle, CardText, CardDeck,
-  CardBody, Jumbotron, Container
+  Jumbotron, Container
 } from 'reactstrap';
-
+import { Redirect } from "react-router-dom";
 import BudgetItem from './BudgetItem'
 import ActionButton from './ActionButton';
 import ToastMessage from './ToastMessage';
@@ -61,6 +60,7 @@ const Budgets = (props) => {
 
 
   return (
+    sessionStorage.getItem('token') ?
     <div>
       <ToastMessage 
       toastTitle={NotifData.title} 
@@ -84,7 +84,7 @@ const Budgets = (props) => {
 
         <ActionButton Feature="budget" updateBudgets={getBudgets} showToastMessage={showToastMessage} notifData={setNotifData}></ActionButton>
       </div>
-    </div>
+    </div> : <Redirect to='/login'></Redirect> 
   );
 };
 

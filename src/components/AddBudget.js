@@ -153,12 +153,13 @@ const AddBudget = (props) => {
                         "icon": "warning.gif"
                     })
                     props.showToastMessage();
+                    if (!props.fromHome) {
+                        props.update();
+                    }
                 }
             })
 
-        if (!props.fromHome) {
-            props.update();
-        }
+        
     }
 
     const getIcons = () => {

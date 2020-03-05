@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card, Button, CardImg, CardTitle, CardText, CardDeck,
-  CardSubtitle, CardBody, Jumbotron, Container
+  Jumbotron, Container
 } from 'reactstrap';
-
+import { Redirect } from "react-router-dom";
 import IncomeItem from './IncomeItem'
 import ActionButton from './ActionButton';
 
@@ -26,6 +25,7 @@ const Incomes = (props) => {
   };
 
   return (
+    sessionStorage.getItem('token') ?
     <div>
       <Jumbotron fluid className="row" style={{ backgroundColor: "#E3F6FF" }}>
         <Container fluid className="col-lg-4 offset-lg-4 text-center">
@@ -40,7 +40,7 @@ const Incomes = (props) => {
       <div className="d-flex justify-content-center">
         <ActionButton Feature="income" updateIncomes={getIncomes}></ActionButton>
       </div>
-    </div>
+    </div> : <Redirect to='/login'></Redirect>
   );
 };
 

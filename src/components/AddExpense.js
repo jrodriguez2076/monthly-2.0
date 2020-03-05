@@ -195,10 +195,10 @@ const AddExpense = (props) => {
             )
             .then(res => {
                 props.toggle();
+                props.update();
             })
 
         // if (!props.fromHome) {
-        props.update();
         // }
 
 

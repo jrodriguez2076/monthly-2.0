@@ -7,6 +7,8 @@ import bcrypt from 'bcryptjs';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import verifyToken from "./components/submodules/verifyToken";
+import https from 'https';
+
 
 
 import 'dotenv/config';
@@ -337,7 +339,11 @@ app.get('*', (req, res) => {
 // Server Start
 
 connectDb().then(() => {
-    app.listen(process.env.PORT, () => {
+    https.createServer({
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert')
+      }, app)
+      .listen(process.env.PORT, () => {
         console.log(`Now listening on port ${process.env.PORT}`); app.use((req, res, next) => {
             next();
         });
