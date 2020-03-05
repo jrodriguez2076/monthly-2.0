@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -22,27 +22,30 @@ const title = 'More functions coming soon...';
 
 function App() {
 
-  const startLoginSession = (newToken, newUser) => {
+  const startLoginSession = (newUser, newToken) => {
     setSession({
       token: newToken,
       user: newUser
     })
-    console.log(token);
-    console.log(user);
   }
+
+  useEffect(() => {
+    sessionStorage.setItem('email',Session.user);
+    sessionStorage.setItem('token',Session.token);
+  })
 
   const [Session, setSession] = useState(
     {
-      user: 'bob',
-      token: 'hope',
+      user: 'tu',
+      token: '',
     })
 
   return (
-    <SessionContext.Provider value={{value: Session, startLoginSession}}>
+    <SessionContext.Provider value={{ value: Session, startLoginSession }}>
       <Router>
         <div style={{ height: "100%" }}>
           <Switch>
-            <Route path="/login" exact component={Login} />
+            <Route path="/login" exact render={props => <Login {...props}></Login>} />
             <Route component={DefaultContainer} />
           </Switch>
         </div>

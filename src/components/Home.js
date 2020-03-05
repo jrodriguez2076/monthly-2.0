@@ -17,6 +17,7 @@ const Home = (props) => {
 
     const changeTotalExpense = () => {
         let d = new Date();
+        console.log(sessionStorage.getItem('email'))
         fetch(`/api/expenses?month=${d.getMonth() + 1}`)
             .then(data => { return data.json() }
             )
