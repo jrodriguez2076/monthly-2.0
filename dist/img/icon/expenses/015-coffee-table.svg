@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512" height="512">
+<g>
+	<polyline style="fill:#FEEF7F;" points="272.5,312 272.5,464 304.5,496 304.5,504 208.5,504 208.5,496 240.5,464 240.5,312  "/>
+	<polyline style="fill:#EA9A10;" points="392.5,288 392.5,312 120.5,312 120.5,288  "/>
+	<rect x="88.5" y="240" style="fill:#FEEF7F;" width="336" height="48"/>
+	<rect x="400.5" y="240" style="fill:#EA9A10;" width="24" height="48"/>
+	<path style="fill:#E8F4FA;" d="M168.5,239L168.5,239c13.255,0,24-10.745,24-24v-24h-48v24C144.5,228.255,155.245,239,168.5,239z"/>
+	<path style="fill:#E8F4FA;" d="M344.5,239L344.5,239c-13.255,0-24-10.745-24-24v-24h48v24C368.5,228.255,357.755,239,344.5,239z"/>
+	<polygon style="fill:#8CA4B8;" points="208.5,120 208.5,112 256.5,64 304.5,112 304.5,120  "/>
+	<g>
+		<path d="M370.677,233c3.359-6,4.823-11.529,4.823-18h17v-15h-17v-16h-63v31c0,6.471,2.463,12,5.823,18H194.677    c3.359-6,4.823-11.529,4.823-18v-31h-63v16h-16v15h16c0,6.471,2.463,12,5.823,18H80.5v63h32v24h120v140.894l-32,32V512h111    v-19.106l-32-32V336h-15v131.106L294.394,497h-75.787l28.894-29.894V320h152v-24h32v-63H370.677z M327.5,199h33v16    c0,9.098-7.402,16.5-16.5,16.5c-9.098,0-16.5-7.402-16.5-16.5V199z M151.5,199h33v16c0,9.098-7.402,16.5-16.5,16.5    c-9.098,0-16.5-7.402-16.5-16.5V199z M384.5,305h-257v-9h257V305z M416.5,281h-321v-33h321V281z"/>
+		<path d="M311.5,108.894l-48-48V0h-15v60.894l-48,48V128h111V108.894z M218.606,113L256.5,75.106L294.394,113H218.606z"/>
+	</g>
+	<g>
+		<g>
+			<rect x="280.5" y="256.5" style="fill:#FFFFFF;" width="16" height="15"/>
+		</g>
+		<g>
+			<rect x="248.5" y="256.5" style="fill:#FFFFFF;" width="16" height="15"/>
+		</g>
+		<g>
+			<rect x="216.5" y="256.5" style="fill:#FFFFFF;" width="16" height="15"/>
+		</g>
+	</g>
+</g>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</svg>
