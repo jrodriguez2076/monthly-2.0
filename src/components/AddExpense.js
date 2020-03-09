@@ -11,7 +11,8 @@ const AddExpense = (props) => {
 
     useEffect(() => {
         getBudgets();
-        getUsers()
+        getUsers();
+
     }, []);
 
     const [ExpenseDate, setExpenseDate] = props.item ? useState(props.item.expenseDate) : useState('')
@@ -31,6 +32,18 @@ const AddExpense = (props) => {
         description: ""
     });
 
+    const getCurrentFormattedDate = () => {
+        let date = new Date(); // YYYY-MM-DD
+
+        let d = date.getDate();
+        let m = date.getMonth() + 1;
+        let y = date.getFullYear();
+
+        let dateString = y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+        return dateString
+    }
+
+    // Final Validation Stage, ran before submitting data to server
     const checkValidity = () => {
         const errors = ValidationError;
         if (errors.amount.length == 0 && !validity.validAmount(Amount)) {
@@ -53,12 +66,12 @@ const AddExpense = (props) => {
         switch (name) {
             case 'date':
                 setExpenseDate(event.target.value);
-                if (Method == "credit") setStartDate(event.target.value)
+                if (Method == "credit") setStartDate(event.target.value) //If paying with credit card, expense will be made when payment is due.
                 errors.date = validity.validDate(value) ? "" : "Please add a valid date!";
                 break;
             case 'amount':
                 setAmount(event.target.value)
-                errors.amount = validity.validAmount(value) ? "" : "You must add a name!";
+                errors.amount = validity.validAmount(value) ? "" : "You must add a value greater than 0!";
                 break;
             case 'user':
                 setUser(event.target.value)

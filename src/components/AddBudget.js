@@ -43,11 +43,11 @@ const AddBudget = (props) => {
         switch (name) {
             case 'amount':
                 setAmount(event.target.value);
-                errors.amount = validity.validAmount(value) ? "":"Please add a number higher than 0!";
+                errors.amount = validity.validAmount(value) ? "" : "Please add a number higher than 0!";
                 break;
             case 'name':
                 setName(event.target.value)
-                errors.name = validity.validName(value) ? "":"You must add a name!";
+                errors.name = validity.validName(value) ? "" : "You must add a name!";
                 break;
             case 'description':
                 setDescription(event.target.value)
@@ -153,13 +153,11 @@ const AddBudget = (props) => {
                         "icon": "warning.gif"
                     })
                     props.showToastMessage();
-                    if (!props.fromHome) {
-                        props.update();
-                    }
+                }
+                if (!props.fromHome) {
+                    props.update();
                 }
             })
-
-        
     }
 
     const getIcons = () => {

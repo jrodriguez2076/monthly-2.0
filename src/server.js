@@ -99,7 +99,7 @@ app.post('/api/expenses', async (req, res) => {
     //Add new Expense to the db
     const expenseDb = await req.context.models.Expense.create({
         user: req.body.user,
-        date: expenseDate,
+        date: expenseDate +10800000, //correction to Argentina Time
         location: req.body.location,
         amount: req.body.amount,
         description: req.body.description,
@@ -125,7 +125,7 @@ app.post('/api/expenses', async (req, res) => {
             if (existingBudget.length < 1) {
                 const budgetDb = await req.context.models.Budget.create({
                     name: "Credit card payment",
-                    amount: (req.body.amount / req.body.payments), //Divide the total amount of the expense between all payments
+                    amount: (req.body.amount / req.body.payments).toFixed(2), //Divide the total amount of the expense between all payments
                     description: req.body.description,
                     icon: iconName,
                     creationDate: startDate,
